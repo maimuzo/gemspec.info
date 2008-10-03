@@ -1,0 +1,30 @@
+SeleniumRc Spec
+=================
+
+Rails plugin for SeleniumRC-RSpec integration.
+
+
+Note
+====
+This plugin includes SeleniumRC 0.9.2.
+
+
+Synposis
+========
+
+require File.join(File.dirname(__FILE__), '..', 'spec_helper')
+story "A reader visits our site" do
+  senario "The reader", "views our toppage" do
+    # You can use "he", "she" or "ve"
+    she.opens "/"
+    she.gets_title; it.should == "Hello, World!"
+  end
+end
+
+
+
+
+Copyright
+=========
+Copyright 2006 ThoughtWorks, Inc
+Copyright (c) 2007 Yugui, released under the Apache 2.0 license

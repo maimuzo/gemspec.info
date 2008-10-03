@@ -1,0 +1,74 @@
+require 'rubygems'
+require 'rake'
+require 'rake/testtask'
+require 'rake/rdoctask'
+require 'rake/packagetask'
+require 'rake/gempackagetask'
+require 'rake/contrib/rubyforgepublisher'
+
+$:.unshift(File.dirname(__FILE__) + "/lib/commands")
+require 'plugin'
+
+PKG_NAME      = 'rapt'
+PKG_VERSION   = '0.2.2'
+PKG_FILE_NAME = "#{PKG_NAME}-#{PKG_VERSION}"
+
+RELEASE_NAME  = "REL #{PKG_VERSION}"
+
+RUBY_FORGE_PROJECT = PKG_NAME
+RUBY_FORGE_USER    = "topfunky"
+
+desc "Default Task"
+task :default => :test
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << 'lib'
+  t.pattern = 'test/**/*_test.rb'
+  t.verbose = true
+end
+
+# Genereate the RDoc documentation
+Rake::RDocTask.new { |rdoc|
+  rdoc.rdoc_dir = 'doc'
+  rdoc.title    = "RaPT -- Rails Plugin Tool"
+  rdoc.template = "#{ENV['template']}.rb" if ENV['template']
+  rdoc.rdoc_files.include('README', 'CHANGELOG')
+  rdoc.rdoc_files.include('lib/plugin.rb')
+  rdoc.rdoc_files.include('lib/plugin/*.rb')
+}
+
+# Create compressed packages
+spec = Gem::Specification.new do |s|
+  s.platform = Gem::Platform::RUBY
+  s.name = PKG_NAME
+  s.summary = "Rails Plugin Tool."
+  s.description = %q{Install, remove, and discover new plugins for your Ruby on Rails app.}
+  s.version = PKG_VERSION
+
+  s.authors = ["Ryan Tomayko", "Geoffrey Grosenbach"]
+  s.email = "boss@topfunky.com"
+  s.rubyforge_project = RUBY_FORGE_PROJECT
+  s.homepage = "http://rapt.rubyforge.org"
+
+  s.has_rdoc = false
+  s.requirements << 'none'
+  s.require_path = 'lib'
+
+  s.files = [ "Rakefile", "README", "CHANGELOG", "MIT-LICENSE" ]
+  %w(bin lib test).each do |dir|
+    s.files = s.files + Dir.glob( "#{dir}/**/*" ).delete_if { |item| item.include?( "\.svn" ) }
+  end
+  s.executables = ["rapt"]
+end
+  
+Rake::GemPackageTask.new(spec) do |p|
+  p.gem_spec = spec
+  p.need_tar = true
+  p.need_zip = true
+end
+
+# desc "Publish the API documentation"
+# task :pgem => [:package] do 
+#   Rake::SshFilePublisher.new("boss@topfunky.com", "public_html/gems/gems", "pkg", "#{PKG_FILE_NAME}.gem").upload
+# end
+

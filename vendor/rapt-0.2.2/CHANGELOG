@@ -1,0 +1,14 @@
+= 0.2.1
+
+* Fixed minor bug with URL mangling and added a warning about running rapt 
+  outside of a Rails application directory (#5157) [BC]
+
+= 0.2.0
+
+* Added search [BC]
+* Added --force-http option to force http download method [LR]
+* Added --svn option to add installed files to subversion with svn add [LR]
+
+= 0.1.0
+
+* Converted from original Rails plugin code

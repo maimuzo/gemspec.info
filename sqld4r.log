@@ -1,0 +1,235 @@
+* sqld4r: Starting at 2008/10/04 03:08:08
+* start to parse about SQLDesigner xml file
+* finish to parse
+* generate for rubygems
+->script/generate rspec  --git --skip-timestamps Rubygem name:string created_at:datetime updated_at:datetime 
+* sqld4r: Starting at 2008/10/04 03:08:37
+* start to parse about SQLDesigner xml file
+* finish to parse
+* generate for rubygems
+->script/generate rspec  --git --skip-timestamps Rubygem name:string created_at:datetime updated_at:datetime 
+-->invalid option: --skip-timestamps
+* generate for versions
+->script/generate rspec  --git --skip-timestamps Version rubygem:references version:string created_at:datetime updated_at:datetime 
+-->invalid option: --skip-timestamps
+* generate for details
+->script/generate rspec  --git --skip-timestamps Detail version:references platform:string executables:text date:datetime summary:text description:text homepage:text authors:text email:string created_at:datetime updated_at:datetime installmessage:text 
+-->invalid option: --skip-timestamps
+* generate for dependencies
+->script/generate rspec  --git --skip-timestamps Dependency version:references gem:string version:string created_at:datetime updated_at:datetime 
+-->invalid option: --skip-timestamps
+* generate for general_points
+->script/generate rspec  --git --skip-timestamps GeneralPoint rubygem:references point:integer 
+-->invalid option: --skip-timestamps
+* add relationship to rubygems
+* -add belongs_to relationship to rubygems about:
+* --skip. becase this model dose not have relationship.
+* -add has_one/has_many relationship to:
+* --skip. because this model dose not have relationship
+* add relationship to versions
+* -add belongs_to relationship to versions about:
+* --Rubygem
+* sqld4r: Starting at 2008/10/04 03:20:15
+* start to parse about SQLDesigner xml file
+* finish to parse
+* generate for rubygems
+->script/generate rspec  --git --skip-timestamps Rubygem name:string created_at:datetime updated_at:datetime 
+-->invalid option: --skip-timestamps
+* generate for versions
+->script/generate rspec  --git --skip-timestamps Version rubygem:references version:string created_at:datetime updated_at:datetime 
+-->invalid option: --skip-timestamps
+* generate for details
+->script/generate rspec  --git --skip-timestamps Detail version:references platform:string executables:text date:datetime summary:text description:text homepage:text authors:text email:string created_at:datetime updated_at:datetime installmessage:text 
+-->invalid option: --skip-timestamps
+* generate for dependencies
+->script/generate rspec  --git --skip-timestamps Dependency version:references gem:string version:string created_at:datetime updated_at:datetime 
+-->invalid option: --skip-timestamps
+* generate for general_points
+->script/generate rspec  --git --skip-timestamps GeneralPoint rubygem:references point:integer 
+-->invalid option: --skip-timestamps
+* add relationship to rubygems
+* -add belongs_to relationship to rubygems about:
+* --skip. because this model dose not have relationship.
+* -add has_one/has_many relationship to:
+* --skip. because this model dose not have relationship
+* add relationship to versions
+* -add belongs_to relationship to versions about:
+* --Rubygem
+* sqld4r: Starting at 2008/10/04 03:24:15
+* start to parse about SQLDesigner xml file
+* finish to parse
+* generate for rubygems
+->script/generate rspec  --git Rubygem name:string created_at:datetime updated_at:datetime 
+-->      create  spec
+      create  spec/spec_helper.rb
+add 'spec/spec_helper.rb'
+      create  spec/spec.opts
+add 'spec/spec.opts'
+      create  spec/rcov.opts
+add 'spec/rcov.opts'
+      create  script/spec_server
+add 'script/spec_server'
+      create  script/spec
+add 'script/spec'
+      create  stories
+      create  stories/all.rb
+add 'stories/all.rb'
+      create  stories/helper.rb
+add 'stories/helper.rb'
+* generate for versions
+->script/generate rspec  --git Version rubygem:references version:string created_at:datetime updated_at:datetime 
+-->      exists  spec
+   identical  spec/spec_helper.rb
+   identical  spec/spec.opts
+   identical  spec/rcov.opts
+   identical  script/spec_server
+   identical  script/spec
+      exists  stories
+   identical  stories/all.rb
+   identical  stories/helper.rb
+* generate for details
+->script/generate rspec  --git Detail version:references platform:string executables:text date:datetime summary:text description:text homepage:text authors:text email:string created_at:datetime updated_at:datetime installmessage:text 
+-->      exists  spec
+   identical  spec/spec_helper.rb
+   identical  spec/spec.opts
+   identical  spec/rcov.opts
+   identical  script/spec_server
+   identical  script/spec
+      exists  stories
+   identical  stories/all.rb
+   identical  stories/helper.rb
+* generate for dependencies
+->script/generate rspec  --git Dependency version:references gem:string version:string created_at:datetime updated_at:datetime 
+-->      exists  spec
+   identical  spec/spec_helper.rb
+   identical  spec/spec.opts
+   identical  spec/rcov.opts
+   identical  script/spec_server
+   identical  script/spec
+      exists  stories
+   identical  stories/all.rb
+   identical  stories/helper.rb
+* generate for general_points
+->script/generate rspec  --git GeneralPoint rubygem:references point:integer 
+-->      exists  spec
+   identical  spec/spec_helper.rb
+   identical  spec/spec.opts
+   identical  spec/rcov.opts
+   identical  script/spec_server
+   identical  script/spec
+      exists  stories
+   identical  stories/all.rb
+   identical  stories/helper.rb
+* add relationship to rubygems
+* -add belongs_to relationship to rubygems about:
+* --skip. because this model dose not have relationship.
+* -add has_one/has_many relationship to:
+* --skip. because this model dose not have relationship
+* add relationship to versions
+* -add belongs_to relationship to versions about:
+* --Rubygem
+* sqld4r: Starting at 2008/10/04 03:26:59
+* start to parse about SQLDesigner xml file
+* finish to parse
+* generate for rubygems
+->script/generate rspec_model  --git Rubygem name:string created_at:datetime updated_at:datetime 
+-->      exists  app/models/
+      create  spec/models/
+      create  spec/fixtures/
+      create  app/models/rubygem.rb
+add 'app/models/rubygem.rb'
+      create  spec/fixtures/rubygems.yml
+add 'spec/fixtures/rubygems.yml'
+      create  spec/models/rubygem_spec.rb
+add 'spec/models/rubygem_spec.rb'
+      create  db/migrate
+      create  db/migrate/20081003182702_create_rubygems.rb
+add 'db/migrate/20081003182702_create_rubygems.rb'
+* generate for versions
+->script/generate rspec_model  --git Version rubygem:references version:string created_at:datetime updated_at:datetime 
+-->      exists  app/models/
+      exists  spec/models/
+      exists  spec/fixtures/
+      create  app/models/version.rb
+add 'app/models/version.rb'
+      create  spec/fixtures/versions.yml
+add 'spec/fixtures/versions.yml'
+      create  spec/models/version_spec.rb
+add 'spec/models/version_spec.rb'
+      exists  db/migrate
+      create  db/migrate/20081003182706_create_versions.rb
+add 'db/migrate/20081003182706_create_versions.rb'
+* generate for details
+->script/generate rspec_model  --git Detail version:references platform:string executables:text date:datetime summary:text description:text homepage:text authors:text email:string created_at:datetime updated_at:datetime installmessage:text 
+-->      exists  app/models/
+      exists  spec/models/
+      exists  spec/fixtures/
+      create  app/models/detail.rb
+add 'app/models/detail.rb'
+      create  spec/fixtures/details.yml
+add 'spec/fixtures/details.yml'
+      create  spec/models/detail_spec.rb
+add 'spec/models/detail_spec.rb'
+      exists  db/migrate
+      create  db/migrate/20081003182709_create_details.rb
+add 'db/migrate/20081003182709_create_details.rb'
+* generate for dependencies
+->script/generate rspec_model  --git Dependency version:references gem:string version:string created_at:datetime updated_at:datetime 
+-->      exists  app/models/
+      exists  spec/models/
+      exists  spec/fixtures/
+      create  app/models/dependency.rb
+add 'app/models/dependency.rb'
+      create  spec/fixtures/dependencies.yml
+add 'spec/fixtures/dependencies.yml'
+      create  spec/models/dependency_spec.rb
+add 'spec/models/dependency_spec.rb'
+      exists  db/migrate
+      create  db/migrate/20081003182712_create_dependencies.rb
+add 'db/migrate/20081003182712_create_dependencies.rb'
+* generate for general_points
+->script/generate rspec_model  --git GeneralPoint rubygem:references point:integer 
+-->      exists  app/models/
+      exists  spec/models/
+      exists  spec/fixtures/
+      create  app/models/general_point.rb
+add 'app/models/general_point.rb'
+      create  spec/fixtures/general_points.yml
+add 'spec/fixtures/general_points.yml'
+      create  spec/models/general_point_spec.rb
+add 'spec/models/general_point_spec.rb'
+      exists  db/migrate
+      create  db/migrate/20081003182715_create_general_points.rb
+add 'db/migrate/20081003182715_create_general_points.rb'
+* add relationship to rubygems
+* -add belongs_to relationship to rubygems about:
+* --skip. because this model dose not have relationship.
+* -add has_one/has_many relationship to:
+* --skip. because this model dose not have relationship
+* add relationship to versions
+* -add belongs_to relationship to versions about:
+* --Rubygem
+* -add has_one/has_many relationship to:
+* --Rubygem
+* add relationship to details
+* -add belongs_to relationship to details about:
+* --Version
+* -add has_one/has_many relationship to:
+* --Version
+* add relationship to dependencies
+* -add belongs_to relationship to dependencies about:
+* --Version
+* -add has_one/has_many relationship to:
+* --Version
+* add relationship to general_points
+* -add belongs_to relationship to general_points about:
+* --Rubygem
+* -add has_one/has_many relationship to:
+* --Rubygem
+* add index to a new migrate file
+->script/generate migration add_index_for_all
+-->      exists  db/migrate
+      create  db/migrate/20081003182718_add_index_for_all.rb
+* --modifyed index on db/migrate/20081003182718_add_index_for_all.rb
+* save this database xml file to ../../docs/sqldesigner.xml.save
+->cp doc/gemer.txt ../../docs/sqldesigner.xml.save

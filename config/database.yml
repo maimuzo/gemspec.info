@@ -17,10 +17,10 @@
 development:
   adapter: mysql
   encoding: utf8
-  database: gemspec.info_development
+  database: gemspec_info_development
   username: root
   password:
-  socket: /tmp/mysql.sock
+  host: localhost
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -28,15 +28,7 @@ development:
 test:
   adapter: mysql
   encoding: utf8
-  database: gemspec.info_test
+  database: gemspec_info_test
   username: root
   password:
-  socket: /tmp/mysql.sock
-
-production:
-  adapter: mysql
-  encoding: utf8
-  database: gemspec.info_production
-  username: root
-  password: 
-  socket: /tmp/mysql.sock
+  host: localhost

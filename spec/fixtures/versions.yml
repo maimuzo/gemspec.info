@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  rubygem: 
+  version: MyString
+  created_at: 2008-10-04 03:27:06
+  updated_at: 2008-10-04 03:27:06
+
+two:
+  rubygem: 
+  version: MyString
+  created_at: 2008-10-04 03:27:06
+  updated_at: 2008-10-04 03:27:06

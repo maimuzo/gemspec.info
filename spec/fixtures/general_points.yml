@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  rubygem: 
+  point: 1
+
+two:
+  rubygem: 
+  point: 1

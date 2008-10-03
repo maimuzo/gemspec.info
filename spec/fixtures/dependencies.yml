@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  version: 
+  gem: MyString
+  version: MyString
+  created_at: 2008-10-04 03:27:12
+  updated_at: 2008-10-04 03:27:12
+
+two:
+  version: 
+  gem: MyString
+  version: MyString
+  created_at: 2008-10-04 03:27:12
+  updated_at: 2008-10-04 03:27:12

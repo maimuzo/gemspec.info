@@ -1,0 +1,29 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  version: 
+  platform: MyString
+  executables: MyText
+  date: 2008-10-04 03:27:09
+  summary: MyText
+  description: MyText
+  homepage: MyText
+  authors: MyText
+  email: MyString
+  created_at: 2008-10-04 03:27:09
+  updated_at: 2008-10-04 03:27:09
+  installmessage: MyText
+
+two:
+  version: 
+  platform: MyString
+  executables: MyText
+  date: 2008-10-04 03:27:09
+  summary: MyText
+  description: MyText
+  homepage: MyText
+  authors: MyText
+  email: MyString
+  created_at: 2008-10-04 03:27:09
+  updated_at: 2008-10-04 03:27:09
+  installmessage: MyText

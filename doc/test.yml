@@ -1,0 +1,25 @@
+--- 
+- attributes: 
+    gem_id: "10"
+    gem: aalib-ruby
+    version_update: 2008-10-03 14:56:32
+    version_id: "14"
+    version: 0.7.1
+    gem_update: 2008-10-03 14:56:31
+
+- attributes: 
+    gem_id: "11"
+    gem: abn
+    version_update: 2008-10-03 14:56:33
+    version_id: "15"
+    version: 1.2.0
+    gem_update: 2008-10-03 14:56:32
+
+- attributes: 
+    gem_id: "12"
+    gem: abstract
+    version_update: 2008-10-03 14:56:34
+    version_id: "16"
+    version: 1.0.0
+    gem_update: 2008-10-03 14:56:33
+

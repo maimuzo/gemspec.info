@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081003182718) do
+ActiveRecord::Schema.define(:version => 20081004054543) do
 
   create_table "dependencies", :force => true do |t|
     t.integer  "version_id", :limit => 11
@@ -55,6 +55,13 @@ ActiveRecord::Schema.define(:version => 20081003182718) do
   end
 
   add_index "rubygems", ["id"], :name => "index_rubygems_on_id"
+
+  create_table "specs", :force => true do |t|
+    t.integer  "version_id", :limit => 11
+    t.text     "yaml"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "versions", :force => true do |t|
     t.integer  "rubygem_id", :limit => 11

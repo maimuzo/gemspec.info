@@ -1,0 +1,30 @@
+<%% form_tag session[:return_to], :method => session[:return_to_method] do %>
+  <%% session[:stored_parameters].delete :controller %>
+  <%% session[:stored_parameters].delete :action %>
+  <%% session[:stored_parameters].delete :id %>
+  <%% session[:stored_parameters].delete :authenticity_token %>
+  <%%
+  to_input = proc{|key, value|
+    case value
+    when Hash
+      value.map{|k,v| to_input["#{key}[#{k}]", v]}.join('')
+    when Array
+      value.map{|v| to_input["#{key}[]", v]}.join('')
+    else hidden_field_tag key, value
+    end
+  }
+  %>
+  <%% session[:stored_parameters].each do |key, value| %>
+    <%%= to_input[key, value] %>
+  <%% end %>
+<%% end %>
+
+<%%= javascript_tag %{
+(function(){
+  var onload = window.onload;
+  window.onload = function(){
+    document.getElementsByTagName('form')[0].submit();
+    if(onload) onload();
+  }
+})();
+} %>

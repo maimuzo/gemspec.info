@@ -4,7 +4,7 @@ require "yaml"
 # Scan unknown version of gem, and add to DB.
 # 未知のバージョンを調査して、DBに保存する
 # kick:
-# script/runner 'SpecScanner.new(true, true).add_unkown_version'
+# script/runner 'SpecScanner.new(true, true).scan.add_unknown_gem_versions'
 #
 class SpecScanner
   def initialize(report = false, verbose = false)
@@ -29,6 +29,8 @@ class SpecScanner
     
     # flag of report
     @report = report
+    
+    @scaned_gem_and_versions = []
   end
   
   # list up all gem name and all version, and return a version list
@@ -38,18 +40,18 @@ class SpecScanner
       lines = `gem list -ra`.split("\n")
     rescue
       puts "Catch exception from command line"
-      show_result
+      show_result_of_gem_version
       exit(1)
     end
-    @gem_and_versions = lines.map do |line|
+    @scaned_gem_and_versions = []
+    lines.map do |line|
       next if "*** REMOTE GEMS ***" == line or "" == line
       gem_name_and_versions = line.scan(/^(.+)\s\((.+)\)$/).first
       gem_name = gem_name_and_versions[0].strip.downcase
       versions = gem_name_and_versions[1].split(",").map do |version| version.strip end
       #古い物から登録する
       versions.reverse!
-      
-      {:gem => gem_name, :versions => versions}
+      @scaned_gem_and_versions << {:gem => gem_name, :versions => versions}
     end
     self
   end
@@ -62,7 +64,7 @@ class SpecScanner
   # version毎にyieldを呼び出す。
   # もし未知のgem名ならば、それを追加する。
   def add_unknown_gem_versions
-    @gem_and_versions.each do |line|
+    @scaned_gem_and_versions.each do |line|
       gem_name = line[:gem]
       versions = line[:versions]
       
@@ -74,20 +76,20 @@ class SpecScanner
         added_name_countup(gem_name)
         puts "added #{gem_name}" if @verbose
         # if the system could not find by gem name,
-        # call a yield method for all version
-        # もしgem名が見つからなければ、全てのバージョンでyieldを呼び出す
+        # call a add_unkown_version method for all version
+        # もしgem名が見つからなければ、全てのバージョンでadd_unkown_versionを呼び出す
         versions.each do |version|
           scaned_version_countup("#{gem_name}[#{version}]")
-          yield(rubygem, version)
+          add_unkown_version(rubygem, version)
         end
       else  
         begin
           versions.each do |version|
             scaned_version_countup("#{gem_name}[#{version}]")
-            # call a yield method if this system dosn't know this version
-            # もしこのバージョンが未知なら、yieldを呼び出す
+            # call a add_unkown_version method if this system dosn't know this version
+            # もしこのバージョンが未知なら、add_unkown_versionを呼び出す
             if rubygem.versions.find_by_version(version).nil?
-              yield(rubygem, version)
+              add_unkown_version(rubygem, version)
             else
               puts "skip #{gem_name} [#{version}]" if @verbose
             end
@@ -96,38 +98,37 @@ class SpecScanner
           puts n
           puts n.backtrace
           puts "Catch a exception from #{rubygem.name} #{version}"
-          show_result
+          show_result_of_gem_version
           exit(1)
         end
       end
     end
+    show_result_of_gem_version
+    self
   end
 
 private  
   
   # save a unknown version
   # 未知のバージョンを保存する
-  def add_unkown_version
-    scan_unknown_gem_versions do |rubygem, version|
-      # when found a unknown version
-      begin
-        rubygem.versions.create(:version => version)
-        puts "added #{rubygem.name} [#{version}]" if @verbose
-        added_version_countup("#{rubygem.name}[#{version}]")
-      rescue => n
-        puts n
-        puts n.backtrace
-        puts "Catch a exception from #{rubygem.name} #{version}"
-        show_result
-        exit(1)
-      end
+  def add_unkown_version(rubygem, version)
+    # when found a unknown version
+    begin
+      rubygem.versions.create(:version => version)
+      puts "added #{rubygem.name} [#{version}]" if @verbose
+      added_version_countup("#{rubygem.name}[#{version}]")
+    rescue => n
+      puts n
+      puts n.backtrace
+      puts "Catch a exception from #{rubygem.name} #{version}"
+      show_result_of_gem_version
+      exit(1)
     end
-    show_result
   end
 
    # show result of this scanning
    # 調査結果を表示する
-  def show_result
+  def show_result_of_gem_version
     if @report
       puts "scaned gems:#{@scaned_name}, scaned version:#{@scaned_version}"
       puts "added gems:#{@added_name}, added version:#{@added_version}"

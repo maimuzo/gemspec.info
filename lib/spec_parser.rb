@@ -5,7 +5,8 @@ require "yaml"
 # 未知のバージョンの詳細を取得し、解析して保存する。
 #
 # kick:
-# script/runner 'SpecParser.new(true, true).scan.add_unknown_gem_versions.update_spec'
+# script/runner 'SpecParser.new.scan.add_unknown_gem_versions.update_spec'
+# script/runner 'SpecParser.new(true).scan.add_unknown_gem_versions'
 # script/runner 'SpecParser.new(true, true).scan.update_spec'
 #
 class SpecParser < SpecScanner
@@ -23,19 +24,22 @@ class SpecParser < SpecScanner
   # 未知のgem、version、yaml形式のspec、詳細を追加する
   def update_spec
     @scaned_gem_and_versions.each do |line|
-      line[:versions].each do |version|
-        puts "got record : #{line[:gem]}[#{version}]" if @verbose
-        # add a unknown gem name or a version
-        # 未知のgemかバージョンなら登録する
-        rubygem = Rubygem.find_by_name(line[:gem])
-        if rubygem.nil?
-          rubygem = Rubygem.create(:name => line[:gem])
-          puts "add gem : " + line[:gem] if @verbose
-        end
-        version = rubygem.versions.find_by_version(version)
+      # add a unknown gem name
+      # 未知のgemなら登録する
+      puts "got record : #{line[:gem]}" if @verbose
+      rubygem = Rubygem.find_by_name(line[:gem])
+      if rubygem.nil?
+        rubygem = Rubygem.create(:name => line[:gem])
+        puts "add gem : " + line[:gem] if @verbose
+      end
+      line[:versions].each do |version_name|
+        puts "got record : #{line[:gem]}[#{version_name}]" if @verbose
+        # add a unknown version
+        # 未知のバージョンなら登録する
+        version = rubygem.versions.find_by_version(version_name)
         if version.nil?
-          version = rubygem.versions.create(:version => version)
-          puts "add version : #{line[:gem]}[#{version}]" if @verbose
+          version = rubygem.versions.create(:version => version_name)
+          puts "add version : #{line[:gem]}[#{version_name}]" if @verbose
         end
         # get a spec and add it if this system dosn't have a spec
         # もしspecをキャッシュしてなければ、取得して保存する
@@ -43,7 +47,7 @@ class SpecParser < SpecScanner
           spec_yaml = get_unknown_spec(rubygem, version)
           version.create_spec(:yaml => spec_yaml)
           added_spec_counter(version.gemversion)
-          puts "get the spec from a command line, and save it : #{line[:gem]}[#{version}]" if @verbose
+          puts "get the spec from a command line, and save it : #{line[:gem]}[#{version.version}]" if @verbose
           parse(version, spec_yaml)
         end
       end

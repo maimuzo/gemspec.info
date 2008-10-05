@@ -1,5 +1,6 @@
 # require 'openid_fu'
-gem 'openid_fu', '= 0.0.1'
+# gem 'openid_fu', '= 0.0.1'
+require 'openid_fu_generator-0.0.1/lib/openid_fu'
 
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.

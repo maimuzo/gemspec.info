@@ -9,12 +9,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081004054543) do
+ActiveRecord::Schema.define(:version => 20081005004139) do
 
   create_table "dependencies", :force => true do |t|
     t.integer  "version_id", :limit => 11
-    t.string   "gem"
-    t.string   "version"
+    t.string   "depgem"
+    t.string   "depversion"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -56,6 +56,17 @@ ActiveRecord::Schema.define(:version => 20081004054543) do
 
   add_index "rubygems", ["id"], :name => "index_rubygems_on_id"
 
+  create_table "slugs", :force => true do |t|
+    t.string   "name"
+    t.string   "sluggable_type"
+    t.integer  "sluggable_id",   :limit => 11
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "slugs", ["name", "sluggable_type"], :name => "index_slugs_on_name_and_sluggable_type", :unique => true
+  add_index "slugs", ["sluggable_id"], :name => "index_slugs_on_sluggable_id"
+
   create_table "specs", :force => true do |t|
     t.integer  "version_id", :limit => 11
     t.text     "yaml"
@@ -68,6 +79,8 @@ ActiveRecord::Schema.define(:version => 20081004054543) do
     t.string   "version"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "gemversion"
+    t.integer  "position",   :limit => 11
   end
 
   add_index "versions", ["id"], :name => "index_versions_on_id"

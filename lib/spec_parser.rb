@@ -1,57 +1,58 @@
-require 'net/http'
 require "yaml"
 
-
 #
-# get unknown specs of the version from core.gemspec.info, and parse it, and save it.
-# core.gemspc.infoから未知のバージョンの詳細を取得し、解析して保存する。
+# get unknown specs of the version, and parse it, and save it.
+# 未知のバージョンの詳細を取得し、解析して保存する。
 #
 # kick:
-# script/runner 'SpecParser.new(Date.yesterday, "localhost", 3000, true).update'
+# script/runner 'SpecParser.new(true, true).scan.add_unknown_gem_versions.update_spec'
+# script/runner 'SpecParser.new(true, true).scan.update_spec'
 #
-class SpecParser
+class SpecParser < SpecScanner
   
-  def initialize(lastupdate, core_domain = "core.gemspec.info", port = 80, verbose = false)
-    clone_site = YAML.load_file("./config/clone_site.yml")
-    @core_domain = core_domain
-    @port = port
-    @auth_account = clone_site["account"]
-    @auth_password = clone_site["password"]
-    @lastupdate = lastupdate
-    @verbose = verbose
-    Net::HTTP.version_1_2   # おまじない
+  def initialize(report = false, verbose = false)
+    super(report, verbose)
+    # result counter
+    @scaned_spec = 0
+    @added_spec = 0
+    @scaned_spec_array = []
+    @added_spec_array = []
   end
-  
-  # coreから指定のあったgemのバージョンを解析してdetailを更新する
-  # gemとversionは追加のみ。上書きしない。
-  def update
-    version_structures = get_unknown_versions_from_core
-    version_structures.each do |structure|
-      puts "got record : " + structure.inspect if @verbose
-      # add a unknown unknown gem name with the id
-      rubygem = Rubygem.find_by_name(structure["gem"])
-      if rubygem.nil?
-        rubygem = Rubygem.create(:name => structure["gem"])
-        puts "add gem : " + structure["gem"] if @verbose
+    
+  # add a unknown a gem, a version, a spec yaml, and a detail
+  # 未知のgem、version、yaml形式のspec、詳細を追加する
+  def update_spec
+    @scaned_gem_and_versions.each do |line|
+      line[:versions].each do |version|
+        puts "got record : #{line[:gem]}[#{version}]" if @verbose
+        # add a unknown gem name or a version
+        # 未知のgemかバージョンなら登録する
+        rubygem = Rubygem.find_by_name(line[:gem])
+        if rubygem.nil?
+          rubygem = Rubygem.create(:name => line[:gem])
+          puts "add gem : " + line[:gem] if @verbose
+        end
+        version = rubygem.versions.find_by_version(version)
+        if version.nil?
+          version = rubygem.versions.create(:version => version)
+          puts "add version : #{line[:gem]}[#{version}]" if @verbose
+        end
+        # get a spec and add it if this system dosn't have a spec
+        # もしspecをキャッシュしてなければ、取得して保存する
+        if version.spec.nil?
+          spec_yaml = get_unknown_spec(rubygem, version)
+          version.create_spec(:yaml => spec_yaml)
+          added_spec_counter(version.gemversion)
+          puts "get the spec from a command line, and save it : #{line[:gem]}[#{version}]" if @verbose
+          parse(version, spec_yaml)
+        end
       end
-      version = rubygem.versions.find_by_version(structure["version"])
-      if version.nil?
-        version = rubygem.versions.create(:version => structure["version"])
-        puts "add version : #{structure["gem"]}[#{structure["version"]}]" if @verbose
-      end
-      # add or load spec yaml
-      if version.spec.nil?
-        spec_yaml = get_unknown_spec(rubygem, version)
-        version.create_spec(:yaml => spec_yaml)
-        puts "get the spec from a command line, and save it : #{structure["gem"]}[#{structure["version"]}]" if @verbose
-      else
-        spec_yaml = version.spec.yaml
-        puts "load the spec : #{structure["gem"]}[#{structure["version"]}]" if @verbose
-      end
-      parse(version, spec_yaml)
     end
+    show_result_of_spec
   end
-  
+
+private
+
   # parse spec, and save it or force update it
   # specの解析と、保存または上書き
   def parse(version, spec_yaml_source)
@@ -77,6 +78,7 @@ class SpecParser
         version.detail.update_attributes(detail)
         puts "update the detail" if @verbose
       end
+      added_spec_counter(version.gemversion)     
       
       gem_dependencies(geminfo.dependencies).each do |rec|
         puts "found dependency : " + rec.inspect if @verbose
@@ -115,43 +117,36 @@ class SpecParser
     rescue => n
       puts n
       puts n.backtrace
+      show_result_of_spec
       exit(1)
     end    
   end
-  
-  # exapmle
-  # GET /need_to_update.yml
-  # GET /need_to_update.yml?lastupdate=2008/09/01
-  def get_unknown_versions_from_core
-    timestamp = @lastupdate.strftime("%Y/%m/%d")
-    local_path = "/need_to_update.yaml" + "?" + timestamp
-    spec = ""
-    get_body(local_path) do |body|
-      puts "body : " + body if @verbose
-      spec = YAML.load(body)
+
+  # show result of this scanning
+  # 調査結果を表示する
+  def show_result_of_spec
+    if @report
+      @added_spec_array.each {|spec| @scaned_spec_array.delete(spec)}
+      puts "scaned spec:#{@scaned_spec}"
+      puts "added spec:#{@added_spec}"
+      puts "did not add following specs of version : " + @scaned_spec_array.join(", ")
     end
-    spec
+  end
+
+  def scaned_spec_counter(version)
+    if @report
+      @scaned_spec_array << version
+      @scaned_spec += 1
+    end
   end
   
-  # connect to http://@core_domain/local_path, and call yield with body
-  # To connect to the server needs a BASIC authentication. 
-  # http://@core_domain/local_pathに接続して、bodyと共にyeildに渡す
-  # 接続にはベーシック認証が必要
-  def get_body(local_path)
-    req = Net::HTTP::Get.new(local_path)
-    req.basic_auth @auth_account, @auth_password
-    Net::HTTP.start(@core_domain, @port) {|http|
-      response = http.request(req)
-      case response
-      when Net::HTTPSuccess     then yield(response.body)
-      else
-        puts "Can not get yaml."
-        puts "it accesses to '#{@core_domain}:#{@port}' with auth_account '#{@auth_account}' and password '#{@auth_password}'"
-        puts "see the following body:"
-        puts response.body
-        exit(1)
-      end
-    }
+  def added_spec_counter(version)
+    if @report
+      @added_spec_array << version
+      @added_spec += 1
+    end
   end
+  
+  
 end
 

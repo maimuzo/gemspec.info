@@ -1,5 +1,6 @@
+# use unpacked gems from vender directory.
 require 'openid_fu_generator-0.0.1/lib/openid_fu'
-require 'ruby-openid-2.1.2/lib/openid'
+require 'ruby-openid-2.0.4/lib/openid'
 
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
@@ -9,7 +10,7 @@ class ApplicationController < ActionController::Base
 
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
-  protect_from_forgery :secret => 'f06beab18f0a0798ab325cb90cac37ff'
+  protect_from_forgery #:secret => 'f06beab18f0a0798ab325cb90cac37ff'
   
   # See ActionController::Base for details 
   # Uncomment this to filter the contents of submitted sensitive data parameters

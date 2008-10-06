@@ -1,5 +1,5 @@
 # use unpacked gems from vender directory.
-require 'ruby-openid-2.1.2/lib/openid'
+# require 'ruby-openid-2.1.2/lib/openid'
 
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   # from your application log (in this case, all fields with names like "password"). 
   # filter_parameter_logging :password
   
-  layout :default
+  layout "default"
   
   # 未ログイン状態でログインが必要なページに入ろうとすると、元のページに戻される
   # ログイン専用ページがない場合など
@@ -41,14 +41,5 @@ class ApplicationController < ActionController::Base
       redirect_to("/login")
     end
   end
-
-  def login?
-    session[:user_id]
-  end
-
-  def logined_user
-    User.find(session[:user_id])
-  end
-
   
 end

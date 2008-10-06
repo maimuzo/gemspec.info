@@ -33,7 +33,10 @@ class ApplicationController < ActionController::Base
       redirect_to("/login")
     end
   end
+end
 
+**add to app/helper/application_helper.rb
+module ApplicationHelper
   def login?
     session[:user_id]
   end

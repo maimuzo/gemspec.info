@@ -148,8 +148,8 @@ function emuJsonP(){
               <% form_tag(session_url, :class => "niceforms") do |f| -%>
               <label for="openid_url" >
                 OpenId URL:
-              </label>
-              <%= text_field_tag :openid_url, {:class => "coolinput", :title => "Input your OpenID!"} -%>
+              </label><br />
+              <%= text_field_tag :openid_url, nil, {:class => "coolinput", :title => "Input your OpenID!"} -%>
               <%= submit_tag "Go" -%>
               <% end -%>
             <% end -%>

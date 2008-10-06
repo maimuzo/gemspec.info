@@ -6,5 +6,9 @@ describe SessionsController do
   it "should use SessionsController" do
     controller.should be_an_instance_of(SessionsController)
   end
+  
+  it "should return arrayed symbol" do
+    arrayed_hash_keys([:nickname => "nickname", :email => "email"]).should == [:nickname, :email]
+  end
 
 end

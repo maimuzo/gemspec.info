@@ -29,7 +29,7 @@ module OpenIdAuthentication
       :failed       => "OpenID verification failed",
       :setup_needed => "OpenID verification needs setup"
     }
-
+    
     def self.[](code)
       new(code)
     end
@@ -38,6 +38,11 @@ module OpenIdAuthentication
       @code = code
     end
 
+    # add 
+    def result
+      @code
+    end
+    
     def ===(code)
       if code == :unsuccessful && unsuccessful?
         true
@@ -104,7 +109,11 @@ module OpenIdAuthentication
       params_with_path = params.reject { |key, value| request.path_parameters[key] }
       params_with_path.delete(:format)
       open_id_response = timeout_protection_from_identity_server { open_id_consumer.complete(params_with_path, requested_url) }
-      identity_url     = normalize_url(open_id_response.endpoint.claimed_id) if open_id_response.endpoint.claimed_id
+      begin
+        identity_url     = normalize_url(open_id_response.endpoint.claimed_id) if open_id_response.endpoint.claimed_id
+      rescue
+        yield Result[:double_auth], identity_url, nil
+      end
 
       case open_id_response.status
       when OpenID::Consumer::SUCCESS

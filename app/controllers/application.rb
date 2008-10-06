@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   def block_until_authorized
     unless login?
       flash[:notice] = "Please log in"
-      redirect_to(request.refferer)
+      redirect_to(request.referer)
     end
   end
 

@@ -14,7 +14,7 @@ class SessionsController < ApplicationController
   # [:(User model property) => "(OpenID provider property)"]
   @@optional = {
     :fullname => "fullname",
-    :dob => "birth_date",
+    :birth_day => "dob",
     :gender => "gender",
     :postcode => "postcode",
     :country => "country",
@@ -51,11 +51,20 @@ protected
   def open_id_authentication
 
     authenticate_with_open_id(params[:openid_url],
-                              {:required => @@required.keys,
-                              :optional => @@optional.keys}) do
+                              {:required => @@required.values.map {|str| str.to_sym},
+                              :optional => @@optional.values.map {|str| str.to_sym}}) do
       |status, identity_url, registration|
 
-      case status
+      case status.result
+      when :found_in_whitelist
+        #TODO:
+        #server_url = registration.endpoint.server_url
+        #if not TrastedOpenidProvider.find_by_url(server_url)
+          # 信頼していないOPでのログインは拒否する
+          #failed_login "Sorry, untrusted OpenID provider: #{server_url}"
+        failed_login "Sorry, the OpenID server is blocked"
+      when :double_auth
+        failed_login "Error, detect a double autentication"
       when :missing
         failed_login "Sorry, the OpenID server couldn't be found"
       when :canceled
@@ -63,25 +72,19 @@ protected
       when :failed
         failed_login "Sorry, the OpenID verification failed"
       when :successful
-        
-        #server_url = discover_status.endpoint.server_url
-        #if not TrastedOpenidProvider.find_by_url(server_url)
-          # 信頼していないOPでのログインは拒否する
-          #failed_login "Sorry, untrusted OpenID provider: #{server_url}"
-        #els
-        if @current_user = @User.find_by_identity_url(identity_url)
-          # TODO:need to change to your User model here
+        if @current_user = User.find_by_claimed_url(identity_url)
+          failed_login "Sorry, this identity URL already exists"
+        else
+          @current_user = User.new
           assign_registration_attributes!(registration)
           @current_user.claimed_url = identity_url
 
-          if current_user.save
+          if @current_user.save
             successful_login
           else
             failed_login "Your OpenID profile registration failed: " +
               @current_user.errors.full_messages.to_sentence
           end
-        else
-          failed_login "Sorry, no user by that identity URL exists"
         end
       end
 
@@ -98,7 +101,7 @@ protected
 
   def failed_login(message)
     flash[:error] = message
-    redirect_to tyied_page
+    redirect_to default_page
   end
 
    # if you don't use map.resource in config/routes.rb, you need to use root_url method:
@@ -112,7 +115,7 @@ protected
   end
 
   def tyied_page
-    request.refferer
+    request.referer
   end
 
   # registration is a hash containing the valid sreg keys given above

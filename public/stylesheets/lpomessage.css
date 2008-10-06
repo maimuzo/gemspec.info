@@ -1,0 +1,28 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/*
+div.jGrowl div.LPOMessagePanel {
+	background-color: 		#c4bfac;
+	color: 					black;
+}
+*/
+div.jGrowl div.header {
+	color: white;
+	font-weight: bold;
+}
+div.jGrowl div.message {
+	color: #ddd;
+}
+div.jGrowl div.message a{
+	color: #ddd;
+}
+div.jGrowl div.message a:link{
+	color: #ddd;
+}
+div.jGrowl div.message a:visited{
+	color: #ddd;
+}
+div.jGrowl div.message a:hover{
+	color: #fff;
+}

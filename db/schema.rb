@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081006041949) do
+ActiveRecord::Schema.define(:version => 20081006133506) do
 
   create_table "dependencies", :force => true do |t|
     t.integer  "version_id", :limit => 11
@@ -85,6 +85,27 @@ ActiveRecord::Schema.define(:version => 20081006041949) do
   create_table "specs", :force => true do |t|
     t.integer  "version_id", :limit => 11
     t.text     "yaml"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "trasted_openid_providers", :force => true do |t|
+    t.string   "endpoint_url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "users", :force => true do |t|
+    t.string   "nickname"
+    t.string   "email"
+    t.string   "claimed_url"
+    t.string   "fullname"
+    t.string   "birth_date"
+    t.integer  "gender",      :limit => 11
+    t.string   "postcode"
+    t.string   "country"
+    t.string   "language"
+    t.string   "timezone"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

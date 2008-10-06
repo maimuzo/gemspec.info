@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Index | GEMSPEC.INFO</title>
+<title>Gem:rocketstarter | GEMSPEC.INFO</title>
 <!--
 !!DO NOT DELETE THIS COMMENT!!
 
@@ -14,6 +14,7 @@
 - Free stuff: http://gordonmac.com/downloads/
 -->
 <link href="stylesheets/stylesMain.css" rel="stylesheet" type="text/css" media="all" />
+<link href="stylesheets/customize.css" rel="stylesheet" type="text/css" media="all" />
 <!--[if lt IE 7]>
 <link rel="stylesheet" type="text/css" href="PNGfix.css" />
 <![endif]-->
@@ -130,131 +131,149 @@ function emuJsonP(){
     <div id="wrapper-2">
       <div id="content-top" class="png">&nbsp;</div>
       <div id="wrapper-3">
-      	<div id="content-1">
+        <div id="content-1">
           <div class="content-wrap">
-            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">総合評価</h2>
-            <div style="overflow:hidden;">
+            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">sqld4rについて</h2>
+            <div class="left-rate-wrapper">
+               <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,ffffff&chco=8080ff,ff8080&chl=LOVE&chd=t:0" width="130" height="50" /></div>
+              <div>愛され度(0/0 0人による評価)</div>
+               <div><a href="">+評価</a>  <a href="">-評価</a></div>
+            </div>
+			<div class="tag-name">Tag : ログインするとき, 新Appを作るとき</div>
+			<div class="tag-new"><form class="niceforms"><input name="name" type="text" id="newtagname" class="coolinput" title="○○するとき" size="10" />
+			使うタグ<input type="submit" value="追加" /></form></div>
+			<div class="favorit-new"><form class="niceforms">
+			  <input type="submit" value="お気に入りに追加" /></form></div>
+            <div class="version-select">Version <form class="inline-form"><select name="version">
+              <option value="1">0.1.0</option><option value="2">0.2.0</option></select></form></div>
+            <div class="gem-detail">
+              <h3 class="group-header">バージョン依存情報</h3>
+              <p class="detail-content">The sqld4r is model generator for SQLDesigner(http://ondras. zarovi .cz/sql/demo/).</p>
+              <p><a href="http://sqld4r.rubyforge.org" target="_blank">公式サイト</a></p>
+              <p><a href="" target="_blank">RubyForgeプロジェクトページ</a></p>
               <ul>
-                <li><span>1.</span><span>(99pt)</span><a href="">active_scaffold_generator</a></li>
-                <li><span>2.</span><span>(99pt)</span><a href="">rocketstarter</a></li>
-                <li><span>3.</span><span>(99pt)</span><a href="">adminpage_scaffold_generator</a></li>
-                <li><span>4.</span><span>(99pt)</span><a href="">sqld4r</a></li>
-                <li><span>5.</span><span>(99pt)</span><a href="">sqld4r</a></li>
-                <li><span>6.</span><span>(99pt)</span><a href="">sqld4r</a></li>
-                <li><span>7.</span><span>(99pt)</span><a href="">sqld4r</a></li>
-                <li><span>8.</span><span>(99pt)</span><a href="">sqld4r</a></li>
-                <li><span>9.</span><span>(99pt)</span><a href="">sqld4r</a></li>
-                <li><span>10.</span><span>(99pt)</span><a href="">sqld4r</a></li>
+              	<li>provided by <a href="mailto:maimuzo@gmail.com">maimuzo</a></li>
               </ul>
+              <p>platform : ruby</p>
+              <p>実行可能コマンド : sqld4r</p>
+              <p>最終更新日 : 2008-07-19</p>
+              <h3 class="group-header">インストールメッセージ</h3>
+              <p class="detail-content">1. Set environment valiable if you want...</p>
+              <div style="display:none;">
+<pre>
+  1. Set environment valiable if you want to change a config file path.
+  
+  $ export SQLD4R_CONF=~/.sqld4r
+  
+  - Default is $HOME/.sqld4r
+  
+  2. Create config file.
+  
+  $ sqld4r --init
+  
+  3. Modify default values and command list.
+  
+  $ vi ~/.sqld4r
+  $ vi ~/sqld4r_execute_commands
+  
+  4. Test for setting
+  
+  $ sqld4r --check
+  
+  5. Generate migration files and model files from SQLDesigner xml file.
+  
+  $ cd your-rails-root
+  $ sqld4r /path/to/SQLDesigner.xml
+  
+  For more information on sqld4r, see http://sqld4r.rubyforge.org
+</pre>
+			  </div>
+              <h3 class="group-header">依存関係</h3>
+              <ul>
+              	<li><a href="/gem/hoe/version/1.7.0">hoe(1.7.0)</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="content-wrap">
+			<h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">障害状況</h2>
+            <div class="list-wrapper">
+              <ol>
+                <li>
+                  <div class="commentboxgrey">
+                    <h2 class="comment-title">障害でてます</h2>
+                    <div class="left-rate-wrapper">
+                      <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
+                      <div>役立ち度(0/0 0人による評価)</div>
+                    </div>
+                    <div class="comments-wrapper">
+                      <p>ver0.1.0とxxxx ver2.0.0の組み合わせでエラー発生...</p>
+                    </div>
+                    <div class="comment-date">Trackback by maimuzo at 2008/8/3 19:23:32</div>
+                    <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
+                  </div>
+                </li>
+                <li>
+                  <div class="commentboxgrey">
+                    <h2 class="comment-title">やべーよやーべーよ</h2>
+                    <div class="left-rate-wrapper">
+                      <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
+                      <div>役立ち度(0/0 0人による評価)</div>
+                    </div>
+                    <div class="comments-wrapper">
+                      <p>なんかバージョンアップしたら変なエラーが出るようになったんですけど...</p>
+                    </div>
+                    <div class="comment-date">Trackback by maimuzo at 2008/8/3 19:23:32</div>
+                    <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
+                 </div>
+                </li>
+              </ol>
             </div>
           </div>
         </div>
         <div id="content-2">
           <div class="content-wrap">
-              <div class="content-area">
-                <h2>ログインすると幸せになれるかも知れません…</h2>
+          	<div class="content-area header-wrapper">
+              <div class="content-header">
+               	<h3>短評</h3>
+               	<hr>
+               	<div class="sub-header">Remarks</div>
               </div>
-              <div class="content-area header-wrapper">
+			  <div class="line-group">
+                <h4 class="line-header">このGemは何が出来るの?</h4>
+                <ul class="line-message">
+                  <li>なんだわからんけどすごい(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                  <li>セットアップをらくにしてくれる(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                  <li>ルーチンワークの回避が出来る(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                </ul>
+              </div>
+			  <div class="line-group">
+                <h4 class="line-header">どこが嬉しいの?</h4>
+                <ul class="line-message">
+                  <li>なんだわからんけどすごい(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                  <li>セットアップをらくにしてくれる(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                  <li>ルーチンワークの回避が出来る(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                </ul>
+              </div>
+			  <div class="line-group">
+                <h4 class="line-header">どこが苦手なの?</h4>
+                <ul class="line-message">
+                  <li>なんだわからんけどすごい(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                  <li>セットアップをらくにしてくれる(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                  <li>ルーチンワークの回避が出来る(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                </ul>
+              </div>
+              <div class="line-link">&gt; 全て表示</div>
+			</div>
+          	<div class="content-area header-wrapper">
               	<div class="content-header">
-               	  <h3>新着Gems</h3>
+               	  <h3>GemCasts</h3>
                	  <hr>
-               	  <div class="sub-header">New gems</div>
+               	  <div class="sub-header">Video tutorials</div>
                 </div>
                 <div class="list-wrapper">
                   <ol>
                     <li>
                       <div class="commentboxgrey">
-                        <h2 class="gem-name">rocketstarter</h2>
-                        <div class="summary-wrapper">
-                          <div class="rate-wrapper">
-                            <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=LOVE&chd=t:0" width="130" height="50" /></div>
-                            <div>愛され度(0/0 0人による評価)</div>
-                          </div>
-                          <div class="comments-wrapper">
-                            <p>何:0件 良:0件 悪:0件<br />GemCasts:0件<br />うんちく:0件<br />最新版での障害:0件</p>
-                          </div>
-                        </div>
-                        <div class="tag-name">Tag : ログインするとき, 新Appを作るとき</div>
-                        <div class="comment-date">Last update on 2008/8/3</div>
-                        <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="commentboxgrey">
-                        <h2 class="gem-name">sqld4r</h2>
-                        <div class="summary-wrapper">
-                          <div class="rate-wrapper">
-                            <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=LOVE&chd=t:30" width="130" height="50" /></div>
-                            <div>愛され度(0/0 0人による評価)</div>
-                          </div>
-                          <div class="comments-wrapper">
-                            <p>何:0件 良:0件 悪:0件<br />GemCasts:0件<br />うんちく:0件<br />最新版での障害:0件</p>
-                          </div>
-                        </div>
-                        <div class="tag-name">Tag : ログインするとき, 新Appを作るとき</div>
-                        <div class="comment-date">Last update on 2008/8/3</div>
-                        <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
-                      </div>
-                    </li>
-                  </ol>
-                </div><!-- end of list-wrapper -->
-              </div><!-- end of content-area -->
-              <div class="content-area header-wrapper">
-              	<div class="content-header">
-               	  <h3>新着GemCasts</h3>
-               	  <hr>
-               	  <div class="sub-header">New video tutorials</div>
-                </div>
-                <div class="list-wrapper">
-                  <ol>
-                    <li>
-                      <div class="commentboxgrey">
-                        <h2 class="gem-name">rocketstarter</h2>
-                        <h2 class="comment-title">たいとるるー</h2>
-                        <div class="summary-wrapper">
-                          <div class="rate-wrapper">
-                            <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
-                            <div>役立ち度(0/0 0人による評価)</div>
-                          </div>
-                          <div class="comments-wrapper">
-                            <p>使ってみたら解ったんだけど、実はこのgem使えるかも知れない...</p>
-                          </div>
-                        </div>
-                        <div class="comment-date">Posted by maimuzo at 2008/8/3 19:23:43</div>
-                        <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="commentboxgrey">
-                        <h2 class="gem-name">sqld4r</h2>
-                        <h2 class="comment-title">たいとるるー</h2>
-                        <div class="summary-wrapper">
-                          <div class="rate-wrapper">
-                            <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
-                            <div>役立ち度(0/0 0人による評価)</div>
-                          </div>
-                          <div class="comments-wrapper">
-                            <p>使ってみたら解ったんだけど、実はこのgem使えるかも知れない...</p>
-                          </div>
-                        </div>
-                        <div class="comment-date">Posted by maimuzo at 2008/8/3 19:23:43</div>
-                        <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
-                      </div>
-                    </li>
-                  </ol>
-                </div><!-- end of list-wrapper -->
-              </div><!-- end of con tent-area-->
-              <div class="content-area header-wrapper">
-              	<div class="content-header">
-               	  <h3>新着うんちく</h3>
-               	  <hr>
-               	  <div class="sub-header">New comments</div>
-                </div>
-                <div class="list-wrapper">
-                  <ol>
-                    <li>
-                      <div class="commentboxgrey">
-                        <h2 class="gem-name">sqld4r</h2>
                         <h2 class="comment-title">俺様の話を聞け</h2>
                         <div class="summary-wrapper">
                           <div class="rate-wrapper">
@@ -265,13 +284,40 @@ function emuJsonP(){
                             <p>使ってみたら解ったんだけど、実はこのgem使えるかも知れない...</p>
                           </div>
                         </div>
-                        <div class="comment-date">Direct commented by maimuzo at 2008/8/3 19:23:32</div>
+                        <div class="tag-name">Tag : ログインするとき, 新Appを作るとき</div>
+                        <div class="comment-date">Trackback by maimuzo at 2008/8/3 19:23:32</div>
                         <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
                       </div>
                     </li>
                     <li>
                       <div class="commentboxgrey">
-                        <h2 class="gem-name">sqld4r</h2>
+                         <h2 class="comment-title">俺様の話を聞け</h2>
+                        <div class="summary-wrapper">
+                          <div class="rate-wrapper">
+                            <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
+                            <div>役立ち度(0/0 0人による評価)</div>
+                          </div>
+                          <div class="comments-wrapper">
+                            <p>使ってみたら解ったんだけど、実はこのgem使えるかも知れない...</p>
+                          </div>
+                        </div>
+                        <div class="comment-date">Trackback by maimuzo at 2008/8/3 19:23:32</div>
+                        <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
+                     </div>
+                    </li>
+                  </ol>
+                </div><!-- end of list-wrapper -->
+              </div>
+			  <div class="content-area header-wrapper">
+              	<div class="content-header">
+               	  <h3>うんちく</h3>
+               	  <hr>
+               	  <div class="sub-header">Comments</div>
+                </div>
+                <div class="list-wrapper">
+                  <ol>
+                    <li>
+                      <div class="commentboxgrey">
                         <h2 class="comment-title">俺様の話を聞け</h2>
                         <div class="summary-wrapper">
                           <div class="rate-wrapper">
@@ -286,31 +332,48 @@ function emuJsonP(){
                         <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
                       </div>
                     </li>
+                    <li>
+                      <div class="commentboxgrey">
+                         <h2 class="comment-title">俺様の話を聞け</h2>
+                        <div class="summary-wrapper">
+                          <div class="rate-wrapper">
+                            <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
+                            <div>役立ち度(0/0 0人による評価)</div>
+                          </div>
+                          <div class="comments-wrapper">
+                            <p>使ってみたら解ったんだけど、実はこのgem使えるかも知れない...</p>
+                          </div>
+                        </div>
+                        <div class="comment-date">Trackback by maimuzo at 2008/8/3 19:23:32</div>
+                        <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
+                     </div>
+                    </li>
                   </ol>
                 </div><!-- end of list-wrapper -->
-              </div><!-- end of content-area -->
-          </div><!-- end of content-wrap -->
+              </div>
+          </div>
         </div>
         <div id="content-3">
           <div class="content-wrap login-indicator">
-          	<h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">貴様証明</h2>
+            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">貴様証明</h2>
             <p>OpenID:maimuzo</p>
             <div class="mypage-link"><a href="mypage.html">&gt; 自己管理</a> <a href="/logout">&gt; ログアウト</a></div>
             <form class="niceforms">
-            OpenID:<br /><input type="text" class="coolinput" title="Input your OpenID!" />
-            <input type="submit"  value="Go" />
-			</form>
+              OpenID:<br />
+              <input type="text" class="coolinput" title="Input your OpenID!" />
+              <input type="submit"  value="Go" />
+            </form>
           </div>
           <div class="content-wrap search-indicator">
             <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">検索</h2>
             <form accept-charset="UTF-8" action="index.html" method="get">
               <div class="niceforms">
-              	<input type="text" name="searchthis" id="searchthis" size="15" class="coolinput" title="fulltext search" />
-              	<input type="button" id="search-detail-toggle" value="▽" />
-	          </div>
+                <input type="text" name="searchthis" id="searchthis" size="15" class="coolinput" title="fulltext search" />
+                <input type="button" id="search-detail-toggle" value="▽" />
+              </div>
               <div id="search-detail-panel" style="display:none;">
                 <div id="niceforms-select">
-              	  <select name="license" id="license" class="coolinput">
+                  <select name="license" id="license" class="coolinput">
                     <option value="*">問わない</option>
                     <option value="gpl">GPL</option>
                     <option value="mit">MIT</option>
@@ -319,30 +382,31 @@ function emuJsonP(){
                   </select>
                 </div>
                 <div class="niceforms">
-                	<input name="tag" type="text" class="coolinput" title="search by tags" /><br />
+                  <input name="tag" type="text" class="coolinput" title="search by tags" />
+                  <br />
                 </div>
                 <fieldset id="last-update-slider">
-                    <div>最新版更新日</div>
-                    <label for="from" class="sentence">From:</label>
-                    <select name="from" id="from">
-                        <option value="more" selected="selected">問わない</option>
-                        <option value="1year">1年前</option>
-                        <option value="6mon">6ヶ月前</option>
-                        <option value="1mon">1ヶ月前</option>
-                        <option value="now">現在</option>
-                    </select>            
-                    <label for="to" class="sentence">To:</label>
-                    <select name="to" id="to">
-                        <option value="more">問わない</option>
-                        <option value="1year">1年前</option>
-                        <option value="6mon">6ヶ月前</option>
-                        <option value="1mon">1ヶ月前</option>
-                        <option value="now" selected="selected">現在</option>
-                    </select>
+                <div>最新版更新日</div>
+                  <label for="from" class="sentence">From:</label>
+                <select name="from" id="from">
+                  <option value="more" selected="selected">問わない</option>
+                  <option value="1year">1年前</option>
+                  <option value="6mon">6ヶ月前</option>
+                  <option value="1mon">1ヶ月前</option>
+                  <option value="now">現在</option>
+                </select>
+                <label for="to" class="sentence">To:</label>
+                <select name="to" id="to">
+                  <option value="more">問わない</option>
+                  <option value="1year">1年前</option>
+                  <option value="6mon">6ヶ月前</option>
+                  <option value="1mon">1ヶ月前</option>
+                  <option value="now" selected="selected">現在</option>
+                </select>
                 </fieldset>
               </div>
               <div class="niceforms">
-              	<input type="submit" value="Go" />
+                <input type="submit" value="Go" />
               </div>
             </form>
           </div>
@@ -352,11 +416,11 @@ function emuJsonP(){
           </div>
           <div id="LPOToggle" class="content-wrap" style="display:none;">
             <form class="niceform">
-            <input type="button" value="オススメをもう一度見る" onclick="LPOShowAgain();" />
-			</form>
+              <input type="button" value="オススメをもう一度見る" onclick="LPOShowAgain();" />
+            </form>
           </div>
           <div class="content-wrap">
-          	<input type="button" value="LPO表示テスト" onclick="emuJsonP();" />
+            <input type="button" value="LPO表示テスト" onclick="emuJsonP();" />
           </div>
         </div>
         <div id="content-bottom">&nbsp;</div>
@@ -393,7 +457,6 @@ function emuJsonP(){
     	<li>jgrowl</li>
     	<li>simplemodal</li>
   </ul>
-    <p>※名称は<strong>勢いを大事</strong>にしていますので、タグクラウドの事を「思考領域」とかは、あまり大きい声で言わない方が良いでしょう。</p>
 </div>
 <div id="LPOPanel" class="top-left"></div>
 </body>

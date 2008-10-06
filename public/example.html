@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>jQuery Remix Example</title>
+
+<!-- 定型。フォルダ構成やバージョンに変化がなければ変更する必要はない。または不要なものを行毎に削除 -->
+<script type="text/javascript" src="javascripts/jquery-1.2.6.min.js"></script>
+<script type="text/javascript">
+var $j = jQuery.noConflict();
+</script>
+<script type="text/javascript" src="javascripts/interface.js"></script>
+<script type="text/javascript" src="javascripts/jquery.ui.all.js"></script>
+<script type="text/javascript" src="javascripts/jglycy-1.0.js"></script>
+<script type="text/javascript" src="javascripts/jforms.1.0.js"></script>
+<link rel="stylesheet" type="text/css" href="stylesheets/niceforms-default.css" media="screen" />
+<script type="text/javascript" src="javascripts/jquery.coolinput.js"></script>
+<script type="text/javascript" src="javascripts/jquery.dimensions.js"></script>
+<script type="text/javascript" src="javascripts/jquery.gradient.js"></script>
+<script type="text/javascript" src="javascripts/ui.stars.js"></script>
+<link rel="stylesheet" type="text/css" href="stylesheets/ui.stars.css">
+<script type="text/javascript" src="javascripts/jquery.curvycorners.min.js"></script>
+<!-- 定型。フォルダ構成やバージョンに変化がなければ変更する必要はない。または不要なものを行毎に削除 -->
+
+<style>
+body
+{
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	background-color:#cccccc;
+}
+.panel{
+	background-color:#ffffff;
+	width:400px;
+	margin: 20px auto;
+	padding:10px 10px;
+	text-align:left;
+}
+h1{
+	background-color:#ccccFF;
+	padding-left: 10px;
+}
+.coolinput {
+	color:#333333;
+}
+input.pre-input{ 
+	color:#bbbbbb;
+}
+</style>
+<script type="text/javascript">
+$j(document).ready( function() 
+{
+	// for form
+	$j('form.niceforms').jForms({listSize:20, imagePath:'./images/niceforms/default/'});
+	$j('input.coolinput').coolinput({blurClass: 'pre-input'});	
+	// h1
+	$j('.corner').corner();
+} );
+</script>
+</head>
+
+<body>
+<div class="panel">
+  <h1 jg="gradient" class="corner" jg:gradient="from:'ccccff', to:'ffffff', direction:'vertical', length:100, position: 'right'">タイトル</h1>
+    <form class="niceforms">
+      ID:<input type="text" class="coolinput" title="Input your ID!" /><br />
+      Password:<input type="text" class="coolinput" title="Input your Password!" /><br />
+      今の気分: <select>
+        <option value="1">あちょー</option>
+        <option value="2">でたよ</option>
+        <option value="3">とんでけ</option>
+      </select><br />
+      評価: <span id="stars-cap"></span> 
+      <div id="stars-wrapper" jg="stars" jg:stars="captionEl: $j('#stars-cap')"> 
+        <input name="newrate" value="1" title="ダメダメ" type="radio"> 
+        <input name="newrate" value="2" title="ちょっとなぁ" type="radio"> 
+        <input name="newrate" value="3" title="ふつう" type="radio"> 
+        <input name="newrate" value="4" title="いいね" type="radio"  checked="checked"> 
+        <input name="newrate" value="5" title="サイコー" type="radio">
+      </div><br /> 
+      <input type="submit" value="Go" />
+    </form>
+</div><!-- end of panel -->
+</body>
+</html>

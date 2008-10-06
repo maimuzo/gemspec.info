@@ -1,0 +1,264 @@
+/*
+!!DO NOT DELETE THIS COMMENT!!
+
+Custom style from styleMain.css
+
+"GemSPEC v1.0" (2008/8/3) (C) Yusuke Ohmichi(Maimuzo).
+- Website: http://gemspec.info/
+----------------------------------------------------*/
+
+
+/*
+@General layout
+----------------------------------------------------*/
+
+#content-main
+{
+	float: left;
+	width: 550px;
+	font-size: .75em;
+	margin: 0 15px 0 0;
+	padding: 0;
+}
+
+
+
+
+
+.login-indicator {
+
+}
+
+.search-indicator {
+}
+
+.tag-indicator {
+
+}
+
+form.inline-form, form.inline-form div.selectArea{
+	display:inline;
+}
+
+/*
+@title 
+----------------------------------------------------*/
+
+.gem-title
+{
+	background: transparent url(/images/bg_navlist-top.jpg) no-repeat top center;
+	margin: 0;
+	padding: 12px 0 0 0;
+}
+
+
+.gem-value
+{
+	padding: 0 0 0 5px;
+}
+
+h2.part-of-title {
+	background-color:#c4bfac;
+	padding-left:10px;
+	margin-bottom:15px;
+/*	color: #ffffff; */
+	font-weight:bold;
+}
+
+div.content-area{
+
+}
+
+/*
+@Article header form styles
+----------------------------------------------------*/
+
+div.content-header .header-wrapper{
+	text-align:center;
+	width:100%;
+}
+
+div.content-header{
+	width:150px;
+	text-align:center;
+	margin: 0 auto 10px auto;
+}
+
+/*
+Gem detail(group header) form styles
+----------------------------------------------------*/
+
+div.content-header h3{
+	margin-bottom: 0;
+    font-size:1.20em;
+	font-weight:bold;
+}
+
+div.content-header hr{
+	margin:0 0 0 0;
+}
+
+div.content-header div.sub-header{
+	margin-top: 0;
+    font-size:0.75em;
+}
+
+div.search-condition {
+	margin-left: 10px;
+}
+
+div.pagenate {
+	text-align:right;
+	margin-right:30px;
+}
+
+/*
+Gem detail(1 line message) form styles
+----------------------------------------------------*/
+
+
+div.line-group ul.line-message li {
+	margin-left:10px;
+}
+
+div.line-group .line-header {
+	font-weight:bold;
+	font-size:1.0em;
+}
+
+div.line-link{
+	text-align:right;
+	margin-right:30px;
+}
+
+
+/*
+Gem detail(for version and dependence) form styles
+----------------------------------------------------*/
+
+div.gem-detail .group-header {
+	font-weight:bold;
+	font-size:1.0em;
+}
+
+div.left-rate-wrapper {
+	text-align:center;
+}
+
+#newtagname {
+	width:60px;
+}
+
+/*
+Gems and comments form styles
+----------------------------------------------------*/
+
+.list-wrapper ol, .list-wrapper li {
+	list-style-image:none;
+	list-style-position:outside;
+	list-style-type:none;
+	text-align:left;
+	margin:0;
+	padding:0;
+}
+
+
+.list-wrapper .commentboxgrey, div.line-group, p.detail-content {
+    background-color:#F8F8F8;
+    border-bottom:1px solid #DFDFDF;
+    border-top:1px solid #DFDFDF !important;
+    clear:both;
+    margin-top:-1px;
+    padding:8px 8px 1px;
+	color:#333333;
+}
+
+.list-wrapper .gem-name {
+    font-size:1.2em;
+    font-weight:bold;
+	margin:0;
+	padding:0;
+}
+
+.list-wrapper .comment-title {
+    font-size:1.0em;
+	margin:0;
+	padding:0;
+}
+
+.list-wrapper .comment-name a{
+    text-decoration:underline;
+}
+
+.list-wrapper .comment-date {
+    font-size:0.75em;
+}
+
+.list-wrapper .comment-text {
+    font-size:1em;
+}
+
+.list-wrapper div.summary-wrapper{
+	height:80px;
+}
+
+.list-wrapper div.rate-wrapper{
+	width:200px;
+	text-align:center;
+	float:left;
+}
+
+.list-wrapper div.comment-date, .list-wrapper div.link-wrapper{
+	text-align:right;
+}
+
+/*
+@Search form styles
+----------------------------------------------------*/
+
+.coolinput {
+	width:120px;
+}
+
+input.pre-input{ 
+	color:#bbbbbb;
+}
+
+div.mypage-link {
+	text-align:right;
+	margin-right:30px;
+}
+/*
+@licenser panel
+----------------------------------------------------*/
+
+#licenserPanel, div#modalContainer{
+	color:#333333;
+	text-align:left;
+	font-size:0.75em;
+}
+
+#licenserPanel h2, div#modalContainer h2{
+	margin-left:1em;
+	margin-right:1em;
+	text-align:center;
+	font-size:1.25em;
+	font-weight:bold;
+}
+
+#licenserPanel h3, div#modalContainer h3{
+	margin-left:2em;
+	margin-right:2em;
+	font-size:1em;
+	font-weight:bold;
+}
+
+#licenserPanel p, div#modalContainer p{
+	margin-left:3em;
+	margin-right:3em;
+}
+
+#licenserPanel ul, div#modalContainer ul{
+	margin-left:3em;
+	margin-right:3em;
+}

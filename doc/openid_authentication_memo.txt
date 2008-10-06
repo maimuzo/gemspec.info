@@ -37,6 +37,10 @@ class ApplicationController < ActionController::Base
   def login?
     session[:user_id]
   end
+
+  def logined_user
+    User.find(session[:user_id])
+  end
 end
 
 **ログインが必要なページを指定する
@@ -111,8 +115,8 @@ protected
     # need discover_status_patch for this code
     include OpenIdAuthentication_with_discover_status_patch
     authenticate_with_open_id(params[:openid_url],
-                              :required => @@required.keys
-                              :optional => @@optional.keys) do
+                              {:required => @@required.keys,
+                              :optional => @@optional.keys}) do
       |status, identity_url, registration, discover_status|
 
       case status

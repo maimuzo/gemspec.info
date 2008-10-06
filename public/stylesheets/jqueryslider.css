@@ -1,0 +1,28 @@
+/*
+p { clear:both; }
+fieldset { border:0; margin-top: 1em;}	
+label { margin:0; font-weight: normal;}
+*/
+
+#last-update-slider { margin:0; padding:0; border:0; }
+
+/* slider widget */
+
+.sliderControl { position: relative;  height: 50px; clear: both; margin-top: 10px; margin-bottom:40px; }
+.sliderIndicator {width:36px; height:50px; top: 0; z-index: 3; background:url(../images/slider/slider_pull.gif) no-repeat center bottom; position: absolute;}
+.sliderIndicator span {display: block; font-size: .9em; color: #428b1d; border: 2px solid #428b1d; background: #fff; padding: 2px; height: 11px; text-align:center; }
+
+.xScale {left: 18px; top: 50px; z-index: 1; }
+.xScale, .xScale * {margin: 0; padding: 0; position: relative;}
+.xScale dd, .xScale li {position: absolute; top: 0; text-align: left; list-style: none; font-size:1em; }
+.xScale span {position: absolute; top: .5em; }
+.xScale dd.morning, .xScale li.morning {color: #69a535; border-top: 4px solid #69a535;}
+.xScale dd.evening, .xScale li.evening {color: #428b1d; border-top: 4px solid #428b1d;}
+.xScale dt {position: absolute; top: 3em; color: #808080; text-transform: uppercase; font-size: .9em;}
+.xScale dt.morning {left: 0; color: #69a535;}
+.xScale dt.evening {right: 36px; color: #428b1d;}
+div.sliderSpan {position: absolute; z-index: 0; top: 25px; left: 18px; height: 15px; overflow: hidden; width: 500px;background: #d1d1cd url(../images/slider/slider_span_bg.gif) center no-repeat;}
+div.blotA, div.blotB {position: absolute; left: 0; width: 0;  z-index: 99999; top: 0; border-top: 15px solid #fff; }
+div.scale {display: block; position: absolute; left: 18px; top: 47px; z-index: 2; border-bottom: 1px solid #000; height: 3px;}
+div.scale span {position: absolute; border-right: 1px solid #000; height: 3px;top: 4px; font-size: 0; line-height: 0;}
+p.caption {font-size: 1em; font-style: italic; margin-top: 6em;}

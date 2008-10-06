@@ -1,6 +1,5 @@
 # use unpacked gems from vender directory.
-require 'openid_fu_generator-0.0.1/lib/openid_fu'
-require 'ruby-openid-2.0.4/lib/openid'
+require 'ruby-openid-2.1.2/lib/openid'
 
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
@@ -17,9 +16,6 @@ class ApplicationController < ActionController::Base
   # from your application log (in this case, all fields with names like "password"). 
   # filter_parameter_logging :password
   
-  # by openid_fu
-  include AuthenticatedSystem
-  before_filter :login_from_cookie
 
   
 end

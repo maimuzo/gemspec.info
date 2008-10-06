@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081005085607) do
+ActiveRecord::Schema.define(:version => 20081006041949) do
 
   create_table "dependencies", :force => true do |t|
     t.integer  "version_id", :limit => 11
@@ -48,23 +48,19 @@ ActiveRecord::Schema.define(:version => 20081005085607) do
   add_index "general_points", ["id"], :name => "index_general_points_on_id"
   add_index "general_points", ["rubygem_id"], :name => "index_general_points_on_rubygem_id"
 
-  create_table "open_id_associations", :force => true do |t|
-    t.binary   "server_url"
-    t.string   "handle"
-    t.binary   "secret"
-    t.integer  "issued",     :limit => 11
-    t.integer  "lifetime",   :limit => 11
-    t.string   "assoc_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "open_id_authentication_associations", :force => true do |t|
+    t.integer "issued",     :limit => 11
+    t.integer "lifetime",   :limit => 11
+    t.string  "handle"
+    t.string  "assoc_type"
+    t.binary  "server_url"
+    t.binary  "secret"
   end
 
-  create_table "open_id_nonces", :force => true do |t|
-    t.string   "server_url",               :null => false
-    t.integer  "timestamp",  :limit => 11, :null => false
-    t.string   "salt",                     :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "open_id_authentication_nonces", :force => true do |t|
+    t.integer "timestamp",  :limit => 11, :null => false
+    t.string  "server_url"
+    t.string  "salt",                     :null => false
   end
 
   create_table "rubygems", :force => true do |t|
@@ -89,26 +85,6 @@ ActiveRecord::Schema.define(:version => 20081005085607) do
   create_table "specs", :force => true do |t|
     t.integer  "version_id", :limit => 11
     t.text     "yaml"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "users", :force => true do |t|
-    t.string   "nickname"
-    t.string   "email"
-    t.string   "claimed_id"
-    t.string   "crypted_password",           :limit => 40
-    t.string   "salt",                       :limit => 40
-    t.string   "remember_token"
-    t.datetime "remember_token_expires_at"
-    t.string   "open_id_claimed_identifier"
-    t.string   "fullname"
-    t.string   "birth_date"
-    t.integer  "gender",                     :limit => 1
-    t.string   "postcode"
-    t.string   "country"
-    t.string   "language"
-    t.string   "timezone"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

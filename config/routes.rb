@@ -1,6 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :users
-
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
@@ -37,11 +35,6 @@ ActionController::Routing::Routes.draw do |map|
 
   # See how all your routes lay out with "rake routes"
   
-  # by openid_fu
-  map.resource :sessions, :collection => { :begin => :post, :complete => :get }
-  map.signup '/signup', :controller => 'users', :action => 'new'
-  map.login  '/login',  :controller => 'sessions', :action => 'new'
-  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
 
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'

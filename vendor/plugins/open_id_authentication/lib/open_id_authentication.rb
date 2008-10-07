@@ -21,6 +21,10 @@ module OpenIdAuthentication
 
   class InvalidOpenId < StandardError
   end
+  
+  # add by Maimuzo
+  class DenyProvider < StandardError
+  end
 
   class Result
     ERROR_MESSAGES = {
@@ -38,7 +42,7 @@ module OpenIdAuthentication
       @code = code
     end
 
-    # add 
+    # add by Maimuzo
     def result
       @code
     end
@@ -95,22 +99,38 @@ module OpenIdAuthentication
     end
 
   private
+    
+    # modified by Maimuzo
     def begin_open_id_authentication(identity_url, options = {})
       return_to = options.delete(:return_to)
       open_id_request = open_id_consumer.begin(identity_url)
+      endpoint_url = open_id_request.endpoint.server_url
+      if options.has_key?(:whitelist) and options.has_key?(:target_column)
+        unless options[:whitelist].send("find_by_#{options[:target_column]}", endpoint_url)
+          raise DenyProvider, "#{identity_url}'s OP server(#{endpoint_url}) is denyed"
+        end
+      elsif options.has_key?(:blacklist) and options.has_key?(:target_column)
+        if options[:blacklist].send("find_by_#{options[:target_column]}", endpoint_url)
+          raise DenyProvider, "#{identity_url}'s OP server(#{endpoint_url}) is denyed"
+        end
+      end
       add_simple_registration_fields(open_id_request, options)
       redirect_to(open_id_redirect_url(open_id_request, return_to))
     rescue OpenID::OpenIDError, Timeout::Error => e
       logger.error("[OPENID] #{e}")
       yield Result[:missing], identity_url, nil
+    rescue DenyProvider => e
+      logger.error("[OPENID] #{e}")
+      yield Result[:found_in_whitelist_or_blacklist], identity_url, nil
     end
 
+    # modified by Maimuzo
     def complete_open_id_authentication
       params_with_path = params.reject { |key, value| request.path_parameters[key] }
       params_with_path.delete(:format)
       open_id_response = timeout_protection_from_identity_server { open_id_consumer.complete(params_with_path, requested_url) }
       begin
-        identity_url     = normalize_url(open_id_response.endpoint.claimed_id) if open_id_response.endpoint.claimed_id
+        identity_url = normalize_url(open_id_response.endpoint.claimed_id) if open_id_response.endpoint.claimed_id
       rescue
         yield Result[:double_auth], identity_url, nil
       end

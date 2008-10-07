@@ -4,14 +4,14 @@ class SessionsController < ApplicationController
   @@default_page = "/"
 
   # require property from a OpenID provider
-  # [:(User model property) => "(OpenID provider property)"]
+  # [:(User model property) => "(OpenID provider property in sreg)"]
   @@required = {
     :nickname => "nickname",
     :email => "email"
   }
 
   # optional property from a OpenID provider (sreg)
-  # [:(User model property) => "(OpenID provider property)"]
+  # [:(User model property) => "(OpenID provider property in sreg)"]
   @@optional = {
     :fullname => "fullname",
     :birth_day => "dob",
@@ -49,20 +49,18 @@ class SessionsController < ApplicationController
 protected
 
   def open_id_authentication
-
-    authenticate_with_open_id(params[:openid_url],
-                              {:required => @@required.values.map {|str| str.to_sym},
-                              :optional => @@optional.values.map {|str| str.to_sym}}) do
-      |status, identity_url, registration|
-
+    # request options
+    # :whitelist and :blacklist require ActiveRecord class
+    options = {
+      :required => @@required.values.map {|str| str.to_sym},
+      :optional => @@optional.values.map {|str| str.to_sym},
+      :whitelist => TrastedOpenidProvider,
+      :target_column => "endpoint_url"
+    }
+    authenticate_with_open_id(params[:openid_url], options) do |status, identity_url, registration|
       case status.result
-      when :found_in_whitelist
-        #TODO:
-        #server_url = registration.endpoint.server_url
-        #if not TrastedOpenidProvider.find_by_url(server_url)
-          # 信頼していないOPでのログインは拒否する
-          #failed_login "Sorry, untrusted OpenID provider: #{server_url}"
-        failed_login "Sorry, the OpenID server is blocked"
+      when :found_in_whitelist_or_blacklist
+        failed_login "Sorry, the OpenID server is blocked by the white list"
       when :double_auth
         failed_login "Error, detect a double autentication"
       when :missing
@@ -73,11 +71,12 @@ protected
         failed_login "Sorry, the OpenID verification failed"
       when :successful
         if @current_user = User.find_by_claimed_url(identity_url)
-          failed_login "Sorry, this identity URL already exists"
+          successful_login
         else
           @current_user = User.new
           assign_registration_attributes!(registration)
           @current_user.claimed_url = identity_url
+          @current_user.nickname = identity_url.delete(".+://")[0..8] if @current_user.nickname.blank?
 
           if @current_user.save
             successful_login

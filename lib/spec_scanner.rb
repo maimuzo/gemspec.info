@@ -44,13 +44,16 @@ class SpecScanner
       exit(1)
     end
     @scaned_gem_and_versions = []
-    lines.map do |line|
-      next if "*** REMOTE GEMS ***" == line or "" == line
+    lines.each do |line|
+      puts "scaned line : #{line}" if @verbose
+      next if "*** REMOTE GEMS ***" == line or "" == line or /Bulk updating/ =~ line
       gem_name_and_versions = line.scan(/^(.+)\s\((.+)\)$/).first
       gem_name = gem_name_and_versions[0].strip.downcase
       versions = gem_name_and_versions[1].split(",").map do |version| version.strip end
       #古い物から登録する
       versions.reverse!
+      puts "parsed gem name : " + line if @verbose
+      puts "parsed versions : " + versions.join(', ') if @verbose
       @scaned_gem_and_versions << {:gem => gem_name, :versions => versions}
     end
     self

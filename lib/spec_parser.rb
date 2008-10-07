@@ -19,7 +19,21 @@ class SpecParser < SpecScanner
     @scaned_spec_array = []
     @added_spec_array = []
   end
-    
+  
+  
+  def load_from_ar
+    @scaned_gem_and_versions = []
+    rubygems = Rubygems.find(:all)
+    rubygems.each do |rubygem|
+      versions = rubygem.versions
+      array_version = []
+      versions.each do |version|
+        array_version << version.version
+      end
+      @scaned_gem_and_versions << {:gem => rubygem.name, :versions => array_version}
+    end
+  end
+  
   # add a unknown a gem, a version, a spec yaml, and a detail
   # 未知のgem、version、yaml形式のspec、詳細を追加する
   def update_spec

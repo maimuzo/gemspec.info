@@ -1,0 +1,2 @@
+class WhatIsThis < Abstract
+end

@@ -1,0 +1,2 @@
+class Weakness < Abstract
+end

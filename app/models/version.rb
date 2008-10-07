@@ -12,6 +12,8 @@ class Version < ActiveRecord::Base
   validates_associated :rubygem
   
   acts_as_list :scope => :rubygem_id
+  acts_as_commentable
+
   
   def before_validation
     fill_gemversion

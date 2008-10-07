@@ -3,16 +3,11 @@
             <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">総合評価</h2>
             <div style="overflow:hidden;">
               <ul>
-                <li><span>1.</span><span>(99pt)</span><a href="">active_scaffold_generator</a></li>
-                <li><span>2.</span><span>(99pt)</span><a href="">rocketstarter</a></li>
-                <li><span>3.</span><span>(99pt)</span><a href="">adminpage_scaffold_generator</a></li>
-                <li><span>4.</span><span>(99pt)</span><a href="">sqld4r</a></li>
-                <li><span>5.</span><span>(99pt)</span><a href="">sqld4r</a></li>
-                <li><span>6.</span><span>(99pt)</span><a href="">sqld4r</a></li>
-                <li><span>7.</span><span>(99pt)</span><a href="">sqld4r</a></li>
-                <li><span>8.</span><span>(99pt)</span><a href="">sqld4r</a></li>
-                <li><span>9.</span><span>(99pt)</span><a href="">sqld4r</a></li>
-                <li><span>10.</span><span>(99pt)</span><a href="">sqld4r</a></li>
+                <% rank = 0  -%>
+                <% general_ranks.each do |ranking| -%>
+                <% rank += 1 -%>
+                <li><span><%= rank %></span><span>(<%=h ranking.point %>pt)</span><%= link_to(sanitize(ranking.rubygem.name), "/rubygems/#{sanitize(ranking.rubygem.to_param)}").untaint %></li>
+                <% end -%>
               </ul>
             </div>
           </div>

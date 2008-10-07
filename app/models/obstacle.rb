@@ -1,0 +1,2 @@
+class Obstacle < Comment
+end

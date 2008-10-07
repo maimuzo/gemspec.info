@@ -113,6 +113,8 @@ function emuJsonP(){
 	eval('LPOCallback([ { "message" : "今日のオススメは×××です。興味ある方はクリックしてください", "url" : "gem.html" },  { "message" : "今日のオススメは○○○です。興味ある方はクリックしてください", "url" : "mypage.html" }, { "message" : "今日のオススメは無いので天気予報です。晴れです。", "url" : "" }, { "message" : "今日のオススメは無いので天気予報です。曇りです。", "url" : "" } ])');
 }
 </script>
+<%= stylesheet_link_tag 'acts_as_taggable_stylesheet' %>
+
 </head>
 <body>
 <div id="wrapper-body">
@@ -201,7 +203,7 @@ function emuJsonP(){
           </div>
           <div class="content-wrap tag-indicator">
             <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">問題領域</h2>
-            <p><a>ログインするとき</a> <a>新Appを作るとき</a> <a>ツリーを表示するとき</a> <a>RSSを作るとき</a> <a>ファイルをアップロードするとき</a> <a>管理画面を作るとき</a> <a>ジェネレートするとき</a> </p>
+            <p><%= tag_cloud %></p>
           </div>
           <div id="LPOToggle" class="content-wrap" style="display:none;">
             <form class="niceform">

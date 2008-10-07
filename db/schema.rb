@@ -9,7 +9,36 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081006133506) do
+ActiveRecord::Schema.define(:version => 20081007071150) do
+
+  create_table "abstracts", :force => true do |t|
+    t.integer  "user_id",      :limit => 11
+    t.integer  "rubygem_id",   :limit => 11
+    t.text     "message"
+    t.string   "type",                                                      :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "rating_count", :limit => 11
+    t.integer  "rating_total", :limit => 10, :precision => 10, :scale => 0
+    t.decimal  "rating_avg",                 :precision => 10, :scale => 2
+  end
+
+  create_table "comments", :force => true do |t|
+    t.integer  "user_id",          :limit => 11
+    t.string   "title",                                                         :default => ""
+    t.text     "comment"
+    t.integer  "commentable_id",   :limit => 11,                                :default => 0,  :null => false
+    t.string   "commentable_type", :limit => 15,                                :default => "", :null => false
+    t.string   "nico_content_key",                                              :default => ""
+    t.string   "url",                                                           :default => ""
+    t.string   "type",                                                                          :null => false
+    t.string   "method",                                                                        :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "rating_count",     :limit => 11
+    t.integer  "rating_total",     :limit => 10, :precision => 10, :scale => 0
+    t.decimal  "rating_avg",                     :precision => 10, :scale => 2
+  end
 
   create_table "dependencies", :force => true do |t|
     t.integer  "version_id", :limit => 11
@@ -40,6 +69,14 @@ ActiveRecord::Schema.define(:version => 20081006133506) do
   add_index "details", ["id"], :name => "index_details_on_id"
   add_index "details", ["version_id"], :name => "index_details_on_version_id"
 
+  create_table "favorites", :force => true do |t|
+    t.integer  "user_id",        :limit => 11
+    t.string   "favorable_type", :limit => 30
+    t.integer  "favorable_id",   :limit => 11
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "general_points", :force => true do |t|
     t.integer "rubygem_id", :limit => 11
     t.integer "point",      :limit => 11
@@ -67,6 +104,9 @@ ActiveRecord::Schema.define(:version => 20081006133506) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "rating_count", :limit => 11
+    t.integer  "rating_total", :limit => 10, :precision => 10, :scale => 0
+    t.decimal  "rating_avg",                 :precision => 10, :scale => 2
   end
 
   add_index "rubygems", ["id"], :name => "index_rubygems_on_id"
@@ -89,6 +129,29 @@ ActiveRecord::Schema.define(:version => 20081006133506) do
     t.datetime "updated_at"
   end
 
+  create_table "taggings", :force => true do |t|
+    t.integer "tag_id",        :limit => 11
+    t.integer "taggable_id",   :limit => 11
+    t.string  "taggable_type"
+    t.integer "user_id",       :limit => 11
+    t.integer "rating_count",  :limit => 11
+    t.integer "rating_total",  :limit => 10, :precision => 10, :scale => 0
+    t.decimal "rating_avg",                  :precision => 10, :scale => 2
+  end
+
+  add_index "taggings", ["tag_id", "taggable_type"], :name => "index_taggings_on_tag_id_and_taggable_type"
+  add_index "taggings", ["user_id", "tag_id", "taggable_type"], :name => "index_taggings_on_user_id_and_tag_id_and_taggable_type"
+  add_index "taggings", ["taggable_id", "taggable_type"], :name => "index_taggings_on_taggable_id_and_taggable_type"
+  add_index "taggings", ["user_id", "taggable_id", "taggable_type"], :name => "index_taggings_on_user_id_and_taggable_id_and_taggable_type"
+
+  create_table "tags", :force => true do |t|
+    t.string  "name"
+    t.integer "taggings_count", :limit => 11, :default => 0, :null => false
+  end
+
+  add_index "tags", ["name"], :name => "index_tags_on_name"
+  add_index "tags", ["taggings_count"], :name => "index_tags_on_taggings_count"
+
   create_table "trasted_openid_providers", :force => true do |t|
     t.string   "endpoint_url"
     t.datetime "created_at"
@@ -100,7 +163,7 @@ ActiveRecord::Schema.define(:version => 20081006133506) do
     t.string   "email"
     t.string   "claimed_url"
     t.string   "fullname"
-    t.string   "birth_date"
+    t.string   "birth_day"
     t.integer  "gender",      :limit => 11
     t.string   "postcode"
     t.string   "country"

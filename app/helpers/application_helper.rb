@@ -7,4 +7,9 @@ module ApplicationHelper
   def logined_user
     User.find(session[:user_id])
   end
+  
+  # for left bar
+  def general_ranks
+    GeneralPoint.find(:all, :order => "point DESC", :limit => 20)
+  end
 end

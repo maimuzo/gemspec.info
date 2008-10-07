@@ -41,6 +41,11 @@ ActionController::Routing::Routes.draw do |map|
   map.login  '/login',  :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   
+  # acts_as_taggable_redux
+  map.resource :tags
+  map.resource :rubygems
+  map.resource :versions
+
 
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'

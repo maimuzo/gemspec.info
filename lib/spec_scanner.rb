@@ -52,7 +52,7 @@ class SpecScanner
       versions = gem_name_and_versions[1].split(",").map do |version| version.strip end
       #古い物から登録する
       versions.reverse!
-      puts "parsed gem name : " + line if @verbose
+      puts "parsed gem name : " + gem_name if @verbose
       puts "parsed versions : " + versions.join(', ') if @verbose
       @scaned_gem_and_versions << {:gem => gem_name, :versions => versions}
     end

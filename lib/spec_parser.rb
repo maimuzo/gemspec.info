@@ -8,6 +8,7 @@ require "yaml"
 # script/runner 'SpecParser.new.scan.add_unknown_gem_versions.update_spec'
 # script/runner 'SpecParser.new(true).scan.add_unknown_gem_versions'
 # script/runner 'SpecParser.new(true, true).scan.update_spec'
+# script/runner 'SpecParser.new(true, true).load_from_ar.update_spec'
 #
 class SpecParser < SpecScanner
   
@@ -20,10 +21,10 @@ class SpecParser < SpecScanner
     @added_spec_array = []
   end
   
-  
+  # generate @scaned_gem_and_versions from Rubygem and Version(ActiveRecord)
   def load_from_ar
     @scaned_gem_and_versions = []
-    rubygems = Rubygems.find(:all)
+    rubygems = Rubygem.find(:all)
     rubygems.each do |rubygem|
       versions = rubygem.versions
       array_version = []
@@ -32,6 +33,7 @@ class SpecParser < SpecScanner
       end
       @scaned_gem_and_versions << {:gem => rubygem.name, :versions => array_version}
     end
+    puts "loaded gem name and version" if @verbose
   end
   
   # add a unknown a gem, a version, a spec yaml, and a detail

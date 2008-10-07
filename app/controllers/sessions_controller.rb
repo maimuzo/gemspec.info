@@ -76,7 +76,7 @@ protected
           @current_user = User.new
           assign_registration_attributes!(registration)
           @current_user.claimed_url = identity_url
-          @current_user.nickname = identity_url.delete(".+://")[0..8] if @current_user.nickname.blank?
+          @current_user.nickname = identity_url.delete("http://")[0..8] if @current_user.nickname.blank?
 
           if @current_user.save
             successful_login

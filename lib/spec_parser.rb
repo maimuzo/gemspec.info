@@ -62,6 +62,7 @@ class SpecParser < SpecScanner
         # もしspecをキャッシュしてなければ、取得して保存する
         if version.spec.nil?
           spec_yaml = get_unknown_spec(rubygem, version)
+          spec_yaml = remove_dust(spec_yaml)
           version.create_spec(:yaml => spec_yaml)
           added_spec_counter(version.gemversion)
           puts "get the spec from a command line, and save it : #{line[:gem]}[#{version.version}]" if @verbose
@@ -78,12 +79,12 @@ private
   # specの解析と、保存または上書き
   def parse(version, spec_yaml_source)
     geminfo = YAML.load(spec_yaml_source)
-    puts "spec : " + geminfo.inspect if @verbose and geminfo == false
+    puts "spec : " + geminfo.inspect if @verbose
     unless geminfo == false
       detail = {}
       detail[:platform] = geminfo.platform unless geminfo.platform.nil?
       detail[:executables] = geminfo.executables.to_s unless geminfo.executables.nil?
-      detail[:date] = geminfo.date uless geminfo.date.nil?
+      detail[:date] = geminfo.date unless geminfo.date.nil?
       detail[:summary] = geminfo.summary unless geminfo.summary.nil?
       detail[:description] = geminfo.description.to_s unless geminfo.description.nil?
       detail[:homepage] = geminfo.homepage unless geminfo.homepage.nil?
@@ -167,6 +168,13 @@ private
     end
   end
   
-  
+  def remove_dust(spec_yaml)
+    lines = spec_yaml.split("\n")
+    cleared_line = []
+    lines.each do |line|
+      cleared_line << line unless /Bulk updating Gem source index for/ =~ line
+    end
+    cleared_line.join("\n")
+  end
 end
 

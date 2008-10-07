@@ -8,11 +8,11 @@ load 'config/deploy'
 namespace :deploy do
 
   task :start, :roles => :app do
-    run "cat ~/database.yml >> #{current_path}/config/database.yml"
+    run "cat ~/gemspec.database.yml >> #{current_path}/config/database.yml"
   end
 
   task :restart, :roles => :app do
-    run "cat ~/database.yml >> #{current_path}/config/database.yml"
+    run "cat ~/gemspec.database.yml >> #{current_path}/config/database.yml"
   end
 
 end

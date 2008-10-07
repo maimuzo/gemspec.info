@@ -34,6 +34,7 @@ class SpecParser < SpecScanner
       @scaned_gem_and_versions << {:gem => rubygem.name, :versions => array_version}
     end
     puts "loaded gem name and version" if @verbose
+    self
   end
   
   # add a unknown a gem, a version, a spec yaml, and a detail
@@ -79,17 +80,16 @@ private
     geminfo = YAML.load(spec_yaml_source)
     puts "spec : " + geminfo.inspect if @verbose and geminfo == false
     unless geminfo == false
-      detail = {
-        :platform => geminfo.platform,
-        :executables => geminfo.executables.to_s,
-        :date => geminfo.date,
-        :summary => geminfo.summary,
-        :description => geminfo.description.to_s,
-        :homepage => geminfo.homepage,
-        :authors => geminfo.authors.to_s,
-        :email => geminfo.email,
-        :installmessage => geminfo.post_install_message          
-      }
+      detail = {}
+      detail[:platform] = geminfo.platform unless geminfo.platform.nil?
+      detail[:executables] = geminfo.executables.to_s unless geminfo.executables.nil?
+      detail[:date] = geminfo.date uless geminfo.date.nil?
+      detail[:summary] = geminfo.summary unless geminfo.summary.nil?
+      detail[:description] = geminfo.description.to_s unless geminfo.description.nil?
+      detail[:homepage] = geminfo.homepage unless geminfo.homepage.nil?
+      detail[:authors] = geminfo.authors.to_s unless geminfo.authors.nil?
+      detail[:email] = geminfo.email unless geminfo.email.nil?
+      detail[:installmessage] = geminfo.post_install_message unless geminfo.post_install_message.nil?          
       # add or update
       if version.detail.nil?
         version.create_detail(detail)

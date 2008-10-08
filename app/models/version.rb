@@ -14,6 +14,8 @@ class Version < ActiveRecord::Base
   acts_as_list :scope => :rubygem_id
   acts_as_commentable
 
+  # test of acts_as_commentable with Single Table Inheritance for obstacles
+  has_many :obstacles, :as => :commentable, :dependent => :destroy, :order => 'created_at ASC'
   
   def before_validation
     fill_gemversion

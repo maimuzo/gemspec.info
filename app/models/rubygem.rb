@@ -1,7 +1,12 @@
+require "gemspec_a_r_extend"
+
 class Rubygem < ActiveRecord::Base
   has_one :general_point
   # has_one :version # TODO:CHECK_ME
   has_many :versions
+  has_many :what_is_this
+  has_many :strength
+  has_many :weakness
   
   validates_presence_of :name
   validates_uniqueness_of :name
@@ -11,7 +16,12 @@ class Rubygem < ActiveRecord::Base
   acts_as_taggable
   acts_as_commentable
   acts_as_favorite
-
+  
+  # test of acts_as_commentable with Single Table Inheritance for gemcasts and unchikus
+  has_many :gemcasts, :as => :commentable, :dependent => :destroy, :order => 'created_at ASC'
+  has_many :unchikus, :as => :commentable, :dependent => :destroy, :order => 'created_at ASC'
+  
+  include GemspecARExtend
   
   # ar holder
   @@ar_lastest_version = nil
@@ -28,29 +38,38 @@ class Rubygem < ActiveRecord::Base
     find_lastest_version
   end
   
-  def love_rating
-    if @love_rating.nil?
-      total_rater = rated_count
-      minus_point = total_rater - rated_total
-      plus_point = total_rater - minus_point
-      p_m_rate = plus_point / total_rater
-      @love_rating = {
-        :plus => plus_point,
-        :minus => minus_point,
-        :total => total_rater,
-        :rate => p_m_rate
+#  def gemcasts
+#    comments.map {|comment| comment if "gemcast" == comment[:type]}
+#  end
+  
+  # make LOVE chart
+  def love_chart_url
+    # google_chart_url method and result_rating method are in the module
+    google_chart_url("LOVE", result_rating[:rate].to_s[0..5])
+  end
+
+  def count_info
+    if @count_info.nil?
+      @count_info = {
+        :whatisthis => what_is_thises.count,
+        :strength => strengthes.count,
+        :weakness => weakness.count,
+        :gemcast => gemcasts.count,
+        :unchiku => unchikus.count,
+        :obstacle => lastest_version.obstacles.count
       }
     end
-    @love_rating
+    @count_info
   end
-  
-  # image URL for google chart
-  # example
-  # http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=LOVE&chd=t:0
-  def love_graph_url
-    rating = love_rating[:rate].to_s[0..5]
-    "http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=LOVE&chd=t:" + rating
+
+  def tag_string
+    if @tag_array.nil?
+      @tag_array = []
+      tags.each {|tag| @tag_array << tag.name}
+    end
+    @tag_array.join(", ")
   end
+
 
 private
 

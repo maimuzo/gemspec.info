@@ -37,8 +37,8 @@ pre.code{
 }
 
 #head, #foot{ border:#AAA solid 2px; }
-#head{ background:#F7F7F7 url('/jquery/project/head.png') bottom left repeat-x; }
-#foot{ background:#F7F7F7 url('/jquery/project/foot.png') top left repeat-x; }
+#head{ background:#F7F7F7 url('/images/jquery/project/head.png') bottom left repeat-x; }
+#foot{ background:#F7F7F7 url('/images/jquery/project/foot.png') top left repeat-x; }
 #head{ border-width:0 0 2px 0; }
 #foot{ border-width:2px 0 0 0; padding:0 0 20px 0; }
 

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081007071150) do
+ActiveRecord::Schema.define(:version => 20081008153316) do
 
   create_table "abstracts", :force => true do |t|
     t.integer  "user_id",      :limit => 11
@@ -21,6 +21,14 @@ ActiveRecord::Schema.define(:version => 20081007071150) do
     t.integer  "rating_count", :limit => 11
     t.integer  "rating_total", :limit => 10, :precision => 10, :scale => 0
     t.decimal  "rating_avg",                 :precision => 10, :scale => 2
+  end
+
+  create_table "clone_sites", :force => true do |t|
+    t.string   "name"
+    t.string   "domain"
+    t.string   "country"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "comments", :force => true do |t|

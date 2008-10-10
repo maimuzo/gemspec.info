@@ -1,9 +1,10 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Index | GEMSPEC.INFO</title>
+<title><%=h @title %> | GEMSPEC.INFO</title>
 <!--
 !!DO NOT DELETE THIS COMMENT!!
 
@@ -13,9 +14,15 @@
 - Contact me: http://gordonmac.com/contact/
 - Free stuff: http://gordonmac.com/downloads/
 -->
-<link href="stylesheets/stylesMain.css" rel="stylesheet" type="text/css" media="all" />
+<%= javascript_include_tag(:defaults, :cache => 'cache/defaults.js') %>
+<%= javascript_include_tag('interface', 'jglycy-1.0', 'jforms.1.0', 'jquery.coolinput', 'jquery.dimensions', 'jquery.gradient', 'jquery.jgrowl', 'jquery.simplemodal', 'jquery.slider', 'jquery.curvycorners.min', 'lpomessage', :cache => 'cache/jqueries.js') %>
+<%#= javascript_include_tag(:all) %>
+<%# = javascript_include_tag(:all, :cache => 'cache/all.js') %>
+<%= javascript_include_tag('gemspec') %>
+
+<%= stylesheet_link_tag 'stylesMain' %>
 <!--[if lt IE 7]>
-<link rel="stylesheet" type="text/css" href="PNGfix.css" />
+<%= stylesheet_link_tag 'PNGfix' %>
 <![endif]-->
 <!--[if lte IE 7]>
 <style type="text/css">
@@ -27,93 +34,7 @@
 #wrapper-body, #wrapper-1, #wrapper-2, #wrapper-3 { height: 1%; }
 </style>
 <![endif]-->
-<script type="text/javascript" src="javascripts/jquery-1.2.6.min.js"></script>
-<script type="text/javascript">
-var $j = jQuery.noConflict();
-</script>
-<script type="text/javascript" src="javascripts/interface.js"></script>
-<script type="text/javascript" src="javascripts/jquery.ui.all.js"></script>
-<script type="text/javascript" src="javascripts/jglycy-1.0.js"></script>
-<script type="text/javascript" src="javascripts/jforms.1.0.js"></script>
-<link rel="stylesheet" type="text/css" href="stylesheets/niceforms-default.css" media="screen" />
-<script type="text/javascript" src="javascripts/jquery.coolinput.js"></script>
-<script type="text/javascript" src="javascripts/jquery.dimensions.js"></script>
-<script type="text/javascript" src="javascripts/jquery.gradient.js"></script>
-
-<script type="text/javascript" src="javascripts/ui.stars.js"></script>
-<link rel="stylesheet" type="text/css" href="stylesheets/ui.stars.css">
-
-<script type="text/javascript" src="javascripts/jquery.jgrowl.js"></script>
-<link rel="stylesheet" type="text/css" href="stylesheets/jgrowl/jquery.jgrowl.css">
-
-<script type="text/javascript" src="javascripts/jquery.simplemodal.js"></script>
-<link rel="stylesheet" type="text/css" href="stylesheets/simplemodal/basic.css">
-<!--
-<link rel="stylesheet" type="text/css" href="stylesheets/simplemodal/basic_ie.css">
--->
-
-<script type="text/javascript" src="javascripts/jquery.slider.js"></script>
-<link rel="stylesheet" type="text/css" href="stylesheets/jqueryslider.css">
-
-<script type="text/javascript" src="javascripts/jquery.curvycorners.min.js"></script>
-
-<link rel="stylesheet" type="text/css" href="stylesheets/customize.css" media="all" />
-
-<script type="text/javascript">
-$j(document).ready( function() 
-{
-	// for search
-	$j('form.niceforms').jForms({listSize:20, imagePath:'./images/niceforms/default/'});
-	$j('div.niceforms').jForms({listSize:20, imagePath:'./images/niceforms/default/'});
-	$j('input.coolinput').coolinput({blurClass: 'pre-input'});
-	
-	// for title
-	$j('.part-of-title').corner();
-	
-	// for search panel detail 
-	$j('#search-detail-toggle').click(function () {
-	  $j('#search-detail-panel').slideToggle();
-	  if('none' == $j('#search-detail-panel').css("display")){
-	  	$j('#search-detail-panel+input').val("");
-		$j('#license').val("");
-	  }
-	  target = $j('#search-detail-toggle');
-	  if('▽' == target.val()){
-	  	target.val("△");
-	  }else{
-	  	target.val("▽");
-	  }
-    });
-	
-	// for licensers
-	$j('#licenser-toggle').click(function (e) {
-		e.preventDefault();
-		$j('#licenserPanel').modal();
-	});
-
-	// lastupdate slider
-	$j("#search-detail-toggle").one("click", function(){
-		// lastupdate slider
-		$j('#last-update-slider').makeSlider(2, 170, false);
-		// jForm enable for select
-		$j('#niceforms-select').jForms({listSize:20, imagePath:'./images/niceforms/default/'});
-	});
-} );
-/*
-enhancedDomReady(function(){
-	$('#last-update-slider').makeSlider(2, 380); // enable time slider
-});
-*/
-</script>
-
-<script type="text/javascript" src="javascripts/lpomessage.js"></script>
-<link rel="stylesheet" type="text/css" href="stylesheets/lpomessage.css">
-<script type="text/javascript">
-function emuJsonP(){
-	eval('LPOCallback([ { "message" : "今日のオススメは×××です。興味ある方はクリックしてください", "url" : "gem.html" },  { "message" : "今日のオススメは○○○です。興味ある方はクリックしてください", "url" : "mypage.html" }, { "message" : "今日のオススメは無いので天気予報です。晴れです。", "url" : "" }, { "message" : "今日のオススメは無いので天気予報です。曇りです。", "url" : "" } ])');
-}
-</script>
-<%= stylesheet_link_tag 'acts_as_taggable_stylesheet' %>
+<%= stylesheet_link_tag 'niceforms-default', 'ui.stars', 'jgrowl/jquery.jgrowl', 'simplemodal/basic', 'lpomessage', 'jqueryslider', 'customize', 'acts_as_taggable_stylesheet', :cache => 'cache/all.css' %>
 
 </head>
 <body>
@@ -124,9 +45,9 @@ function emuJsonP(){
     </div>
     <div id="hornav">
       <ul>
-        <li><a href="index.html">Japan</a></li>
-        <li><a href="gem.html">USA</a></li>
-        <li><a href="reverce.html">Thai</a></li>
+        <% clone_sites.each do |site| -%>
+        <li><%= link_to(site.country, :host => site.domain).untaint %></li>
+        <% end -%>
       </ul>
     </div>
     <div id="wrapper-2">
@@ -143,9 +64,9 @@ function emuJsonP(){
           </div>
           <div class="content-wrap login-indicator">
             <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">貴様証明</h2>
-            <% if login? -%>
-              <p>User:<%=h logined_user.nickname %> </p>
-              <div class="mypage-link"><a href="mypage.html">&gt; 自己管理</a> <a href="/logout">&gt; ログアウト</a></div>
+            <% if logged_in? -%>
+              <p>User:<%=h current_user.nickname %> </p>
+              <div class="mypage-link"><%= link_to('自己管理', mypage_path) %> <a href="/logout">ログアウト</a></div>
             <% else -%>
               <% form_tag(session_url, :class => "niceforms") do |f| -%>
               <label for="openid_url" >

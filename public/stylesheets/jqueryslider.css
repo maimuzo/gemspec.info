@@ -9,7 +9,7 @@ label { margin:0; font-weight: normal;}
 /* slider widget */
 
 .sliderControl { position: relative;  height: 50px; clear: both; margin-top: 10px; margin-bottom:40px; }
-.sliderIndicator {width:36px; height:50px; top: 0; z-index: 3; background:url(../images/slider/slider_pull.gif) no-repeat center bottom; position: absolute;}
+.sliderIndicator {width:36px; height:50px; top: 0; z-index: 3; background:url(/images/slider/slider_pull.gif) no-repeat center bottom; position: absolute;}
 .sliderIndicator span {display: block; font-size: .9em; color: #428b1d; border: 2px solid #428b1d; background: #fff; padding: 2px; height: 11px; text-align:center; }
 
 .xScale {left: 18px; top: 50px; z-index: 1; }
@@ -21,7 +21,7 @@ label { margin:0; font-weight: normal;}
 .xScale dt {position: absolute; top: 3em; color: #808080; text-transform: uppercase; font-size: .9em;}
 .xScale dt.morning {left: 0; color: #69a535;}
 .xScale dt.evening {right: 36px; color: #428b1d;}
-div.sliderSpan {position: absolute; z-index: 0; top: 25px; left: 18px; height: 15px; overflow: hidden; width: 500px;background: #d1d1cd url(../images/slider/slider_span_bg.gif) center no-repeat;}
+div.sliderSpan {position: absolute; z-index: 0; top: 25px; left: 18px; height: 15px; overflow: hidden; width: 500px;background: #d1d1cd url(/images/slider/slider_span_bg.gif) center no-repeat;}
 div.blotA, div.blotB {position: absolute; left: 0; width: 0;  z-index: 99999; top: 0; border-top: 15px solid #fff; }
 div.scale {display: block; position: absolute; left: 18px; top: 47px; z-index: 2; border-bottom: 1px solid #000; height: 3px;}
 div.scale span {position: absolute; border-right: 1px solid #000; height: 3px;top: 4px; font-size: 0; line-height: 0;}

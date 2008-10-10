@@ -5,7 +5,7 @@ function(options)
     var keyBuffer = '';
     var self = this;
     var defaults = {
-	imagePath : '/niceforms/default/',
+	imagePath : '/images/niceforms/default/',
 	listSize:20
 	}	
 	if(jQuery.browser.safari){return false;}

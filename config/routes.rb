@@ -45,7 +45,11 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :tags
   map.resources :rubygems
   map.resources :versions
-
+  
+  # by hand
+  map.gemcasts 'rubygems/:rubygem_id/gemcast/:id', :controller => "gemcasts", :action => "show"
+  map.unchikus 'rubygems/:rubygem_id/unchiku/:id', :controller => "unchikus", :action => "show"
+  map.resource :mypage
 
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'

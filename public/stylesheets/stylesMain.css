@@ -18,7 +18,7 @@ body
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 100%;
 	color: #FFFFFF;
-	background: #8D927C url(../images/bg_body.jpg) repeat-x;
+	background: #8D927C url(/images/bg_body.jpg) repeat-x;
 	margin: 0;
 	padding: 0;
 	min-width: 800px;
@@ -104,7 +104,7 @@ img.border
 	display: inline;
 	margin: 0 2px 0 0;
 	padding: 3px 0 3px 10px;
-	background: url(../images/bg_hornav-l.jpg) no-repeat top left;
+	background: url(/images/bg_hornav-l.jpg) no-repeat top left;
 }
 
 #hornav ul li a
@@ -112,7 +112,7 @@ img.border
 	text-decoration: none;
 	padding: 3px 10px 3px 0;
 	margin: 0;
-	background: url(../images/bg_hornav-r.jpg) no-repeat top right;
+	background: url(/images/bg_hornav-r.jpg) no-repeat top right;
 }
 
 #hornav ul li a:link, #hornav ul li a:visited
@@ -131,7 +131,7 @@ img.border
 
 #navcontainer
 {
-	background: transparent url(../images/bg_navlist-top.jpg) no-repeat top center;
+	background: transparent url(/images/bg_navlist-top.jpg) no-repeat top center;
 	margin: 0;
 	padding: 12px 0 0 0;
 }
@@ -143,7 +143,7 @@ img.border
 	line-height: normal;
 	padding: 0 0 12px 0;
 	border-top: 1px solid #FFF;
-	background: transparent url(../images/bg_navlist-bottom.jpg) no-repeat bottom center;
+	background: transparent url(/images/bg_navlist-bottom.jpg) no-repeat bottom center;
 }
 
 #navcontainer a
@@ -205,7 +205,7 @@ img.border
 #wrapper-1
 {
 	width: auto;
-	background: transparent url(../images/bg_wrapper-1.jpg) no-repeat;
+	background: transparent url(/images/bg_wrapper-1.jpg) no-repeat;
 	margin: 0;
 	padding: 0;
 }
@@ -219,7 +219,7 @@ img.border
 
 #wrapper-3
 {
-	background: url(../images/bg_wrapper-3.jpg) repeat-y;
+	background: url(/images/bg_wrapper-3.jpg) repeat-y;
 	color: #333;
 	text-align: left;
 }
@@ -228,7 +228,7 @@ img.border
 {
 	margin: 0;
 	height: 15px;
-	background: url(../images/bg_content-top.png) no-repeat;
+	background: url(/images/bg_content-top.png) no-repeat;
 	font-size: 0;
 	line-height: 0;
 }
@@ -264,7 +264,7 @@ img.border
 {
 	clear: both;
 	height: 15px;
-	background: url(../images/bg_content-bottom.jpg) no-repeat;
+	background: url(/images/bg_content-bottom.jpg) no-repeat;
 	font-size: 0;
 	line-height: 0;
 }
@@ -290,7 +290,7 @@ img.border
 	float: left;
 	height: 52px;
 	width: 52px;
-	background: url(../images/date.png) no-repeat;
+	background: url(/images/date.png) no-repeat;
 	margin-right: 10px;
 	padding-top: 0px;
 	line-height: normal;

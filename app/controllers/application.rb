@@ -6,6 +6,7 @@
 
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
+  include ApplicationHelper
 
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
@@ -20,8 +21,9 @@ class ApplicationController < ActionController::Base
   
   # 未ログイン状態でログインが必要なページに入ろうとすると、元のページに戻される
   # ログイン専用ページがない場合など
+  # example : before_filter :block_until_authorized, :only => [ :new , :edit, :create, :update, :destroy]
   def block_until_authorized
-    unless login?
+    unless logged_in?
       flash[:notice] = "Please log in"
       redirect_to(request.referer)
     end
@@ -32,13 +34,15 @@ class ApplicationController < ActionController::Base
   # 一部
   # http://japan.internet.com/column/developer/20080627/26.html
   # を参考に書き換え必要
+  # example : before_filter :go_through_authorized, :only => [ :new , :edit, :create, :update, :destroy]
   def go_through_authorized
-    unless login?
-      flash[:notice] = "Please log in"
+    unless logged_in?
       # save the URL the user requested so we can hop back to it
       # after login
       session[:jumpto] = request.parameters
-      redirect_to("/login")
+      session[:jumpfrom] = nil
+      # need a route in config/routes.rb
+      redirect_to login_url
     end
   end
   

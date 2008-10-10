@@ -45,8 +45,8 @@ label.chosen {color:#333;}
 	font-size:0;
 	cursor:pointer;
 }
-.radioArea {background:url(../images/niceforms/default/radio.gif) no-repeat left top;}
-.radioAreaChecked {background:url(../images/niceforms/default/radio.gif) no-repeat left bottom;}
+.radioArea {background:url(/images/niceforms/default/radio.gif) no-repeat left top;}
+.radioAreaChecked {background:url(/images/niceforms/default/radio.gif) no-repeat left bottom;}
 
 /*Checkboxes*/
 .checkboxArea, .checkboxAreaChecked {
@@ -60,14 +60,14 @@ label.chosen {color:#333;}
 	margin:0;
 	cursor:pointer;
 }
-.checkboxArea {background:url(../images/niceforms/default/checkbox.gif) no-repeat left top;}
-.checkboxAreaChecked {background:url(../images/niceforms/default/checkbox.gif) no-repeat left bottom;}
+.checkboxArea {background:url(/images/niceforms/default/checkbox.gif) no-repeat left top;}
+.checkboxAreaChecked {background:url(/images/niceforms/default/checkbox.gif) no-repeat left bottom;}
 .focused {border:1px dotted #ddd;}
 
 /*Text inputs*/
 .textinput, .textinputHovered {
 	height:15px;
-	background:url(../images/niceforms/default/input_bg.gif) repeat-x left top;
+	background:url(/images/niceforms/default/input_bg.gif) repeat-x left top;
 	border:none;
 	padding:4px 0;
 	vertical-align:middle;
@@ -79,23 +79,23 @@ label.chosen {color:#333;}
 }
 
 /*Text areas*/
-.txtarea .tr, .txtarea .tr_xon {background:url(../images/niceforms/default/txtarea_tr.gif) no-repeat top right;}
-.txtarea .tr_xon {background:url(../images/niceforms/default/txtarea_tr_xon.gif) no-repeat top right;}
+.txtarea .tr, .txtarea .tr_xon {background:url(/images/niceforms/default/txtarea_tr.gif) no-repeat top right;}
+.txtarea .tr_xon {background:url(/images/niceforms/default/txtarea_tr_xon.gif) no-repeat top right;}
 .txtarea img.txt_corner {
 	width:5px;
 	height:5px;
 	display:block;
 }
-.txtarea .br, .txtarea .br_xon {background:url(../images/niceforms/default/txtarea_br.gif) no-repeat top right;}
-.txtarea .br_xon {background:url(../images/niceforms/default/txtarea_br_xon.gif) no-repeat top right;}
-.txtarea .cntr {background:url(../images/niceforms/default/txtarea_cntr.gif) repeat-y right top;}
-.txtarea .cntr_xon {background:url(../images/niceforms/default/txtarea_cntr_xon.gif) repeat-y right top;}
+.txtarea .br, .txtarea .br_xon {background:url(/images/niceforms/default/txtarea_br.gif) no-repeat top right;}
+.txtarea .br_xon {background:url(/images/niceforms/default/txtarea_br_xon.gif) no-repeat top right;}
+.txtarea .cntr {background:url(/images/niceforms/default/txtarea_cntr.gif) repeat-y right top;}
+.txtarea .cntr_xon {background:url(/images/niceforms/default/txtarea_cntr_xon.gif) repeat-y right top;}
 .txtarea .cntr_l, .txtarea .cntr_l_xon {
 	width:5px;
-	background:url(../images/niceforms/default/txtarea_l.gif) repeat-y left top;
+	background:url(/images/niceforms/default/txtarea_l.gif) repeat-y left top;
 	float:left;
 }
-.txtarea .cntr_l_xon {background:url(../images/niceforms/default/txtarea_l_xon.gif) repeat-y left top;}
+.txtarea .cntr_l_xon {background:url(/images/niceforms/default/txtarea_l_xon.gif) repeat-y left top;}
 .txtarea textarea {
 	border:0;
 	background:none;
@@ -107,19 +107,19 @@ label.chosen {color:#333;}
 .selectArea {
 
 	height:21px;
-	background:url(../images/niceforms/default/select_bg.gif) repeat-x left top;
+	background:url(/images/niceforms/default/select_bg.gif) repeat-x left top;
 }
 .selectArea .left {
 	width:8px;
 	height:21px;
 	float:left;
-	background:url(../images/niceforms/default/select_left.gif) no-repeat left top;
+	background:url(/images/niceforms/default/select_left.gif) no-repeat left top;
 }
 .selectArea .right {
 	width:21px;
 	height:21px;
 	float:right;
-	background:url(../images/niceforms/default/select_right.gif) no-repeat left top;
+	background:url(/images/niceforms/default/select_right.gif) no-repeat left top;
 }
 .selectArea .right a {
 	display:block;
@@ -176,7 +176,7 @@ ul.fake_list li
 	color:#FFF;
 	font-weight:bold;
 	padding:2px;
-	background:url(../images/niceforms/default/button_bg.gif) repeat-x left top;
+	background:url(/images/niceforms/default/button_bg.gif) repeat-x left top;
 	cursor:pointer;
 	border:none;
 }

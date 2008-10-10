@@ -3,10 +3,10 @@
             <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">総合評価</h2>
             <div style="overflow:hidden;">
               <ul>
-                <% rank = 0  -%>
+                <% num = 0  -%>
                 <% general_ranks.each do |ranking| -%>
-                <% rank += 1 -%>
-                <li><span><%= rank %></span><span>(<%=h ranking.point %>pt)</span><%= link_to(sanitize(ranking.rubygem.name), url_for(ranking.rubygem)).untaint %></li>
+                <% num += 1 -%>
+                <li><span><%= num %></span><span>(<%=h ranking.point %>pt)</span><%= link_to(sanitize(ranking.rubygem.name), rubygem_path(ranking.rubygem)).untaint %></li>
                 <% end -%>
               </ul>
             </div>
@@ -17,7 +17,7 @@
               <div class="content-area">
                 <h2>ログインすると幸せになれるかも知れません…</h2>
               </div>
-              <% if not @newgems.nil?  -%>
+              <% if @newgems.size > 0  -%>
               <div class="content-area header-wrapper">
               	<div class="content-header">
                	  <h3>新着Gems</h3>
@@ -33,7 +33,7 @@
                         <div class="summary-wrapper">
                           <div class="rate-wrapper">
                             <div><img src="<%= gem.love_chart_url.untaint %>" width="130" height="50" /></div>
-                            <div>愛され度(<%=h gem.result_of_rating[:plus] %>/<%=h gem.result_of_rating[:minus] %> <%=h gem.result_of_rating[:total] %>人による評価)</div>
+                            <div>愛され度(<%=h plus_minus_total(gem) %>人による評価)</div>
                           </div>
                           <div class="comments-wrapper">
                             <p>何:<%=h gem.count_info[:whatisthis] %>件 良:<%=h gem.count_info[:strength] %>件 悪:<%=h gem.count_info[:weakness] %>件<br />
@@ -43,32 +43,16 @@
                           </div>
                         </div>
                         <div class="tag-name">Tag : <%=h tag_string_or_none(gem) %></div>
-                        <div class="comment-date">Last update on <%=h last_update_string %></div>
-                        <div class="link-wrapper"><%= link_to('詳細へ', url_for(gem)).untaint %></div>
+                        <div class="comment-date">Last update on <%=h gem.last_update_string %></div>
+                        <div class="link-wrapper"><%= link_to('詳細へ', rubygem_path(gem)).untaint %></div>
                       </div>
                     </li>
                     <% end -%>
-                    <li>
-                      <div class="commentboxgrey">
-                        <h2 class="gem-name">sqld4r</h2>
-                        <div class="summary-wrapper">
-                          <div class="rate-wrapper">
-                            <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=LOVE&chd=t:30" width="130" height="50" /></div>
-                            <div>愛され度(0/0 0人による評価)</div>
-                          </div>
-                          <div class="comments-wrapper">
-                            <p>何:0件 良:0件 悪:0件<br />GemCasts:0件<br />うんちく:0件<br />最新版での障害:0件</p>
-                          </div>
-                        </div>
-                        <div class="tag-name">Tag : ログインするとき, 新Appを作るとき</div>
-                        <div class="comment-date">Last update on 2008/8/3</div>
-                        <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
-                      </div>
-                    </li>
                   </ol>
                 </div><!-- end of list-wrapper -->
               </div><!-- end of content-area -->
               <% end -%>
+              <% if @gemcasts.size > 0  -%>
               <div class="content-area header-wrapper">
               	<div class="content-header">
                	  <h3>新着GemCasts</h3>
@@ -77,43 +61,30 @@
                 </div>
                 <div class="list-wrapper">
                   <ol>
+                    <% @gemcasts.each do |gemcast| -%>
                     <li>
                       <div class="commentboxgrey">
-                        <h2 class="gem-name">rocketstarter</h2>
-                        <h2 class="comment-title">たいとるるー</h2>
+                        <h2 class="gem-name"><%=h gemcast.rubygem.name %></h2>
+                        <h2 class="comment-title"><%=h gemcast.title %></h2>
                         <div class="summary-wrapper">
                           <div class="rate-wrapper">
-                            <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
-                            <div>役立ち度(0/0 0人による評価)</div>
+                            <div><img src="<%= gemcast.useful_chart_url.untaint %>" width="130" height="50" /></div>
+                            <div>役立ち度(<%=h plus_minus_total(gemcast) %>人による評価)</div>
                           </div>
                           <div class="comments-wrapper">
-                            <p>使ってみたら解ったんだけど、実はこのgem使えるかも知れない...</p>
+                            <p><%=h gemcast.summary %></p>
                           </div>
                         </div>
-                        <div class="comment-date">Posted by maimuzo at 2008/8/3 19:23:43</div>
-                        <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
+                        <div class="comment-date">Posted by <%=h gemcast.user.name %>  at <%=h gemcast.last_update_string %></div>
+                        <div class="link-wrapper"><%= link_to('詳細へ', show_path_for_gemcast(gemcast)) %></div>
                       </div>
                     </li>
-                    <li>
-                      <div class="commentboxgrey">
-                        <h2 class="gem-name">sqld4r</h2>
-                        <h2 class="comment-title">たいとるるー</h2>
-                        <div class="summary-wrapper">
-                          <div class="rate-wrapper">
-                            <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
-                            <div>役立ち度(0/0 0人による評価)</div>
-                          </div>
-                          <div class="comments-wrapper">
-                            <p>使ってみたら解ったんだけど、実はこのgem使えるかも知れない...</p>
-                          </div>
-                        </div>
-                        <div class="comment-date">Posted by maimuzo at 2008/8/3 19:23:43</div>
-                        <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
-                      </div>
-                    </li>
+                    <% end -%>
                   </ol>
                 </div><!-- end of list-wrapper -->
               </div><!-- end of con tent-area-->
+              <% end -%>
+              <% if @unchikus.size > 0  -%>
               <div class="content-area header-wrapper">
               	<div class="content-header">
                	  <h3>新着うんちく</h3>
@@ -122,42 +93,28 @@
                 </div>
                 <div class="list-wrapper">
                   <ol>
+                    <% @unchikus.each do |unchiku| -%>
                     <li>
                       <div class="commentboxgrey">
-                        <h2 class="gem-name">sqld4r</h2>
-                        <h2 class="comment-title">俺様の話を聞け</h2>
+                        <h2 class="gem-name"><%=h unchiku.rubygem.name %></h2>
+                        <h2 class="comment-title"><%=h unchiku.title %></h2>
                         <div class="summary-wrapper">
                           <div class="rate-wrapper">
-                            <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
-                            <div>役立ち度(0/0 0人による評価)</div>
+                            <div><img src="<%= unchiku.useful_chart_url.untaint %>" width="130" height="50" /></div>
+                            <div>役立ち度(<%=h plus_minus_total(unchiku) %>人による評価)</div>
                           </div>
                           <div class="comments-wrapper">
-                            <p>使ってみたら解ったんだけど、実はこのgem使えるかも知れない...</p>
+                            <p><%=h unchiku.summary %></p>
                           </div>
                         </div>
-                        <div class="comment-date">Direct commented by maimuzo at 2008/8/3 19:23:32</div>
-                        <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
+                        <div class="comment-date">Direct commented by <%=h unchiku.user.name %> at <%=h unchiku.last_update_string %></div>
+                        <div class="link-wrapper"><%= link_to('詳細へ', show_path_for_unchiku(unchiku)) %></div>
                       </div>
                     </li>
-                    <li>
-                      <div class="commentboxgrey">
-                        <h2 class="gem-name">sqld4r</h2>
-                        <h2 class="comment-title">俺様の話を聞け</h2>
-                        <div class="summary-wrapper">
-                          <div class="rate-wrapper">
-                            <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
-                            <div>役立ち度(0/0 0人による評価)</div>
-                          </div>
-                          <div class="comments-wrapper">
-                            <p>使ってみたら解ったんだけど、実はこのgem使えるかも知れない...</p>
-                          </div>
-                        </div>
-                        <div class="comment-date">Trackback by maimuzo at 2008/8/3 19:23:32</div>
-                        <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
-                      </div>
-                    </li>
+                    <% end -%>
                   </ol>
                 </div><!-- end of list-wrapper -->
               </div><!-- end of content-area -->
+              <% end -%>
           </div><!-- end of content-wrap -->
         </div>

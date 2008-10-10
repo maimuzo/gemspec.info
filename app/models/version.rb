@@ -17,9 +17,7 @@ class Version < ActiveRecord::Base
   # test of acts_as_commentable with Single Table Inheritance for obstacles
   has_many :obstacles, :as => :commentable, :dependent => :destroy, :order => 'created_at ASC'
   
-  def before_validation
-    fill_gemversion
-  end
+  before_validation :fill_gemversion
   
   # make gemversion string when before_save
   def fill_gemversion

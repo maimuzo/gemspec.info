@@ -1,8 +1,3 @@
-# 
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
- 
-
 module GemspecARExtend
 
   # calculate rating
@@ -10,18 +5,23 @@ module GemspecARExtend
     total_rater = rated_count
     minus_point = total_rater - rated_total
     plus_point = total_rater - minus_point
-    ratio = plus_point / total_rater
+    begin
+      ratio = (plus_point / total_rater).to_s
+      ratio = ratio[0..5] if ratio.length > 5
+    rescue ZeroDivisionError
+      ratio = "0"
+    end
     {
-      :plus => plus_point,
-      :minus => minus_point,
-      :total => total_rater,
+      :plus => plus_point.to_s,
+      :minus => minus_point.to_s,
+      :total => total_rater.to_s,
       :ratio => ratio
     }
   end
   
   # make USEFUL chart
   def useful_chart_url
-    google_chart_url("USEFUL", result_of_rating[:rate].to_s[0..5])
+    google_chart_url("USEFUL", result_of_rating[:ratio])
   end
 
   # formated string
@@ -34,7 +34,7 @@ module GemspecARExtend
   # example
   # http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=LOVE&chd=t:0
   def google_chart_url(label, ratio)
-    "http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=#{label}&chd=t:#{ratio}" + rating
+    "http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=#{label}&chd=t:#{ratio}"
   end
     
 end

@@ -1,5 +1,3 @@
-require "jcode"
-
 # from http://yohasebe.com/2006/03/16/
 module JSlice
   # Stringオブジェクトにjsliceメソッドを追加する。

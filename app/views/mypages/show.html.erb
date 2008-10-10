@@ -1,0 +1,73 @@
+        <div id="content-1">
+          <div class="content-wrap">
+            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">名を名乗れ</h2>
+            <div>
+              <p>your OpenID : <%=h @user.claimed_url %></p>
+              <p>表示名 : <%=h @user.nickname %></p>
+              <p>メアド : <%=h @user.email %></p>
+              <p>本名 : <%=h @user.fullname %></p>
+              <p>誕生日 : <%=h @user.birth_day.strftime("%Y/%m/%d") %></p>
+              <p>性別 : <%=h gender_value(@user.gender) %></p>
+              <p>郵便番号 : <%=h @user.postcode %></p>
+              <p>住んでいる国 : <%=h @user.country %></p>
+              <p>ネイティブ言語 : <%=h @user.language %></p>
+              <p>タイムゾーン : <%=h @user.timezone %></p>
+              <p><form class="niceforms"><input type="button" value="編集" onclick="location = '<%= edit_mypage_path %>'"></form></p>
+              <p>さーせん。今んとこ未使用が多いけど、OpenIDのテストの意味合いが大きいです。将来的に統計情報として使うかもです。さーせん。</p>
+            </div>
+          </div>
+        </div>
+        <div id="content-2">
+          <div class="content-wrap">
+            <div class="content-area">
+              <div>お気に入り</div>
+            </div>
+            <% if @favorites.size > 0  -%>
+            <div class="content-area">
+              <div class="pagenate">
+                <%= link_to "前へ", {:page => @favorites.previous_page} if @favorites.previous_page? %>
+                <%= paginating_links(@favorites, :window_size => 20) %>
+                <%= link_to "次へ", {:page => @favorites.next_page} if @favorites.next_page? %> 
+              </div>
+            </div>
+            <div class="content-area header-wrapper">
+              <div class="list-wrapper">
+                <ol>
+                  <% @favorites.each do |gem| -%>
+                    <li>
+                      <div class="commentboxgrey">
+                        <h2 class="gem-name"><%=h gem.name %></h2>
+                        <div class="summary-wrapper">
+                          <div class="rate-wrapper">
+                            <div><img src="<%= gem.love_chart_url.untaint %>" width="130" height="50" /></div>
+                            <div>愛され度(<%=h plus_minus_total(gem) %>人による評価)</div>
+                          </div>
+                          <div class="comments-wrapper">
+                            <p>何:<%=h gem.count_info[:whatisthis] %>件 良:<%=h gem.count_info[:strength] %>件 悪:<%=h gem.count_info[:weakness] %>件<br />
+                            GemCasts:<%=h gem.count_info[:gemcast] %>件<br />
+                            うんちく:<%=h gem.count_info[:unchiku] %>件<br />
+                            最新版での障害:<%=h gem.count_info[:obstacle] %>件</p>
+                          </div>
+                        </div>
+                        <div class="tag-name">Tag : <%=h tag_string_or_none(gem) %></div>
+                        <div class="comment-date">Last update on <%=h gem.last_update_string %></div>
+                        <div class="link-wrapper"><%= link_to('詳細へ', rubygem_path(gem)).untaint %></div>
+                      </div>
+                    </li>
+                  <% end -%>
+                </ol>
+              </div><!-- end of list-wrapper -->
+            </div><!-- end of content-area -->
+            <div class="content-area">
+              <div class="pagenate">
+                <%= link_to "前へ", {:page => @favorites.previous_page} if @favorites.previous_page? %>
+                <%= paginating_links(@favorites, :window_size => 20) %>
+                <%= link_to "次へ", {:page => @favorites.next_page} if @favorites.next_page? %> 
+              </div>
+            </div>
+            <% end -%>
+            <!-- end of con tent-area-->
+            <!-- end of content-area -->
+          </div>
+          <!-- end of content-wrap -->
+        </div>

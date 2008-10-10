@@ -1,6 +1,6 @@
 # Be sure to restart your server when you modify this file
 require 'jcode'
-$KCODE='e'
+$KCODE='u'
 
 
 # Uncomment below to force Rails into production mode when

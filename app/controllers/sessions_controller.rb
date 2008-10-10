@@ -29,8 +29,10 @@ class SessionsController < ApplicationController
     redirect_to default_page
   end
 
-  # POST /sessions
+  # POST /session
+  # GET  /session (with params[:open_id_complete] for OpenID Provider)
   def create
+    session[:jumpfrom] = request.referer if params[:open_id_complete].nil?
     if using_open_id?
       open_id_authentication
     else
@@ -71,7 +73,7 @@ protected
         failed_login "Sorry, the OpenID verification failed"
       when :successful
         if @current_user = User.find_by_claimed_url(identity_url)
-          successful_login
+          successful_login_and :jump_from
         else
           @current_user = User.new
           assign_registration_attributes!(registration)
@@ -79,23 +81,40 @@ protected
           @current_user.nickname = identity_url.delete("http://")[0..8] if @current_user.nickname.blank?
 
           if @current_user.save
-            successful_login
+            successful_login_and :jump_to_mypage
           else
             failed_login "Your OpenID profile registration failed: " +
               @current_user.errors.full_messages.to_sentence
           end
         end
       end
-
     end
   end
 
-  def successful_login
+  def successful_login_and(way = root_url)
     session[:user_id] = @current_user.id
-    #jumpto = session[:jumpto] || default_page
-    #session[:jumpto] = nil
-    #redirect_to(jumpto)
-    redirect_to(root_url)
+    flash[:notice] = "success to login"
+    case way
+    when :jump_to
+      jumpto = session[:jumpto] || default_page
+      session[:jumpto] = nil
+      session[:jumpfrom] = nil
+      redirect_to(jumpto)
+    when :jump_from
+      jumpfrom = session[:jumpfrom] || default_page
+      session[:jumpto] = nil
+      session[:jumpfrom] = nil
+      redirect_to(jumpfrom)
+    when :jump_to_mypage
+      # you need to add map.resource sectence to config/routes.rb
+      # or create method
+      flash[:notice] = "added your account. if you need, please modify your profile"
+      redirect_to(mypage_path)
+    else
+      # you need to add map.root sectence to config/routes.rb
+      # or create method
+      redirect_to(root_url)
+    end
   end
 
   def failed_login(message)

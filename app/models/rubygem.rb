@@ -4,9 +4,9 @@ class Rubygem < ActiveRecord::Base
   has_one :general_point
   # has_one :version # TODO:CHECK_ME
   has_many :versions
-  has_many :what_is_this
-  has_many :strength
-  has_many :weakness
+  has_many :what_is_this, :class_name => "WhatIsThis"
+  has_many :strength, :class_name => "Strength"
+  has_many :weakness, :class_name => "Weakness"
   
   validates_presence_of :name
   validates_uniqueness_of :name
@@ -45,21 +45,18 @@ class Rubygem < ActiveRecord::Base
   # make LOVE chart
   def love_chart_url
     # google_chart_url method and result_rating method are in the module
-    google_chart_url("LOVE", result_rating[:rate].to_s[0..5])
+    google_chart_url("LOVE", result_of_rating[:ratio])
   end
 
   def count_info
-    if @count_info.nil?
-      @count_info = {
-        :whatisthis => what_is_thises.count,
-        :strength => strengthes.count,
-        :weakness => weakness.count,
-        :gemcast => gemcasts.count,
-        :unchiku => unchikus.count,
-        :obstacle => lastest_version.obstacles.count
-      }
-    end
-    @count_info
+    @count_info ||= {
+      :whatisthis => what_is_this.count,
+      :strength => strength.count,
+      :weakness => weakness.count,
+      :gemcast => gemcasts.count,
+      :unchiku => unchikus.count,
+      :obstacle => lastest_version.obstacles.count
+    }
   end
 
   def tag_string

@@ -32,7 +32,7 @@
                         <h2 class="gem-name"><%=h gem.name %></h2>
                         <div class="summary-wrapper">
                           <div class="rate-wrapper">
-                            <div><img src="<%= gem.love_chart_url.untaint %>" width="130" height="50" /></div>
+                            <div><img src="<%= gem.love_chart_url_with_lightblue.untaint %>" /></div>
                             <div>愛され度(<%=h plus_minus_total(gem) %>人による評価)</div>
                           </div>
                           <div class="comments-wrapper">
@@ -68,7 +68,7 @@
                         <h2 class="comment-title"><%=h gemcast.title %></h2>
                         <div class="summary-wrapper">
                           <div class="rate-wrapper">
-                            <div><img src="<%= gemcast.useful_chart_url.untaint %>" width="130" height="50" /></div>
+                            <div><img src="<%= gemcast.useful_chart_url.untaint %>" /></div>
                             <div>役立ち度(<%=h plus_minus_total(gemcast) %>人による評価)</div>
                           </div>
                           <div class="comments-wrapper">
@@ -100,7 +100,7 @@
                         <h2 class="comment-title"><%=h unchiku.title %></h2>
                         <div class="summary-wrapper">
                           <div class="rate-wrapper">
-                            <div><img src="<%= unchiku.useful_chart_url.untaint %>" width="130" height="50" /></div>
+                            <div><img src="<%= unchiku.useful_chart_url.untaint %>" /></div>
                             <div>役立ち度(<%=h plus_minus_total(unchiku) %>人による評価)</div>
                           </div>
                           <div class="comments-wrapper">

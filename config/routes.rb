@@ -43,13 +43,14 @@ ActionController::Routing::Routes.draw do |map|
   
   # acts_as_taggable_redux
   map.resources :tags
-  map.resources :rubygems
   map.resources :versions
   
   # by hand
+  map.resource :mypage
+  map.resources :rubygems, :controller => "rubygems", :member => {:plus_love => :post, :minus_love => :post, :reset_love => :post, :new_tag => :get, :create_tag => :post, :destroy_tag => :post, :create_favorit => :post, :destroy_favorit => :post}
+  # map.resources :rubygems, :controller => "rubygems", :path_prefix => 'rubygems/:rubygem_id', :member => {:plus_love => :post, :minus_love => :post, :reset_love => :post}
   map.gemcasts 'rubygems/:rubygem_id/gemcast/:id', :controller => "gemcasts", :action => "show"
   map.unchikus 'rubygems/:rubygem_id/unchiku/:id', :controller => "unchikus", :action => "show"
-  map.resource :mypage
 
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'

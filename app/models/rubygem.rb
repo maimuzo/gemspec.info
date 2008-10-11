@@ -43,9 +43,15 @@ class Rubygem < ActiveRecord::Base
 #  end
   
   # make LOVE chart
-  def love_chart_url
+  def love_chart_url_with_lightblue
     # google_chart_url method and result_rating method are in the module
     google_chart_url("LOVE", result_of_rating[:ratio])
+  end
+
+    # make LOVE chart
+  def love_chart_url_with_white
+    # google_chart_url method and result_rating method are in the module
+    google_chart_url("LOVE", result_of_rating[:ratio], "ffffff")
   end
 
   def count_info

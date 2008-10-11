@@ -1,0 +1,201 @@
+        <div id="content-1">
+          <div class="content-wrap">
+            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">Gemスペック</h2>
+            <div class="gem-name"><%=h @gem.name %></div>
+            <div class="left-rate-wrapper">
+              <div><img src="<%= @gem.love_chart_url_with_white.untaint %>" /></div>
+              <div>愛され度(<%=h plus_minus_total(@gem) %>人による評価)</div>
+              <% if logged_in? -%>
+              <div><%= chose_love_links(@gem, current_user) %></div>
+              <% end -%>
+            </div>
+            <div class="tag-name">Tag : <%=h tag_string_or_none(@gem) %></div>
+            <% if logged_in? -%>
+            <div class="tag-new"><%= niceforms_button_to('タグ追加', new_tag_rubygem_path(@gem)) %></div>
+            <div class="favorit-new"><%= niceforms_button_to('お気に入りに追加', create_favorit_rubygem_path(@gem), :method => :post) %></div>
+            <% end -%>
+            <div class="version-select">Version <form class="inline-form"><%= select_tag('version', options_from_collection_for_select(@versions_for_select, :id, :version)) %><input type="submit" value="変更" /></form></div>
+            <div class="gem-detail">
+              <h3 class="group-header">バージョン依存情報</h3>
+              <p class="detail-content"><%=h @detail.summary %></p>
+              <p>Official : <%= site_link(@detail) %></p>
+              <p>RubyForge : <%= project_link(@detail) %></p>
+              <ul>
+                <% @detail.authors.split(",").each do |author| -%>
+              	<li>provided by <%=h author.strip %></li>
+                <% end -%>
+              </ul>
+              <p>platform : <%=h @detail.platform %></p>
+              <p>実行可能コマンド : <%=h @detail.executables %></p>
+              <p>最終更新日 : <%=h formated_date_with_check(@detail.date) %></p>
+              <h3 class="group-header">インストールメッセージ</h3>
+              <p class="detail-content"><%= check_install_message(@detail.installmessage) %></p>
+              <h3 class="group-header">依存関係</h3>
+              <% unless @dependencies.size == 0 -%>
+              <ul>
+                <% @dependencies.each do |depend| -%>
+              	<li><%= depend_link(depend) %></li>
+                <% end -%>
+              </ul>
+              <% end -%>
+            </div>
+          </div>
+          <div class="content-wrap">
+            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">障害状況</h2>
+            <div class="list-wrapper">
+              <ol>
+                <li>
+                  <div class="commentboxgrey">
+                    <h2 class="comment-title">障害でてます</h2>
+                    <div class="left-rate-wrapper">
+                      <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
+                      <div>役立ち度(0/0 0人による評価)</div>
+                    </div>
+                    <div class="comments-wrapper">
+                      <p>ver0.1.0とxxxx ver2.0.0の組み合わせでエラー発生...</p>
+                    </div>
+                    <div class="comment-date">Trackback by maimuzo at 2008/8/3 19:23:32</div>
+                    <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
+                  </div>
+                </li>
+                <li>
+                  <div class="commentboxgrey">
+                    <h2 class="comment-title">やべーよやーべーよ</h2>
+                    <div class="left-rate-wrapper">
+                      <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
+                      <div>役立ち度(0/0 0人による評価)</div>
+                    </div>
+                    <div class="comments-wrapper">
+                      <p>なんかバージョンアップしたら変なエラーが出るようになったんですけど...</p>
+                    </div>
+                    <div class="comment-date">Trackback by maimuzo at 2008/8/3 19:23:32</div>
+                    <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
+                 </div>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div id="content-2">
+          <div class="content-wrap">
+          	<div class="content-area header-wrapper">
+              <div class="content-header">
+               	<h3>短評</h3>
+               	<hr>
+               	<div class="sub-header">Abstracts</div>
+              </div>
+			  <div class="line-group">
+                <h4 class="line-header">このGemは何が出来るの?</h4>
+                <ul class="line-message">
+                  <li>なんだわからんけどすごい(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                  <li>セットアップをらくにしてくれる(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                  <li>ルーチンワークの回避が出来る(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                </ul>
+              </div>
+			  <div class="line-group">
+                <h4 class="line-header">どこが嬉しいの?</h4>
+                <ul class="line-message">
+                  <li>なんだわからんけどすごい(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                  <li>セットアップをらくにしてくれる(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                  <li>ルーチンワークの回避が出来る(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                </ul>
+              </div>
+			  <div class="line-group">
+                <h4 class="line-header">どこが苦手なの?</h4>
+                <ul class="line-message">
+                  <li>なんだわからんけどすごい(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                  <li>セットアップをらくにしてくれる(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                  <li>ルーチンワークの回避が出来る(0/0 0人)<a href="">+評価</a> <a href="">-評価</a></li>
+                </ul>
+              </div>
+              <div class="line-link">&gt; 全て表示</div>
+			</div>
+          	<div class="content-area header-wrapper">
+              	<div class="content-header">
+               	  <h3>GemCasts</h3>
+               	  <hr>
+               	  <div class="sub-header">Video tutorials</div>
+                </div>
+                <div class="list-wrapper">
+                  <ol>
+                    <li>
+                      <div class="commentboxgrey">
+                        <h2 class="comment-title">俺様の話を聞け</h2>
+                        <div class="summary-wrapper">
+                          <div class="rate-wrapper">
+                            <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
+                            <div>役立ち度(0/0 0人による評価)</div>
+                          </div>
+                          <div class="comments-wrapper">
+                            <p>使ってみたら解ったんだけど、実はこのgem使えるかも知れない...</p>
+                          </div>
+                        </div>
+                        <div class="tag-name">Tag : ログインするとき, 新Appを作るとき</div>
+                        <div class="comment-date">Trackback by maimuzo at 2008/8/3 19:23:32</div>
+                        <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="commentboxgrey">
+                         <h2 class="comment-title">俺様の話を聞け</h2>
+                        <div class="summary-wrapper">
+                          <div class="rate-wrapper">
+                            <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
+                            <div>役立ち度(0/0 0人による評価)</div>
+                          </div>
+                          <div class="comments-wrapper">
+                            <p>使ってみたら解ったんだけど、実はこのgem使えるかも知れない...</p>
+                          </div>
+                        </div>
+                        <div class="comment-date">Trackback by maimuzo at 2008/8/3 19:23:32</div>
+                        <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
+                     </div>
+                    </li>
+                  </ol>
+                </div><!-- end of list-wrapper -->
+              </div>
+              <div class="content-area header-wrapper">
+              	<div class="content-header">
+               	  <h3>うんちく</h3>
+               	  <hr>
+               	  <div class="sub-header">Comments</div>
+                </div>
+                <div class="list-wrapper">
+                  <ol>
+                    <li>
+                      <div class="commentboxgrey">
+                        <h2 class="comment-title">俺様の話を聞け</h2>
+                        <div class="summary-wrapper">
+                          <div class="rate-wrapper">
+                            <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
+                            <div>役立ち度(0/0 0人による評価)</div>
+                          </div>
+                          <div class="comments-wrapper">
+                            <p>使ってみたら解ったんだけど、実はこのgem使えるかも知れない...</p>
+                          </div>
+                        </div>
+                        <div class="comment-date">Trackback by maimuzo at 2008/8/3 19:23:32</div>
+                        <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="commentboxgrey">
+                         <h2 class="comment-title">俺様の話を聞け</h2>
+                        <div class="summary-wrapper">
+                          <div class="rate-wrapper">
+                            <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
+                            <div>役立ち度(0/0 0人による評価)</div>
+                          </div>
+                          <div class="comments-wrapper">
+                            <p>使ってみたら解ったんだけど、実はこのgem使えるかも知れない...</p>
+                          </div>
+                        </div>
+                        <div class="comment-date">Trackback by maimuzo at 2008/8/3 19:23:32</div>
+                        <div class="link-wrapper"><a href="">&gt; 詳細へ</a></div>
+                     </div>
+                    </li>
+                  </ol>
+                </div><!-- end of list-wrapper -->
+              </div>
+          </div>
+        </div>

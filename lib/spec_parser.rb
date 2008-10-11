@@ -5,10 +5,12 @@ require "yaml"
 # 未知のバージョンの詳細を取得し、解析して保存する。
 #
 # kick:
-# script/runner 'SpecParser.new.scan.add_unknown_gem_versions.update_spec'
+# script/runner 'SpecParser.new.scan.add_unknown_gem_versions.update_spec_from_command'
 # script/runner 'SpecParser.new(true).scan.add_unknown_gem_versions'
-# script/runner 'SpecParser.new(true, true).scan.update_spec'
-# script/runner 'SpecParser.new(true, true).load_from_ar.update_spec'
+# script/runner 'SpecParser.new(true, true).scan.update_spec_from_command'
+# script/runner 'SpecParser.new(true, true).load_from_ar.update_spec_from_command'
+# script/runner 'SpecParser.new(true, true).load_from_ar.update_spec_from_zip("pack.zip")'
+# script/runner 'SpecParser.new(true, true).load_from_ar.parse_agein_from_saved_yaml'
 #
 class SpecParser < SpecScanner
   
@@ -39,6 +41,44 @@ class SpecParser < SpecScanner
   
   # add a unknown a gem, a version, a spec yaml, and a detail
   # 未知のgem、version、yaml形式のspec、詳細を追加する
+  # specはgem specificationコマンドで取得
+  def update_spec_from_command
+    update_spec do |rubygem, version|
+      # get a spec and add it if this system dosn't have a spec
+      # もしspecをキャッシュしてなければ、取得して保存する
+      if version.spec.nil?
+        spec_yaml = get_unknown_spec(rubygem, version)
+        spec_yaml = remove_dust(spec_yaml)
+        version.create_spec(:yaml => spec_yaml)
+        added_spec_counter(version.gemversion)
+        puts "get the spec from a command line, and save it : #{line[:gem]}[#{version.version}]" if @verbose
+        parse(version, spec_yaml)
+      end
+    end
+  end
+  
+  # parse yaml specs from file, and add details
+  # ファイルから未知のyaml形式のspecを取得し、詳細を追加する
+  def update_spec_from_zip(filename = nil)
+    update_spec do |rubygem, version|
+      #load
+      get_unknown_spec(rubygem, version)
+    end
+  end
+  
+  # 保存済みyamlから再度解析する(カラム追加時など)
+  def parse_agein_from_saved_yaml
+    update_spec do |rubygem, version|
+      parse(version, version.spec.yaml) unless version.spec.nil?
+    end
+  end
+  
+
+private
+
+  # add a unknown a gem, a version, a spec yaml, and a detail
+  # get yaml formated spec from yield
+  # 未知のgem、version、yaml形式のspec、詳細を追加する
   def update_spec
     @scaned_gem_and_versions.each do |line|
       # add a unknown gem name
@@ -57,24 +97,14 @@ class SpecParser < SpecScanner
         if version.nil?
           version = rubygem.versions.create(:version => version_name)
           puts "add version : #{line[:gem]}[#{version_name}]" if @verbose
-        end
-        # get a spec and add it if this system dosn't have a spec
-        # もしspecをキャッシュしてなければ、取得して保存する
-        if version.spec.nil?
-          spec_yaml = get_unknown_spec(rubygem, version)
-          spec_yaml = remove_dust(spec_yaml)
-          version.create_spec(:yaml => spec_yaml)
-          added_spec_counter(version.gemversion)
-          puts "get the spec from a command line, and save it : #{line[:gem]}[#{version.version}]" if @verbose
-          parse(version, spec_yaml)
-        end
+        end       
+        yield(rubygem, version)
       end
     end
     show_result_of_spec
   end
-
-private
-
+  
+  
   # parse spec, and save it or force update it
   # specの解析と、保存または上書き
   def parse(version, spec_yaml_source)
@@ -88,9 +118,10 @@ private
       detail[:summary] = geminfo.summary unless geminfo.summary.nil?
       detail[:description] = geminfo.description.to_s unless geminfo.description.nil?
       detail[:homepage] = geminfo.homepage unless geminfo.homepage.nil?
-      detail[:authors] = geminfo.authors.to_s unless geminfo.authors.nil?
+      detail[:authors] = geminfo.authors.join(", ") unless geminfo.authors.nil?
       detail[:email] = geminfo.email unless geminfo.email.nil?
       detail[:installmessage] = geminfo.post_install_message unless geminfo.post_install_message.nil?          
+      detail[:project_name] = geminfo.rubyforge_project unless geminfo.rubyforge_project.nil?
       # add or update
       if version.detail.nil?
         version.create_detail(detail)

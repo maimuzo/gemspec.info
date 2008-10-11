@@ -11,6 +11,7 @@ class CreateDetails < ActiveRecord::Migration
       t.text :authors
       t.string :email
       t.text :installmessage
+      t.string :project_name
       t.datetime :created_at
       t.datetime :updated_at
     end

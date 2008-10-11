@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081008153316) do
+ActiveRecord::Schema.define(:version => 20081011041026) do
 
   create_table "abstracts", :force => true do |t|
     t.integer  "user_id",      :limit => 11
@@ -108,6 +108,16 @@ ActiveRecord::Schema.define(:version => 20081008153316) do
     t.string  "salt",                     :null => false
   end
 
+  create_table "ratings", :force => true do |t|
+    t.integer "rater_id",   :limit => 11
+    t.integer "rated_id",   :limit => 11
+    t.string  "rated_type"
+    t.integer "rating",     :limit => 10, :precision => 10, :scale => 0
+  end
+
+  add_index "ratings", ["rater_id"], :name => "index_ratings_on_rater_id"
+  add_index "ratings", ["rated_type", "rated_id"], :name => "index_ratings_on_rated_type_and_rated_id"
+
   create_table "rubygems", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -171,7 +181,7 @@ ActiveRecord::Schema.define(:version => 20081008153316) do
     t.string   "email"
     t.string   "claimed_url"
     t.string   "fullname"
-    t.string   "birth_day"
+    t.date     "birth_day"
     t.integer  "gender",      :limit => 11
     t.string   "postcode"
     t.string   "country"
@@ -179,6 +189,8 @@ ActiveRecord::Schema.define(:version => 20081008153316) do
     t.string   "timezone"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "salt",                      :null => false
+    t.string   "user_key",                  :null => false
   end
 
   create_table "versions", :force => true do |t|

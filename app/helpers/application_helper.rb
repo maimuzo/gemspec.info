@@ -9,7 +9,11 @@ module ApplicationHelper
   end
 
   def current_user
-    @current_user ||= User.find(session[:user_id])
+    if logged_in?
+      return @current_user ||= User.find(session[:user_id])
+    else
+      return nil
+    end
   end
   
   #
@@ -51,6 +55,109 @@ module ApplicationHelper
       "男性"
     else
       "女性"
+    end
+  end
+  
+  def chose_love_links(target, user)
+    link_string = ""
+    return link_string if user.nil?
+    if target.rated_by?(user)
+      rating = what_did_user_rate?(target, user)
+      if 0 < rating
+        # user reted "plus"
+        link_string << "あなたは＋評価しています。 "
+        link_string << link_to('評価取消', reset_love_rubygem_path, :method => :post) + ' '
+        link_string << link_to('−評価', minus_love_rubygem_path, :method => :post)
+      else
+        # user reted "minus"
+        link_string << "あなたは−評価評価しています。 "
+        link_string << link_to('＋評価', plus_love_rubygem_path, :method => :post) + ' '
+        link_string << link_to('評価取消', reset_love_rubygem_path, :method => :post)
+      end
+    else
+      # user don't still rate
+      link_string << "あなたはまだ評価していません。 "
+      link_string << link_to('＋評価', plus_love_rubygem_path, :method => :post) + ' '
+      link_string << link_to('−評価', minus_love_rubygem_path, :method => :post)      
+    end 
+    link_string
+  end
+  
+  # examine a rated rating by the user
+  def what_did_user_rate?(target, user)
+    cond = ["rater_id = :rater_id and rated_id = :rated_id and rated_type = :rated_type",
+      {:rater_id => user.id, :rated_id => target.id, :rated_type => target.class}]
+    rated = Rating.find(:first, cond)
+    if rated.nil?
+      return nil
+    else
+      return rated.rating
+    end
+  end
+  
+  # added class="niceforms" to the form
+  def niceforms_button_to(name, options = {}, html_options = {})
+    html_options = html_options.stringify_keys
+    convert_boolean_attributes!(html_options, %w( disabled ))
+
+    method_tag = ''
+    if (method = html_options.delete('method')) && %w{put delete}.include?(method.to_s)
+     method_tag = tag('input', :type => 'hidden', :name => '_method', :value => method.to_s)
+    end
+
+    form_method = method.to_s == 'get' ? 'get' : 'post'
+
+    request_token_tag = ''
+    if form_method == 'post' && protect_against_forgery?
+     request_token_tag = tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token)
+    end
+
+    if confirm = html_options.delete("confirm")
+     html_options["onclick"] = "return #{confirm_javascript_function(confirm)};"
+    end
+
+    url = options.is_a?(String) ? options : self.url_for(options)
+    name ||= url
+
+    html_options.merge!("type" => "submit", "value" => name)
+
+    "<form method=\"#{form_method}\" action=\"#{escape_once url}\" class=\"button-to niceforms\"><div>" +
+     method_tag + tag("input", html_options) + request_token_tag + "</div></form>"
+  end
+    
+  def site_link(detail)
+    if detail.homepage.blank?
+      return "NO DATA"
+    else
+      return link_to('公式サイト', strip_tags(detail.homepage), {:target => "_blank"}).untaint
+    end
+  end
+  
+  def project_link(detail)
+    link_string = ""
+    unless detail.project_name.blank?
+      link_string <<  link_to('home', "http://" + strip_tags(detail.project_name) + ".rubyforge.org/", {:target => "_blank"})
+      link_string << " / "
+      link_string <<  link_to('project', "http://rubyforge.org/projects/" + strip_tags(detail.project_name) + "/", {:target => "_blank"})
+    end
+    link_string.untaint
+  end
+  
+  def depend_link(depend)
+    h(depend.depgem + "[" + depend.depversion + "]")
+  end
+  
+  def formated_date_with_check(date)
+    formated = date.strftime("%Y/%m/%d")
+    formated = "NO DATA" if "1900/01/01" == formated
+    formated
+  end
+  
+  def check_install_message(message)
+    if message.blank?
+      return "NO DATA"
+    else
+      return simple_format(h(message))
     end
   end
 end

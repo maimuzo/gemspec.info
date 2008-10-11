@@ -23,5 +23,22 @@ class Version < ActiveRecord::Base
   def fill_gemversion
     self.gemversion = self.rubygem.name + "_" + self.version.split(".").join("_")
   end
-    
+  
+  def find_detail_and_check_empty
+    detail = self.detail
+    if detail.nil?
+      detail = Detail.new({
+        :platform => "NO DATA",
+        :executables => "NO DATA",
+        :date => "1900/1/1",
+        :summary => "NO DATA",
+        :description => "NO DATA",
+        :homepage => "",
+        :authors => "NO DATA",
+        :email => "",
+        :platform => "NO DATA",
+      })
+    end
+    return detail
+  end
 end

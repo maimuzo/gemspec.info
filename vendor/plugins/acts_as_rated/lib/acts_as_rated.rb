@@ -252,7 +252,12 @@ module ActiveRecord #:nodoc:
               rating_class.transaction do
                 target.rating_count -= 1
                 target.rating_total -= r.rating
-                target.rating_avg = target.rating_total / target.rating_count
+                # by Maimuzo
+                begin
+                  target.rating_avg = target.rating_total / target.rating_count
+                rescue ZeroDivisionError => e
+                  target.rating_avg = 0
+                end
                 target.rating_avg = 0 if target.rating_avg.nan?
               end
             end

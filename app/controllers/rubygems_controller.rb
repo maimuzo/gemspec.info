@@ -24,6 +24,7 @@ formatted_destroy_tag_rubygem POST   /rubygems/:id/destroy_tag.:format {:control
   # GET    /rubygems/:id
   def show
     @gem = Rubygem.find(params[:id])
+    @title = @gem.name
     if params[:version]
       @version = @gem.versions.find(params[:version])
     else
@@ -32,8 +33,7 @@ formatted_destroy_tag_rubygem POST   /rubygems/:id/destroy_tag.:format {:control
     @versions_for_select = @gem.versions
     @detail = @version.find_detail_and_check_empty
     @dependencies = @version.dependencies
-    @title = @gem.name
-
+    @obstacles = @version.obstacles
     respond_to do |format|
       format.html
     end
@@ -80,11 +80,51 @@ formatted_destroy_tag_rubygem POST   /rubygems/:id/destroy_tag.:format {:control
   
   # GET    /rubygems/:id/new_tag
   def new_tag
-    
+    @gem = Rubygem.find(params[:id])
+    @title = "add tag for " + @gem.name
+    if params[:version]
+      @version = @gem.versions.find(params[:version])
+    else
+      @version = @gem.lastest_version
+    end
+    @versions_for_select = @gem.versions
+    @detail = @version.find_detail_and_check_empty
+    @dependencies = @version.dependencies
+    @obstacles = @version.obstacles
+    respond_to do |format|
+      format.html
+    end
   end
   
   # POST   /rubygems/:id/create_tag
   def create_tag
+    @gem = Rubygem.find(params[:id])
+    @title = "add tag for " + @gem.name
+    if params[:version]
+      @version = @gem.versions.find(params[:version])
+    else
+      @version = @gem.lastest_version
+    end
+    @versions_for_select = @gem.versions
+    @detail = @version.find_detail_and_check_empty
+    @dependencies = @version.dependencies
+    @obstacles = @version.obstacles
+    
+    respond_to do |format|
+#      new_tag = Tag.new(params[:tag])
+#      unless new_tag.valid and new_tag.name.include?(" ")
+#        format.html { redirect_to(new_tag_rubygem_path(@gem)) }
+#        return
+#      end
+      @gem.user_id = current_user.id
+      @gem.tag_list = @gem.tag_list + ", " + params[:tag][:name]
+      if @gem.save
+        flash[:notice] = 'Tag was successfully added.'
+        format.html { redirect_to(rubygem_path(@gem)) }
+      else
+        format.html { redirect_to(new_tag_rubygem_path(@gem)) }
+      end
+    end
     
   end
   
@@ -106,8 +146,4 @@ formatted_destroy_tag_rubygem POST   /rubygems/:id/destroy_tag.:format {:control
     end
   end
   
-  # POST   /rubygems/:id/destroy_favorit
-  #def destroy_favorit
-    
-  #end
 end

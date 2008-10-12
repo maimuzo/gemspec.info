@@ -216,7 +216,15 @@ Gems and comments form styles
 @Search form styles
 ----------------------------------------------------*/
 
-.coolinput {
+.abstract-add .coolinput {
+	width:270px;
+}
+
+.tag-add .coolinput {
+	width:170px;
+}
+
+.search-indicator .coolinput, .login-indicator .coolinput{
 	width:120px;
 }
 
@@ -227,6 +235,16 @@ input.pre-input{
 div.mypage-link {
 	text-align:right;
 	margin-right:30px;
+}
+
+div.right-side {
+	text-align:right;
+	margin-right:5px;
+}
+
+h4.tagname-header {
+	text-align:center;
+	margin-bottom:10px;
 }
 /*
 @licenser panel

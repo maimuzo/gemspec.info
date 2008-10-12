@@ -1,0 +1,23 @@
+        <div id="content-1">
+          <%= render :partial => "share/general" %>
+        </div>
+        <div id="content-2">
+          <div class="content-wrap">
+            <% if @gems.size > 0  -%>
+            <div class="content-area header-wrapper">
+              <div class="content-header">
+                <h3>御題</h3>
+                <hr>
+                <div class="sub-header">results of tag search</div>
+              </div>
+              <div class="list-wrapper">
+                <h4 class="tagname-header"><%=h @tag.name %>とき使うgem</h4>
+                <ol>
+                  <%= render :partial => "share/gem", :collection => @gems %>
+                </ol>
+              </div><!-- end of list-wrapper -->
+            </div><!-- end of content-area -->
+            <% end -%>
+            <div class="content-footer right-side"><%= link_to('戻る', root_path) %></div>
+          </div><!-- end of content-wrap -->
+        </div>

@@ -1,0 +1,12 @@
+          <div class="content-wrap">
+            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">総合評価</h2>
+            <div style="overflow:hidden;">
+              <ul>
+                <% num = 0  -%>
+                <% general_ranks.each do |ranking| -%>
+                <% num += 1 -%>
+                <li><span><%= num %></span><span>(<%=h ranking.point %>pt)</span><%= link_to(sanitize(ranking.rubygem.name), rubygem_path(ranking.rubygem)).untaint %></li>
+                <% end -%>
+              </ul>
+            </div>
+          </div>

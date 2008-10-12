@@ -44,4 +44,18 @@ class MypagesController < ApplicationController
       format.html { redirect_to(mypage_path) }
     end
   end
+  
+  # DELETE   /mypage/:id/
+  def destroy_favorit
+#    @gem = Rubygem.find(params[:id])
+#    current_user.has_favorite(@gem)
+#    
+#    respond_to do |format|
+#      format.html do
+#        flash[:notice] = "#{@gem.name}をお気に入りに追加しました。Mypageから参照可能です"
+#        redirect_to(rubygem_path(@gem))
+#      end
+#    end
+  end
+
 end

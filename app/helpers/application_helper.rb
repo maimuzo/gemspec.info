@@ -58,7 +58,7 @@ module ApplicationHelper
     end
   end
   
-  def chose_love_links(target, user)
+  def chose_rate_links(target, user, plus_url, minus_url, reset_url = '')
     link_string = ""
     return link_string if user.nil?
     if target.rated_by?(user)
@@ -66,19 +66,19 @@ module ApplicationHelper
       if 0 < rating
         # user reted "plus"
         link_string << "あなたは＋評価しています。 "
-        link_string << link_to('評価取消', reset_love_rubygem_path, :method => :post) + ' '
-        link_string << link_to('−評価', minus_love_rubygem_path, :method => :post)
+        link_string << link_to('評価取消', reset_url, :method => :post) + ' '
+        link_string << link_to('−評価', minus_url, :method => :post)
       else
         # user reted "minus"
-        link_string << "あなたは−評価評価しています。 "
-        link_string << link_to('＋評価', plus_love_rubygem_path, :method => :post) + ' '
-        link_string << link_to('評価取消', reset_love_rubygem_path, :method => :post)
+        link_string << "あなたは−評価しています。 "
+        link_string << link_to('＋評価', plus_url, :method => :post) + ' '
+        link_string << link_to('評価取消', reset_url, :method => :post)
       end
     else
       # user don't still rate
       link_string << "あなたはまだ評価していません。 "
-      link_string << link_to('＋評価', plus_love_rubygem_path, :method => :post) + ' '
-      link_string << link_to('−評価', minus_love_rubygem_path, :method => :post)      
+      link_string << link_to('＋評価', plus_url, :method => :post) + ' '
+      link_string << link_to('−評価', minus_url, :method => :post)      
     end 
     link_string
   end
@@ -95,7 +95,7 @@ module ApplicationHelper
     end
   end
   
-  # added class="niceforms" to the form
+  # added class="niceforms inline-form" to the form
   def niceforms_button_to(name, options = {}, html_options = {})
     html_options = html_options.stringify_keys
     convert_boolean_attributes!(html_options, %w( disabled ))
@@ -121,7 +121,7 @@ module ApplicationHelper
 
     html_options.merge!("type" => "submit", "value" => name)
 
-    "<form method=\"#{form_method}\" action=\"#{escape_once url}\" class=\"button-to niceforms\"><div>" +
+    "<form method=\"#{form_method}\" action=\"#{escape_once url}\" class=\"button-to niceforms inline-form\"><div>" +
      method_tag + tag("input", html_options) + request_token_tag + "</div></form>"
   end
     
@@ -159,5 +159,10 @@ module ApplicationHelper
     else
       return simple_format(h(message))
     end
+  end
+  
+  def already_inputed_tag(tag)
+    label = h(tag.name) + "(" + tag.taggings_count.to_s + ")"
+    link_to(label, "javascript:return false;", {:class => "tag-example", :tag => h(tag.name), :onclick => "add_tag_name($j(this).attr('tag'));"})
   end
 end

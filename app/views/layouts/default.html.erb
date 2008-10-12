@@ -18,6 +18,7 @@
 <%= javascript_include_tag('interface', 'jglycy-1.0', 'jforms.1.0', 'jquery.coolinput', 'jquery.dimensions', 'jquery.gradient', 'jquery.jgrowl', 'jquery.simplemodal', 'jquery.slider', 'jquery.curvycorners.min', 'lpomessage', :cache => 'cache/jqueries.js') %>
 <%#= javascript_include_tag(:all) %>
 <%# = javascript_include_tag(:all, :cache => 'cache/all.js') %>
+<%= yield :other_js %>
 <%= javascript_include_tag('gemspec') %>
 
 <%= stylesheet_link_tag 'stylesMain' %>

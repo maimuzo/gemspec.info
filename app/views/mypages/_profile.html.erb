@@ -1,0 +1,17 @@
+          <div class="content-wrap">
+            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">名を名乗れ</h2>
+            <div>
+              <p>your OpenID : <%=h @user.claimed_url %></p>
+              <p>表示名 : <%=h @user.nickname %></p>
+              <p>メアド : <%=h @user.email %></p>
+              <p>本名 : <%=h @user.fullname %></p>
+              <p>誕生日 : <%=h @user.birth_day.strftime("%Y/%m/%d") %></p>
+              <p>性別 : <%=h gender_value(@user.gender) %></p>
+              <p>郵便番号 : <%=h @user.postcode %></p>
+              <p>住んでいる国 : <%=h @user.country %></p>
+              <p>ネイティブ言語 : <%=h @user.language %></p>
+              <p>タイムゾーン : <%=h @user.timezone %></p>
+              <p><%= niceforms_button_to('編集', edit_mypage_path) %></p>
+              <p>さーせん。今んとこ未使用が多いけど、OpenIDのテストの意味合いが大きいです。将来的に統計情報として使うかもです。さーせん。</p>
+            </div>
+          </div>

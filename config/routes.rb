@@ -47,10 +47,13 @@ ActionController::Routing::Routes.draw do |map|
   
   # by hand
   map.resource :mypage
-  map.resources :rubygems, :controller => "rubygems", :member => {:plus_love => :post, :minus_love => :post, :reset_love => :post, :new_tag => :get, :create_tag => :post, :destroy_tag => :post, :create_favorit => :post, :destroy_favorit => :post}
-  # map.resources :rubygems, :controller => "rubygems", :path_prefix => 'rubygems/:rubygem_id', :member => {:plus_love => :post, :minus_love => :post, :reset_love => :post}
-  map.gemcasts 'rubygems/:rubygem_id/gemcast/:id', :controller => "gemcasts", :action => "show"
-  map.unchikus 'rubygems/:rubygem_id/unchiku/:id', :controller => "unchikus", :action => "show"
+  map.resources :rubygems, :controller => "rubygems", :member => {:plus_love => :post, :minus_love => :post, :reset_love => :post, :new_tag => :get, :create_tag => :post, :destroy_tag => :post, :create_favorit => :post}
+  map.resources :gemcasts, :path_prefix => 'rubygems/:rubygem_id', :member => {:plus_useful => :post, :minus_useful => :post, :reset_useful => :post}
+  map.resources :unchikus, :path_prefix => 'rubygems/:rubygem_id', :member => {:plus_useful => :post, :minus_useful => :post, :reset_useful => :post}
+  map.resources :obstacles, :path_prefix => 'rubygems/:rubygem_id/:version_id', :member => {:plus_useful => :post, :minus_useful => :post, :reset_useful => :post}
+  map.resources :whats,    :path_prefix => 'rubygems/:rubygem_id', :member => {:plus_useful => :post, :minus_useful => :post, :reset_useful => :post}, :controller => "what"
+  map.resources :strengths, :path_prefix => 'rubygems/:rubygem_id', :member => {:plus_useful => :post, :minus_useful => :post, :reset_useful => :post}, :controller => "strength"
+  map.resources :weaknesses, :path_prefix => 'rubygems/:rubygem_id', :member => {:plus_useful => :post, :minus_useful => :post, :reset_useful => :post}, :controller => "weakness"
 
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'

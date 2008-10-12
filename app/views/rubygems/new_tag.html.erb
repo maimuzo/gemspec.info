@@ -1,0 +1,44 @@
+<% content_for(:other_js) do -%>
+  <%= javascript_include_tag('gemspec_tag_picker') %>
+<% end -%>
+
+        <div id="content-1">
+          <%= render :partial => 'share/spec' %>
+        </div>
+        <div id="content-2">
+          <div class="content-wrap">
+            <div class="content-area header-wrapper">
+              <div class="content-header">
+               	<h3>如何に使うか</h3>
+               	<hr>
+               	<div class="sub-header">how to use this gem?</div>
+              </div>
+              <div class="line-group">
+                <div class="tag-add">
+                  <% form_for(Tag.new, {:url => create_tag_rubygem_path(@gem), :html => {:class => "niceforms", :method => :post}}) do |f| %>
+                    <%= f.error_messages %>
+                    <%= f.text_field(:name, {:class => "coolinput", :title => "○○する"}) %>
+                    とき使うgem
+                    <%= f.submit("追加") %>
+                  <% end %>
+                </div>
+              </div>
+              <div class="line-group">
+                <div>このgemに既に付けられているタグ</div>
+                <div class="tag-list">
+                  <%=h tag_string_or_none(@gem) %> 
+                </div>
+              </div>
+              <div class="line-group">
+                <div>他のgemに使われている全タグ</div>
+                <div class="tag-list">
+                  <p>(クリックするとコピーされます)</p>
+                  <% Tag.find(:all).each do |tag| -%>
+                    <%= already_inputed_tag(tag) %>&nbsp;
+                  <% end -%>
+                </div>
+              </div>
+              <div class="right-side"><%= link_to('戻る', rubygem_path(@gem).untaint) %></div>
+            </div>
+          </div>
+        </div>

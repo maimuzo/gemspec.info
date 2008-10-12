@@ -1,0 +1,74 @@
+          <div class="content-wrap">
+            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">Gemスペック</h2>
+            <div class="gem-name"><%=h @gem.name %></div>
+            <% if logged_in? -%>
+              <div class="favorit-add right-side"><%= niceforms_button_to('お気に入りに追加', create_favorit_rubygem_path(@gem), :method => :post) %></div>
+            <% end -%>
+            <div class="left-rate-wrapper">
+              <div><img src="<%= @gem.love_chart_url_with_white.untaint %>" /></div>
+              <div>愛され度(<%=h plus_minus_total(@gem) %>人による評価)</div>
+              <% if logged_in? -%>
+              <div><%= chose_rate_links(@gem, current_user, plus_love_rubygem_path, minus_love_rubygem_path, reset_love_rubygem_path) %></div>
+              <% end -%>
+            </div>
+            <div class="tag-name">Tag : <%=h tag_string_or_none(@gem) %></div>
+            <% if logged_in? -%>
+              <div class="tag-new right-side"><%= niceforms_button_to('タグ編集', new_tag_rubygem_path(@gem), :method => :get) %></div>
+            <% end -%>
+            <div class="version-select">Version <form class="inline-form"><%= select_tag('version', options_from_collection_for_select(@versions_for_select, :to_param, :version, @version.to_param)) %><input type="submit" value="変更" /></form></div>
+            <div class="gem-detail">
+              <h3 class="group-header">バージョン依存情報</h3>
+              <p class="detail-content"><%=h @detail.summary %></p>
+              <p>Official : <%= site_link(@detail) %></p>
+              <p>RubyForge : <%= project_link(@detail) %></p>
+              <ul>
+                <% @detail.authors.split(",").each do |author| -%>
+              	<li>provided by <%=h author.strip %></li>
+                <% end -%>
+              </ul>
+              <p>platform : <%=h @detail.platform %></p>
+              <p>実行可能コマンド : <%=h @detail.executables %></p>
+              <p>最終更新日 : <%=h formated_date_with_check(@detail.date) %></p>
+              <h3 class="group-header">インストールメッセージ</h3>
+              <p class="detail-content"><%= check_install_message(@detail.installmessage) %></p>
+              <h3 class="group-header">依存関係</h3>
+              <% unless @dependencies.size == 0 -%>
+              <ul>
+                <% @dependencies.each do |depend| -%>
+              	<li><%= depend_link(depend) %></li>
+                <% end -%>
+              </ul>
+              <% end -%>
+            </div>
+          </div>
+          <div class="content-wrap">
+            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">障害状況</h2>
+            <% if 0 == @obstacles.size -%>
+            <div class="list-wrapper">
+              <div>このバージョンへの障害情報はありません</div>
+            </div>
+            <% end -%>
+            <div class="list-wrapper">
+              <ol>
+                <% @obstacles.each do |obstacle| -%>
+                <li>
+                  <div class="commentboxgrey">
+                    <h2 class="comment-title"><%=h obstacle.title %></h2>
+                    <div class="left-rate-wrapper">
+                      <div><img src="<%= obstacle.useful_chart_url.untaint %>" /></div>
+                      <div>役立ち度(<%=h plus_minus_total(obstacle) %>人による評価)</div>
+                    </div>
+                    <div class="comments-wrapper">
+                      <p><%=h obstacle.summary %></p>
+                    </div>
+                    <div class="comment-date"><%=h obstacle.method %> by <%=h obstacle.user.name %> at <%=h obstacle.last_update_string %></div>
+                    <div class="link-wrapper"><%= link_to('詳細へ', obstacle_path({:id => obstacle.id, :rubygem_id => @gem.to_param, :version_id => @version.to_param})) %></div>
+                  </div>
+                </li>
+                <% end -%>
+              </ol>
+            </div>
+            <% if logged_in? -%>
+            <div class="obstacle-new right-side"><%= niceforms_button_to('障害情報追加', new_obstacle_path({:rubygem_id => @gem.to_param, :version_id => @version.to_param})) %></div>
+            <% end -%>
+          </div>

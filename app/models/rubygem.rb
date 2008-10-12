@@ -4,9 +4,9 @@ class Rubygem < ActiveRecord::Base
   has_one :general_point
   # has_one :version # TODO:CHECK_ME
   has_many :versions
-  has_many :what_is_this, :class_name => "WhatIsThis"
-  has_many :strength, :class_name => "Strength"
-  has_many :weakness, :class_name => "Weakness"
+  has_many :what, :class_name => "What", :order => "rating_total DESC"
+  has_many :strength, :class_name => "Strength", :order => "rating_total DESC"
+  has_many :weakness, :class_name => "Weakness", :order => "rating_total DESC"
   
   validates_presence_of :name
   validates_uniqueness_of :name
@@ -56,7 +56,7 @@ class Rubygem < ActiveRecord::Base
 
   def count_info
     @count_info ||= {
-      :whatisthis => what_is_this.count,
+      :whatisthis => what.count,
       :strength => strength.count,
       :weakness => weakness.count,
       :gemcast => gemcasts.count,

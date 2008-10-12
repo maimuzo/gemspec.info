@@ -1,0 +1,2 @@
+class WeaknessController < AbstractsController
+end

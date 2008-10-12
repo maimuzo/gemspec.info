@@ -1,0 +1,20 @@
+                    <li>
+                      <div class="commentboxgrey">
+                        <h2 class="gem-name"><%=h gem.name %></h2>
+                        <div class="summary-wrapper">
+                          <div class="rate-wrapper">
+                            <div><img src="<%= gem.love_chart_url_with_lightblue.untaint %>" /></div>
+                            <div>愛され度(<%=h plus_minus_total(gem) %>人による評価)</div>
+                          </div>
+                          <div class="comments-wrapper">
+                            <p>何:<%=h gem.count_info[:whatisthis] %>件 良:<%=h gem.count_info[:strength] %>件 悪:<%=h gem.count_info[:weakness] %>件<br />
+                            GemCasts:<%=h gem.count_info[:gemcast] %>件<br />
+                            うんちく:<%=h gem.count_info[:unchiku] %>件<br />
+                            最新版での障害:<%=h gem.count_info[:obstacle] %>件</p>
+                          </div>
+                        </div>
+                        <div class="tag-name">Tag : <%=h tag_string_or_none(gem) %></div>
+                        <div class="comment-date">Last update on <%=h gem.last_update_string %></div>
+                        <div class="link-wrapper"><%= link_to('詳細へ', rubygem_path(gem)).untaint %></div>
+                      </div>
+                    </li>

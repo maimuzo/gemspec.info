@@ -1,0 +1,2 @@
+class StrengthController < AbstractsController
+end

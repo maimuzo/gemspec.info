@@ -17,6 +17,14 @@
                       <div class="comments-wrapper">
                         <p><%= simple_format(h(@comment.comment)) %></p>
                       </div>
+                      <% if 'reference' == @comment.method -%>
+                        <div class="comments-wrapper">
+                          <p><%= simple_format(h(strip_tags(@comment.foreign_content))) %></p>
+                        </div>
+                        <div class="comments-url-wrapper">
+                          <%= link_to('参照先リンク', strip_tags(@comment.url), {:target => "_blank"}) %>
+                        </div>
+                      <% end -%>
                       <div class="summary-wrapper">
                         <div class="rate-wrapper">
                           <div><img src="<%= @comment.useful_chart_url.untaint %>" /></div>

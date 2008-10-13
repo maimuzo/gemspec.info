@@ -8,6 +8,8 @@ class CreateComments < ActiveRecord::Migration
       t.column :commentable_type, :string, :limit => 15, :default => "", :null => false
       t.string :nico_content_key, :default => ""
       t.string :url, :default => ""
+      t.text :foreign_content
+      t.integer :tried_times
       t.string :type, :null => false
       t.string :method, :null => false
       t.timestamps

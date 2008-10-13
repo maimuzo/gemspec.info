@@ -9,31 +9,22 @@
                 <hr>
                 <div class="sub-header">Comments</div>
               </div>
+              <% form_for(@comment, {:url => unchikus_path({:rubygem_id => @gem.to_param}), :html => {:class => "niceforms"}}) do |f|  %>
               <div class="list-wrapper">
                 <ol>
                   <li>
                     <div class="commentboxgrey">
-                      <h2 class="comment-title">俺様の話を聞け</h2>
+                      <h2 class="comment-title"><%= f.text_field(:title) %></h2>
                       <div class="comments-wrapper">
-                        <p>使ってみたら解ったんだけど、実はこのgem使えるかも知れないけどどうしたものか。<br />使ってみたら解ったんだけど、実はこのgem使えるかも知れないけどどうしたものか。<br />使ってみたら解ったんだけど、実はこのgem使えるかも知れないけどどうしたものか。<br />最初は改行だけ解釈しつつタグは捨てて、拡張は後で考えよう</p>
+                        <p><%= f.text_area(:comment) %></p>
                       </div>
-                      <div class="summary-wrapper">
-                        <div class="rate-wrapper">
-                          <div><img src="http://chart.apis.google.com/chart?chs=130x50&cht=gom&chf=bg,s,f8f8f8&chco=8080ff,ff8080&chl=USEFUL&chd=t:30" width="130" height="50" /></div>
-                          <div>役立ち度(0/0 0人による評価)</div>
-                        </div>
-                        <div class="comments-wrapper">
-                          <form class="niceforms"><input type="button" class="coolinput" value="+評価して戻る" /><br /><input type="button" class="coolinput" value="-評価して戻る" /></form>
-                        </div>
-                      </div>
-                      <div class="comment-date">Trackback by maimuzo at 2008/8/3 19:23:32</div>
-                      <div class="link-wrapper"><a href="../">評価せずに戻る</a></div>
                     </div>
                   </li>
                 </ol>
-                <div class="comment-add right-side"><%= niceforms_button_to('うんちく追加', new_unchiku_path(@gem)) %></div>
+                <div class="comment-add right-side"><%= f.submit("追加") %></div>
               </div><!-- end of list-wrapper -->
-              <div class="content-footer right-side"><%= link_to('戻る', root_path) %></div>
+              <% end -%>
+              <div class="content-footer right-side"><%= link_to('戻る', rubygem_path(@gem)) %></div>
             </div>
           </div>
         </div>

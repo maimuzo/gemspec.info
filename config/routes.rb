@@ -55,6 +55,10 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :strengths, :path_prefix => 'rubygems/:rubygem_id', :member => {:plus_useful => :post, :minus_useful => :post, :reset_useful => :post}, :controller => "strength"
   map.resources :weaknesses, :path_prefix => 'rubygems/:rubygem_id', :member => {:plus_useful => :post, :minus_useful => :post, :reset_useful => :post}, :controller => "weakness"
 
+  # by hand for trackback
+  map.unchiku_trackback 'rubygems/:rubygem_id/unchiku/trackback/:user_key', :controller => 'unchikus', :action => 'create_trackback', :requirements => { :method => :post }
+  map.obstacle_trackback 'rubygems/:version_id/obstacle/trackback/:user_key', :controller => 'obstacles', :action => 'create_trackback', :requirements => { :method => :post }
+  
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'

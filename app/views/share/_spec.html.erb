@@ -3,6 +3,7 @@
             <div class="gem-name"><%=h @gem.name %></div>
             <% if logged_in? -%>
               <div class="favorit-add right-side"><%= niceforms_button_to('お気に入りに追加', create_favorit_rubygem_path(@gem), :method => :post) %></div>
+              <div class="trackback">うんちくトラックバックURL :<<br /><input type="text" value="<%= make_unchiku_trackback_url(@gem) %> " size="40" /></div>
             <% end -%>
             <div class="left-rate-wrapper">
               <div><img src="<%= @gem.love_chart_url_with_white.untaint %>" /></div>
@@ -69,6 +70,7 @@
               </ol>
             </div>
             <% if logged_in? -%>
-            <div class="obstacle-new right-side"><%= niceforms_button_to('障害情報追加', new_obstacle_path({:rubygem_id => @gem.to_param, :version_id => @version.to_param})) %></div>
+              <div class="obstacle-new right-side"><%= niceforms_button_to('障害情報追加', new_obstacle_path({:rubygem_id => @gem.to_param, :version_id => @version.to_param})) %></div>
+              <div class="trackback">障害情報トラックバックURL :<br /><input type="text" value="<%= make_obstacle_trackback_url(@gem) %> " size="40" /></div>
             <% end -%>
           </div>

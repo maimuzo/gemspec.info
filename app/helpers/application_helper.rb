@@ -174,4 +174,12 @@ module ApplicationHelper
     label = h(tag.name) + "(" + tag.taggings_count.to_s + ")"
     link_to(label, "javascript:return false;", {:class => "tag-example", :tag => h(tag.name), :onclick => "add_tag_name($j(this).attr('tag'));"})
   end
+  
+  def make_unchiku_trackback_url(gem)
+    unchiku_trackback_url({:rubygem_id => gem.id, :user_key => current_user.user_key})
+  end
+
+  def make_obstacle_trackback_url(gem)
+    obstacle_trackback_url({:rubygem_id => gem.id, :user_key => current_user.user_key})
+  end
 end

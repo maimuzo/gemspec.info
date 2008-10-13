@@ -10,7 +10,7 @@ require "yaml"
 # script/runner 'SpecParser.new(true, true).scan.update_spec_from_command'
 # script/runner 'SpecParser.new(true, true).load_from_ar.update_spec_from_command'
 # script/runner 'SpecParser.new(true, true).load_from_ar.update_spec_from_zip("pack.zip")'
-# script/runner 'SpecParser.new(true, true).load_from_ar.parse_agein_from_saved_yaml'
+# script/runner -e production 'SpecParser.new(true, true).load_from_ar.parse_agein_from_saved_yaml'
 #
 class SpecParser < SpecScanner
   

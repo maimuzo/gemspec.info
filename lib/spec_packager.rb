@@ -17,7 +17,7 @@ class SpecPackager
   def unpack(zippath_with_file_name)
     case zippath_with_file_name[0, 1]
     when '~' then zippath_with_file_name[0] = ENV["HOME"]
-    when '.' then zippath_with_file_name[0] = Dir.pwd
+    when '.' then zippath_with_file_name[0] = Dir.pwd unless zippath_with_file_name[0, 2] == '..'
     end
     temp = Tempfile.open("unpack", @tmp)
     temp.close(true)

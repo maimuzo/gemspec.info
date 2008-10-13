@@ -1,6 +1,8 @@
                     <li>
                       <div class="commentboxgrey">
+                        <% unless @with_gem_name.nil? -%>
                         <h2 class="gem-name"><%=h unchiku.rubygem.name %></h2>
+                        <% end -%>
                         <h2 class="comment-title"><%=h unchiku.title %></h2>
                         <div class="summary-wrapper">
                           <div class="rate-wrapper">

@@ -59,6 +59,15 @@ module ApplicationHelper
   end
   
   def chose_rate_links(target, user, plus_url, minus_url, reset_url = '')
+    base_chose_rate_links(target, user, '＋評価', plus_url, '−評価', minus_url, '評価取消', reset_url)
+  end
+  
+  def chose_rate_links_and_go_parent_page(target, user, plus_url, minus_url, reset_url = '')
+    base_chose_rate_links(target, user, '＋評価して戻る', plus_url, '−評価して戻る', minus_url, '評価取消して戻る', reset_url)
+  end
+  
+  
+  def base_chose_rate_links(target, user, plus_message, plus_url, minus_message, minus_url, reset_message, reset_url = '')
     link_string = ""
     return link_string if user.nil?
     if target.rated_by?(user)
@@ -66,19 +75,19 @@ module ApplicationHelper
       if 0 < rating
         # user reted "plus"
         link_string << "あなたは＋評価しています。 "
-        link_string << link_to('評価取消', reset_url, :method => :post) + ' '
-        link_string << link_to('−評価', minus_url, :method => :post)
+        link_string << link_to(reset_message, reset_url, :method => :post) + ' '
+        link_string << link_to(minus_message, minus_url, :method => :post)
       else
         # user reted "minus"
         link_string << "あなたは−評価しています。 "
-        link_string << link_to('＋評価', plus_url, :method => :post) + ' '
-        link_string << link_to('評価取消', reset_url, :method => :post)
+        link_string << link_to(plus_message, plus_url, :method => :post) + ' '
+        link_string << link_to(reset_message, reset_url, :method => :post)
       end
     else
       # user don't still rate
       link_string << "あなたはまだ評価していません。 "
-      link_string << link_to('＋評価', plus_url, :method => :post) + ' '
-      link_string << link_to('−評価', minus_url, :method => :post)      
+      link_string << link_to(plus_message, plus_url, :method => :post) + ' '
+      link_string << link_to(minus_message, minus_url, :method => :post)      
     end 
     link_string
   end

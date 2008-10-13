@@ -1,0 +1,39 @@
+        <div id="content-1">
+          <%= render :partial => 'share/spec' %>
+        </div>
+        <div id="content-2">
+          <div class="content-wrap">
+            <div class="content-area header-wrapper">
+              <div class="content-header">
+                <h3>うんちく</h3>
+                <hr>
+                <div class="sub-header">Comments</div>
+              </div>
+              <div class="list-wrapper">
+                <ol>
+                  <li>
+                    <div class="commentboxgrey">
+                      <h2 class="comment-title"><%=h @comment.title %></h2>
+                      <div class="comments-wrapper">
+                        <p><%= simple_format(h(@comment.comment)) %></p>
+                      </div>
+                      <div class="summary-wrapper">
+                        <div class="rate-wrapper">
+                          <div><img src="<%= @comment.useful_chart_url.untaint %>" /></div>
+                          <div>役立ち度(<%=h plus_minus_total(@comment) %>人による評価)</div>
+                        </div>
+                        <div class="comments-wrapper"><%= chose_rate_links_and_go_parent_page(@comment, current_user, plus_useful_unchiku_path, minus_useful_unchiku_path, reset_useful_unchiku_path) %></div>
+                      </div>
+                      <div class="comment-date"><%=h @comment.method %> by <%=h @comment.user.name %> at <%=h @comment.last_update_string %></div>
+                    </div>
+                  </li>
+                </ol>
+                <% if current_user.id == @comment.user_id -%>
+                  <div class="comment-add right-side"><%= niceforms_button_to('うんちく編集', edit_unchiku_path({:rubygem_id => @gem.id, :id => @comment.id})) %></div>
+                  <div class="comment-delete right-side"><%= niceforms_button_to('うんちく削除', unchiku_path({:rubygem_id => @gem.id, :id => @comment.id}), :method => :delete) %></div>
+                <% end -%>
+              </div><!-- end of list-wrapper -->
+              <div class="content-footer right-side"><%= link_to('評価せずに戻る', rubygem_path(@gem)) %></div>
+            </div>
+          </div>
+        </div>

@@ -17,31 +17,40 @@
                       <div class="comments-wrapper">
                         <p><%= simple_format(h(@comment.comment)) %></p>
                       </div>
-                      <% if 'reference' == @comment.method -%>
-                        <div class="comments-wrapper">
-                          <p><%= simple_format(h(strip_tags(@comment.foreign_content))) %></p>
-                        </div>
-                        <div class="comments-url-wrapper">
-                          <%= link_to('参照先リンク', strip_tags(@comment.url), {:target => "_blank"}) %>
+                      <% if 'referenced' == @comment.method -%>
+                        <div class="reference-wrapper">
+                          <div class="capture-wrapper">
+                            <%= image_tag(@comment.reference_site_capture_url, {:alt => @comment.title, :size => '128x128'}) %>
+                          </div>
+                          <div class="summary-wrapper">
+                            <div class="reference-bubble">
+                              <div class="reference-url-wrapper">
+                                <%= link_to('参照先リンク', strip_tags(@comment.url), {:target => "_blank", :rel => @comment.title}) %>からの引用
+                              </div>
+                              <p><%= simple_format(h(strip_tags(@comment.foreign_content))) %></p>
+                            </div>
+                          </div>
+                          <div class="float-clear" />
                         </div>
                       <% end -%>
-                      <div class="summary-wrapper">
+                      <div class="comment-content-wrapper">
                         <div class="rate-wrapper">
                           <div><img src="<%= @comment.useful_chart_url.untaint %>" /></div>
-                          <div>役立ち度(<%=h plus_minus_total(@comment) %>人による評価)</div>
+                          <div>役立ち度<br />(<%=h plus_minus_total(@comment) %>人による評価)</div>
                         </div>
-                        <div class="comments-wrapper"><%= chose_rate_links_and_go_parent_page(@comment, current_user, plus_useful_unchiku_path, minus_useful_unchiku_path, reset_useful_unchiku_path) %></div>
+                        <div class="rating-link-wrapper"><%= chose_rate_links_and_go_parent_page(@comment, current_user, plus_useful_unchiku_path, minus_useful_unchiku_path, reset_useful_unchiku_path) %></div>
+                        <div class="float-clear" />
                       </div>
-                      <div class="comment-date"><%=h @comment.method %> by <%=h @comment.user.name %> at <%=h @comment.last_update_string %></div>
+                      <div class="comment-date"><%=h @comment.method %> by <%=h @comment.user.nickname %> at <%=h @comment.last_update_string %></div>
                     </div>
                   </li>
                 </ol>
                 <% if current_user.id == @comment.user_id -%>
-                  <div class="comment-add right-side"><%= niceforms_button_to('うんちく編集', edit_unchiku_path({:rubygem_id => @gem.id, :id => @comment.id})) %></div>
-                  <div class="comment-delete right-side"><%= niceforms_button_to('うんちく削除', unchiku_path({:rubygem_id => @gem.id, :id => @comment.id}), :method => :delete) %></div>
+                  <div class="comment-modify right-side"><%= niceforms_button_to('うんちく編集', edit_unchiku_path({:rubygem_id => @gem.to_param, :id => @comment.id}), :method => :get) %>
+                  <%= niceforms_button_to('うんちく削除', unchiku_path({:rubygem_id => @gem.id, :id => @comment.id}), {:method => :delete, :confirm => 'まじで?' }) %></div>
                 <% end -%>
               </div><!-- end of list-wrapper -->
-              <div class="content-footer right-side"><%= link_to('評価せずに戻る', rubygem_path(@gem)) %></div>
+              <div class="content-footer right-side"><%= link_to('評価せずに戻る', rubygem_path(@gem)).untaint %></div>
             </div>
           </div>
         </div>

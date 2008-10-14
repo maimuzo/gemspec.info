@@ -4,5 +4,8 @@ class Unchiku < Comment
   acts_as_rated
   include GemspecARExtend
 
-  attr_accesible :title, :comment
+  attr_accessible :title, :comment
+  
+  validates_presence_of :user_id, :title
+  
 end

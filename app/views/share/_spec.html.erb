@@ -1,15 +1,15 @@
-          <div class="content-wrap">
+          <div class="content-wrap spec-part">
             <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">Gemスペック</h2>
-            <div class="gem-name"><%=h @gem.name %></div>
+            <h3 class="gem-name"><%=h @gem.name %></h3>
             <% if logged_in? -%>
               <div class="favorit-add right-side"><%= niceforms_button_to('お気に入りに追加', create_favorit_rubygem_path(@gem), :method => :post) %></div>
-              <div class="trackback">うんちくトラックバックURL :<<br /><input type="text" value="<%= make_unchiku_trackback_url(@gem) %> " size="40" /></div>
+              <div class="trackback">うんちくトラックバックURL :<br /><input type="text" value="<%= make_unchiku_trackback_url(@gem) %> " size="23" /></div>
             <% end -%>
             <div class="left-rate-wrapper">
               <div><img src="<%= @gem.love_chart_url_with_white.untaint %>" /></div>
               <div>愛され度(<%=h plus_minus_total(@gem) %>人による評価)</div>
               <% if logged_in? -%>
-              <div><%= chose_rate_links(@gem, current_user, plus_love_rubygem_path, minus_love_rubygem_path, reset_love_rubygem_path) %></div>
+              <div><%= chose_rate_links(@gem, current_user, plus_love_rubygem_path(@gem), minus_love_rubygem_path(@gem), reset_love_rubygem_path(@gem)) %></div>
               <% end -%>
             </div>
             <div class="tag-name">Tag : <%=h tag_string_or_none(@gem) %></div>
@@ -60,7 +60,7 @@
                       <div>役立ち度(<%=h plus_minus_total(obstacle) %>人による評価)</div>
                     </div>
                     <div class="comments-wrapper">
-                      <p><%=h obstacle.summary %></p>
+                      <p><%=h obstacle.message_summary %></p>
                     </div>
                     <div class="comment-date"><%=h obstacle.method %> by <%=h obstacle.user.name %> at <%=h obstacle.last_update_string %></div>
                     <div class="link-wrapper"><%= link_to('詳細へ', obstacle_path({:id => obstacle.id, :rubygem_id => @gem.to_param, :version_id => @version.to_param})) %></div>
@@ -71,6 +71,6 @@
             </div>
             <% if logged_in? -%>
               <div class="obstacle-new right-side"><%= niceforms_button_to('障害情報追加', new_obstacle_path({:rubygem_id => @gem.to_param, :version_id => @version.to_param})) %></div>
-              <div class="trackback">障害情報トラックバックURL :<br /><input type="text" value="<%= make_obstacle_trackback_url(@gem) %> " size="40" /></div>
+              <div class="trackback">障害情報トラックバックURL :<br /><input type="text" value="<%= make_obstacle_trackback_url(@version) %> " size="23" /></div>
             <% end -%>
           </div>

@@ -89,7 +89,7 @@ module ApplicationHelper
       link_string << link_to(plus_message, plus_url, :method => :post) + ' '
       link_string << link_to(minus_message, minus_url, :method => :post)      
     end 
-    link_string
+    link_string.untaint
   end
   
   # examine a rated rating by the user
@@ -176,10 +176,10 @@ module ApplicationHelper
   end
   
   def make_unchiku_trackback_url(gem)
-    unchiku_trackback_url({:rubygem_id => gem.id, :user_key => current_user.user_key})
+    unchiku_trackback_url({:rubygem_id => gem.to_param, :user_key => current_user.user_key})
   end
 
-  def make_obstacle_trackback_url(gem)
-    obstacle_trackback_url({:rubygem_id => gem.id, :user_key => current_user.user_key})
+  def make_obstacle_trackback_url(version)
+    obstacle_trackback_url({:version_id => version.to_param, :user_key => current_user.user_key})
   end
 end

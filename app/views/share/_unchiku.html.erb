@@ -1,19 +1,27 @@
                     <li>
                       <div class="commentboxgrey">
                         <% unless @with_gem_name.nil? -%>
-                        <h2 class="gem-name"><%=h unchiku.rubygem.name %></h2>
+                        <h2 class="gem-name"><%=h unchiku.commentable.name %></h2>
                         <% end -%>
                         <h2 class="comment-title"><%=h unchiku.title %></h2>
-                        <div class="summary-wrapper">
+                        <div class="comment-content-wrapper">
                           <div class="rate-wrapper">
                             <div><img src="<%= unchiku.useful_chart_url.untaint %>" /></div>
-                            <div>役立ち度(<%=h plus_minus_total(unchiku) %>人による評価)</div>
+                            <div>役立ち度<br />(<%=h plus_minus_total(unchiku) %>人による評価)</div>
                           </div>
-                          <div class="comments-wrapper">
-                            <p><%=h unchiku.summary %></p>
+                          <div class="summary-wrapper">
+                            <div class="comments-wrapper">
+                              <p><%=h unchiku.comment_summary %></p>
+                            </div>
+                            <% if 'referenced' == unchiku.method -%>
+                              <div class="reference-bubble">
+                                <p><%=h unchiku.foreign_content_summary %></p>
+                              </div>
+                            <% end -%>
                           </div>
+                          <div class="float-clear" />
                         </div>
-                        <div class="comment-date"><%=h unchiku.method %> by <%=h unchiku.user.name %> at <%=h unchiku.last_update_string %></div>
-                        <div class="link-wrapper"><%= link_to('詳細へ', unchiku_path({:id => unchiku.id, :rubygem_id => unchiku.rubygem.to_param})) %></div>
+                        <div class="comment-date"><%=h unchiku.method %> by <%=h unchiku.user.nickname %> at <%=h unchiku.last_update_string %></div>
+                        <div class="link-wrapper"><%= link_to('詳細へ', unchiku_path({:id => unchiku.id, :rubygem_id => unchiku.commentable.to_param})) %></div>
                       </div>
                     </li>

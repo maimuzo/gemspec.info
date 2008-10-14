@@ -4,5 +4,5 @@ class Obstacle < Comment
   acts_as_rated
   include GemspecARExtend
 
-  attr_accesible :title, :comment
+  attr_accessible :title, :comment
 end

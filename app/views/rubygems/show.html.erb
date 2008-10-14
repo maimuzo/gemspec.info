@@ -84,9 +84,12 @@
               </div>
               <div class="list-wrapper">
                 <ol>
+                  <% if 0 == @gem.gemcasts.size -%>
+                    <li>寂しい限りだ。。。</li>
+                  <% end -%>
                   <%= render :partial => "share/gemcast", :collection => @gem.gemcasts %>
                 </ol>
-                <div class="comment-add right-side"><%= niceforms_button_to('Gemcast追加', new_gemcast_path(@gem)) %></div>
+                <div class="comment-add right-side"><%= niceforms_button_to('Gemcast追加', new_gemcast_path(@gem), :method => :get) %></div>
               </div><!-- end of list-wrapper -->
             </div>
             <div class="content-area header-wrapper">
@@ -97,9 +100,12 @@
               </div>
               <div class="list-wrapper">
                 <ol>
+                  <% if 0 == @gem.unchikus.size -%>
+                    <li>寂しい限りだ。。。</li>
+                  <% end -%>
                   <%= render :partial => "share/unchiku", :collection => @gem.unchikus %>
                 </ol>
-                <div class="comment-add right-side"><%= niceforms_button_to('うんちく追加', new_unchiku_path(@gem)) %></div>
+                <div class="comment-add right-side"><%= niceforms_button_to('うんちく追加', new_unchiku_path(@gem), :method => :get) %></div>
               </div><!-- end of list-wrapper -->
               <div class="content-footer right-side"><%= link_to('戻る', root_path) %></div>
             </div>

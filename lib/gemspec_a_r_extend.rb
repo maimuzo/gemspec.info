@@ -1,5 +1,7 @@
-module GemspecARExtend
+require "string_extend"
 
+module GemspecARExtend
+  
   # calculate rating
   # rated_count : 5
   # rated_total : 3
@@ -55,5 +57,32 @@ module GemspecARExtend
   def google_chart_url(label, ratio, bgcolor = "f8f8f8")
     "http://chart.apis.google.com/chart?chs=80x50&cht=gom&chf=bg,s,#{bgcolor}&chco=8080ff,ff8080&chd=t:#{ratio}"
   end
-    
+
+  DISPLAY_LENGTH = 50
+
+  def message_summary
+    make_summary(self.message, 50)
+  end
+      
+  def comment_summary
+    make_summary(self.comment, 50)
+  end
+  
+  def foreign_content_summary
+    make_summary(self.foreign_content, 30)
+  end
+  
+  def reference_site_capture_url
+    "http://capture.heartrails.com/128x128/shadow?" + self.url
+  end
+  
+protected
+
+  def make_summary(base, maximum_length)
+    summary_string = base.dup
+    if summary_string.jlength > maximum_length
+      summary_string = summary_string.jslice(0..(maximum_length - 3)) + "..."
+    end
+    summary_string
+  end
 end

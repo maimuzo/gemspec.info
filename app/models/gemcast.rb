@@ -4,5 +4,6 @@ class Gemcast < Comment
   acts_as_rated
   include GemspecARExtend
 
-  attr_accesible :title, :comment, :nico_content_key
+  attr_accessible :title, :comment
+
 end

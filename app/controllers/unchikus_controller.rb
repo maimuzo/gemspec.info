@@ -2,21 +2,21 @@ class UnchikusController < ApplicationController
 
   # GET    /rubygems/:rubygem_id/unchikus/:id
   def show
-    setup_for_spec
+    setup_for_spec(params[:rubygem_id])
     @title = "unchiku for " + @gem.name
     @comment = @gem.unchikus.find(params[:id])
   end
 
   # GET    /rubygems/:rubygem_id/unchikus/new
   def new
-    setup_for_spec
+    setup_for_spec(params[:rubygem_id])
     @title = "add unchiku for " + @gem.name
     @comment = @gem.unchikus.build
   end
 
   # POST   /rubygems/:rubygem_id/unchikus
   def create
-    setup_for_spec   
+    setup_for_spec(params[:rubygem_id])   
     @comment = @gem.unchikus.build(params[:unchiku])
     @comment.user_id = current_user.id
     if params[:unchiku].blank? or params[:unchiku][:url].blank?
@@ -40,7 +40,7 @@ class UnchikusController < ApplicationController
   
   # GET    /rubygems/:rubygem_id/unchikus/:id/edit
   def edit
-    setup_for_spec
+    setup_for_spec(params[:rubygem_id])
     @title = "Edit unchiku for " + @gem.name
     @comment = @gem.unchikus.find_by_id_and_user_id(params[:id], current_user.id)
     raise "User id is not match" if @comment.nil?
@@ -48,7 +48,7 @@ class UnchikusController < ApplicationController
   
   # PUT    /rubygems/:rubygem_id/unchikus/:id
   def update
-    setup_for_spec   
+    setup_for_spec(params[:rubygem_id])   
     @comment = @gem.unchikus.find_by_id_and_user_id(params[:id], current_user.id)
     raise "User id is not match" if @comment.nil?
     begin
@@ -68,7 +68,7 @@ class UnchikusController < ApplicationController
           flash[:notice] = 'Unchiku was successfully updated.'
           format.html { redirect_to(rubygem_path(@gem)) }
         else
-          @title = "add unchiku for agein " + @gem.name
+          @title = "edit unchiku for agein " + @gem.name
           format.html { render :action => "edit" }
         end
       end
@@ -145,7 +145,7 @@ class UnchikusController < ApplicationController
   # ref:http://gdgdlog.net/log/show/206
   # ref:http://hippos-lab.com/blog/node/56
   def create_trackback
-    setup_for_spec   
+    setup_for_spec(params[:rubygem_id])   
     
     @user = User.find_by_user_key(params[:user_key])
     raise "User not found" unless 1 == @user.size
@@ -167,18 +167,6 @@ class UnchikusController < ApplicationController
 
 protected
 
-  def setup_for_spec
-    @gem = Rubygem.find(params[:rubygem_id])
-    if params[:version]
-      @version = @gem.versions.find(params[:version])
-    else
-      @version = @gem.lastest_version
-    end
-    @versions_for_select = @gem.versions
-    @detail = @version.find_detail_and_check_empty
-    @dependencies = @version.dependencies
-    @obstacles = @version.obstacles
-  end
 
   def render_result_of_trackback(error, message)
     str = '<?xml version="1.0" encoding="iso-8859-1"?>'

@@ -1,2 +1,28 @@
-<h1>Obstacles#new</h1>
-<p>Find me in app/views/obstacles/new.html.erb</p>
+        <div id="content-1">
+          <%= render :partial => 'share/spec' %>
+        </div>
+        <div id="content-2">
+          <div class="content-wrap">
+            <div class="content-area header-wrapper">
+              <div class="content-header">
+                <h3>障害状況</h3>
+                <hr>
+                <div class="sub-header">Obstacles</div>
+              </div>
+              <% form_for(@comment, {:url => obstacles_path({:rubygem_id => @gem.to_param, :version => @version.to_param}), :html => {:class => "niceforms"}}) do |f|  %>
+              <div class="list-wrapper">
+                <div class="commentboxgrey">
+                  <div class="comment-title">タイトル:<br /><%= f.text_field(:title, {:class => "coolinput comment-input-title", :title => "title for this comment"}) %></div>
+                  <div class="comments-wrapper">
+                    <p>うんちくどーぞ:<br /><%= f.text_area(:comment, {:class => "comment-input-textarea"}) %></p>
+                  </div>
+                  <div class="comment-url">参照先URL:<br /><%= f.text_field(:url, {:class => "coolinput comment-input-title", :title => "URL for reference"}) %></div>
+                  <div class="comment-url how-to-input">参照先URLを入力した場合、この障害情報は参照先の紹介記事扱いとなります。<br />定期的に参照先URLの本文の取得を試みます。しばらく経ってからご確認ください。<br />URLが正しいにもかかかわらず、意図しない文面が表示されることがあります。</div>
+                  <div class="comment-add right-side"><%= f.submit("追加") %></div>
+                </div>
+              </div><!-- end of list-wrapper -->
+              <% end -%>
+              <div class="content-footer right-side"><%= link_to('戻る', rubygem_path(:id => @gem.to_param, :version => @version.to_param)).untaint %></div>
+            </div>
+          </div>
+        </div>

@@ -1,19 +1,22 @@
                     <li>
                       <div class="commentboxgrey">
                         <% unless @with_gem_name.nil? -%>
-                        <h2 class="gem-name"><%=h gemcast.rubygem.name %></h2>
+                        <h2 class="gem-name"><%=h gemcast.commentable.name %></h2>
                         <% end -%>
                         <h2 class="comment-title"><%=h gemcast.title %></h2>
-                        <div class="summary-wrapper">
+                        <div class="comment-content-wrapper">
                           <div class="rate-wrapper">
                             <div><img src="<%= gemcast.useful_chart_url.untaint %>" /></div>
-                            <div>役立ち度(<%=h plus_minus_total(gemcast) %>人による評価)</div>
+                            <div>役立ち度<br />(<%=h plus_minus_total(gemcast) %>人による評価)</div>
                           </div>
-                          <div class="comments-wrapper">
-                            <p><%=h gemcast.comment_summary %></p>
+                          <div class="summary-wrapper">
+                            <div class="comments-wrapper">
+                              <p><%=h gemcast.comment_summary %></p>
+                            </div>
                           </div>
+                          <div class="float-clear"></div>
                         </div>
-                        <div class="comment-date"><%=h gemcast.method %> by <%=h gemcast.user.name %>  at <%=h gemcast.last_update_string %></div>
-                        <div class="link-wrapper"><%= link_to('詳細へ', gemcast_path({:id => gemcast.id, :rubygem_id => gemcast.rubygem.to_param})) %></div>
+                        <div class="comment-date"><%=h gemcast.method %> by <%=h gemcast.user.nickname %>  at <%=h gemcast.last_update_string %></div>
+                        <div class="link-wrapper"><%= link_to('詳細へ', gemcast_path({:id => gemcast.id, :rubygem_id => gemcast.commentable.to_param})) %></div>
                       </div>
                     </li>

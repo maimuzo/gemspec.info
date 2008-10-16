@@ -1,0 +1,39 @@
+        <div id="content-1">
+          <%= render :partial => 'share/spec' %>
+        </div>
+        <div id="content-2">
+          <div class="content-wrap">
+            <div class="content-area header-wrapper">
+              <div class="content-header">
+                <h3>GemCasts</h3>
+                <hr>
+                <div class="sub-header">Video tutorials</div>
+              </div>
+              <div class="list-wrapper">
+                <div class="commentboxgrey">
+                  <h2 class="comment-title"><%=h @comment.title %></h2>
+                  <div class="nico-wrapper">
+                    <%= nico_link(@comment) %>
+                  </div>
+                  <div class="comments-wrapper">
+                    <p><%= simple_format(h(@comment.comment)) %></p>
+                  </div>
+                  <div class="comment-content-wrapper">
+                    <div class="rate-wrapper">
+                      <div><img src="<%= @comment.useful_chart_url.untaint %>" /></div>
+                      <div>役立ち度<br />(<%=h plus_minus_total(@comment) %>人による評価)</div>
+                    </div>
+                    <div class="rating-link-wrapper"><%= chose_rate_links_and_go_parent_page(@comment, current_user, plus_useful_gemcast_path, minus_useful_gemcast_path, reset_useful_gemcast_path) %></div>
+                    <div class="float-clear"></div>
+                  </div>
+                  <div class="comment-date"><%=h @comment.method %> by <%=h @comment.user.nickname %> at <%=h @comment.last_update_string %></div>
+                </div>
+                <% if current_user.id == @comment.user_id -%>
+                  <div class="comment-modify right-side"><%= niceforms_button_to('GemCast編集', edit_gemcast_path({:rubygem_id => @gem.to_param, :id => @comment.id}), :method => :get) %>
+                  <%= niceforms_button_to('GemCast削除', gemcast_path({:rubygem_id => @gem.to_param, :id => @comment.id}), {:method => :delete, :confirm => 'まじで?' }) %></div>
+                <% end -%>
+              </div><!-- end of list-wrapper -->
+              <div class="content-footer right-side"><%= link_to('評価せずに戻る', rubygem_path(@gem)).untaint %></div>
+            </div>
+          </div>
+        </div>

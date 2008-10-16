@@ -55,22 +55,22 @@
                 <li>
                   <div class="commentboxgrey">
                     <h2 class="comment-title"><%=h obstacle.title %></h2>
+                    <div class="comments-wrapper">
+                      <p><%=h obstacle.comment_summary %></p>
+                    </div>
                     <div class="left-rate-wrapper">
                       <div><img src="<%= obstacle.useful_chart_url.untaint %>" /></div>
-                      <div>役立ち度(<%=h plus_minus_total(obstacle) %>人による評価)</div>
+                      <div>役立ち度<br />(<%=h plus_minus_total(obstacle) %>人による評価)</div>
                     </div>
-                    <div class="comments-wrapper">
-                      <p><%=h obstacle.message_summary %></p>
-                    </div>
-                    <div class="comment-date"><%=h obstacle.method %> by <%=h obstacle.user.name %> at <%=h obstacle.last_update_string %></div>
-                    <div class="link-wrapper"><%= link_to('詳細へ', obstacle_path({:id => obstacle.id, :rubygem_id => @gem.to_param, :version_id => @version.to_param})) %></div>
+                    <div class="comment-date"><%=h obstacle.method %> by <%=h obstacle.user.nickname %><br />at <%=h obstacle.last_update_string %></div>
+                    <div class="link-wrapper"><%= link_to('詳細へ', obstacle_path({:id => obstacle.id, :rubygem_id => @gem.to_param, :version_id => @version.to_param}), :method => :get) %></div>
                   </div>
                 </li>
                 <% end -%>
               </ol>
             </div>
             <% if logged_in? -%>
-              <div class="obstacle-new right-side"><%= niceforms_button_to('障害情報追加', new_obstacle_path({:rubygem_id => @gem.to_param, :version_id => @version.to_param})) %></div>
+              <div class="obstacle-new right-side"><%= niceforms_button_to('障害情報追加', new_obstacle_path({:rubygem_id => @gem.to_param, :version_id => @version.to_param}), :method => :get) %></div>
               <div class="trackback">障害情報トラックバックURL :<br /><input type="text" value="<%= make_obstacle_trackback_url(@version) %> " size="23" /></div>
             <% end -%>
           </div>

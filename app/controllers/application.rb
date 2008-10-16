@@ -45,5 +45,20 @@ class ApplicationController < ActionController::Base
       redirect_to login_url
     end
   end
-  
+
+protected
+
+  def setup_for_spec(rubygem_id)
+    @gem = Rubygem.find(rubygem_id)
+    if params[:version]
+      @version = @gem.versions.find(params[:version])
+    else
+      @version = @gem.lastest_version
+    end
+    @versions_for_select = @gem.versions
+    @detail = @version.find_detail_and_check_empty
+    @dependencies = @version.dependencies
+    @obstacles = @version.obstacles
+  end
+
 end

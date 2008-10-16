@@ -1,2 +1,28 @@
-<h1>Gemcasts#edit</h1>
-<p>Find me in app/views/gemcasts/edit.html.erb</p>
+        <div id="content-1">
+          <%= render :partial => 'share/spec' %>
+        </div>
+        <div id="content-2">
+          <div class="content-wrap">
+            <div class="content-area header-wrapper">
+              <div class="content-header">
+                <h3>GemCasts</h3>
+                <hr>
+                <div class="sub-header">Video tutorials</div>
+              </div>
+              <% form_for(@comment, {:url => gemcast_path({:rubygem_id => @gem.to_param, :id => @comment.id}), :html => {:class => "niceforms", :method => :put}}) do |f|  %>
+              <div class="list-wrapper">
+                <div class="commentboxgrey">
+                  <div class="comment-title">タイトル:<br /><%= f.text_field(:title, {:class => "coolinput comment-input-title", :title => "title for this gemcast"}) %></div>
+                  <div class="comment-url">ニコニコ動画コンテンツID:<br /><%= f.text_field(:nico_content_key, {:class => "coolinput comment-input-title", :title => "sm3987233みたいなやつ"}) %></div>
+                  <div class="comment-url how-to-input">ニコニコの方がコメントできる分楽しいのですが、需要があればYouTube版も考えます<br />言語の障壁が少ない動画ならば、国際的にはログインが必要ないYouTubeもいいのかな、と思ってみたり…日本語以外で作られたGemCastsも見たいでしょう?<br />ちなみにGemCastsはURLで参照したり、トラックバックで登録することは出来ません</div>
+                  <div class="comments-wrapper">
+                    <p>一言どーぞ:<br /><%= f.text_area(:comment, {:class => "comment-input-textarea"}) %></p>
+                  </div>
+                  <div class="comment-add right-side"><%= f.submit("更新") %></div>
+                </div>
+              </div><!-- end of list-wrapper -->
+              <% end -%>
+              <div class="content-footer right-side"><%= link_to('戻る', rubygem_path(@gem)).untaint %></div>
+            </div>
+          </div>
+        </div>

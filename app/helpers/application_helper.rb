@@ -72,31 +72,39 @@ module ApplicationHelper
     return link_string if user.nil?
     if target.rated_by?(user)
       rating = what_did_user_rate?(target, user)
+      logger.debug "old rating value is : " + rating.inspect
       if 0 < rating
         # user reted "plus"
-        link_string << "あなたは＋評価しています。 "
-        link_string << link_to(reset_message, reset_url, :method => :post) + ' '
-        link_string << link_to(minus_message, minus_url, :method => :post)
+        link_string << link_to(reset_message, reset_url, {:method => :post, :title => "あなたは現在＋評価していますが、これを取り消します"}) + ' '
+        link_string << link_to(minus_message, minus_url, {:method => :post, :title => "あなたは現在＋評価していますが、−評価に変更します"})
       else
         # user reted "minus"
-        link_string << "あなたは−評価しています。 "
-        link_string << link_to(plus_message, plus_url, :method => :post) + ' '
-        link_string << link_to(reset_message, reset_url, :method => :post)
+        link_string << link_to(plus_message, plus_url, {:method => :post, :title => "あなたは現在−評価していますが、＋評価に変更します"}) + ' '
+        link_string << link_to(reset_message, reset_url, {:method => :post, :title => "あなたは現在−評価していますが、これを取り消します"})
       end
     else
       # user don't still rate
-      link_string << "あなたはまだ評価していません。 "
-      link_string << link_to(plus_message, plus_url, :method => :post) + ' '
-      link_string << link_to(minus_message, minus_url, :method => :post)      
+      link_string << link_to(plus_message, plus_url, {:method => :post, :title => "−評価します。あなたはまだ評価していません"}) + ' '
+      link_string << link_to(minus_message, minus_url, {:method => :post, :title => "−評価します。あなたはまだ評価していません"})      
     end 
     link_string.untaint
   end
   
   # examine a rated rating by the user
   def what_did_user_rate?(target, user)
+    case target.class.to_s
+    when 'Obstacle' then class_name = 'Comment'
+    when 'Unchiku' then class_name = 'Comment'
+    when 'Gemcast' then class_name = 'Comment'
+    when 'What' then class_name = 'Abstract'
+    when 'Strength' then class_name = 'Abstract'
+    when 'Weakness' then class_name = 'Abstract'
+    else
+      class_name = target.class.to_s
+    end
     cond = ["rater_id = :rater_id and rated_id = :rated_id and rated_type = :rated_type",
-      {:rater_id => user.id, :rated_id => target.id, :rated_type => target.class}]
-    rated = Rating.find(:first, cond)
+      {:rater_id => user.id, :rated_id => target.id, :rated_type => class_name}]
+    rated = Rating.find(:first, :conditions => cond)
     if rated.nil?
       return nil
     else
@@ -182,4 +190,9 @@ module ApplicationHelper
   def make_obstacle_trackback_url(version)
     obstacle_trackback_url({:version_id => version.to_param, :user_key => current_user.user_key})
   end
+
+  def nico_link(gemcast)
+    ('<iframe width="312" height="176" src="http://ext.nicovideo.jp/thumb/' + h(gemcast.nico_content_key) + '" scrolling="no" style="border:solid 1px #CCC;" frameborder="0"><a href="http://www.nicovideo.jp/watch/' + h(gemcast.nico_content_key) + '">' + h(gemcast.title) + '</a></iframe>').untaint
+  end
+
 end

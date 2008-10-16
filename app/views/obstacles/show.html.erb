@@ -5,9 +5,9 @@
           <div class="content-wrap">
             <div class="content-area header-wrapper">
               <div class="content-header">
-                <h3>うんちく</h3>
+                <h3>障害状況</h3>
                 <hr>
-                <div class="sub-header">Comments</div>
+                <div class="sub-header">Obstacles</div>
               </div>
               <div class="list-wrapper">
                 <div class="commentboxgrey">
@@ -36,17 +36,17 @@
                       <div><img src="<%= @comment.useful_chart_url.untaint %>" /></div>
                       <div>役立ち度<br />(<%=h plus_minus_total(@comment) %>人による評価)</div>
                     </div>
-                    <div class="rating-link-wrapper"><%= chose_rate_links_and_go_parent_page(@comment, current_user, plus_useful_unchiku_path, minus_useful_unchiku_path, reset_useful_unchiku_path) %></div>
+                    <div class="rating-link-wrapper"><%= chose_rate_links_and_go_parent_page(@comment, current_user, plus_useful_obstacle_path, minus_useful_obstacle_path, reset_useful_obstacle_path) %></div>
                     <div class="float-clear"></div>
                   </div>
                   <div class="comment-date"><%=h @comment.method %> by <%=h @comment.user.nickname %> at <%=h @comment.last_update_string %></div>
                 </div>
                 <% if current_user.id == @comment.user_id -%>
-                  <div class="comment-modify right-side"><%= niceforms_button_to('うんちく編集', edit_unchiku_path({:rubygem_id => @gem.to_param, :id => @comment.id}), :method => :get) %>
-                  <%= niceforms_button_to('うんちく削除', unchiku_path({:rubygem_id => @gem.to_param, :id => @comment.id}), {:method => :delete, :confirm => 'まじで?' }) %></div>
+                  <div class="comment-modify right-side"><%= niceforms_button_to('うんちく編集', edit_obstacle_path({:rubygem_id => @gem.to_param, :version_id => @version.to_param, :id => @comment.id}), :method => :get) %>
+                  <%= niceforms_button_to('うんちく削除', obstacle_path({:rubygem_id => @gem.to_param, :version => @version.to_param, :id => @comment.id}), {:method => :delete, :confirm => 'まじで?' }) %></div>
                 <% end -%>
               </div><!-- end of list-wrapper -->
-              <div class="content-footer right-side"><%= link_to('評価せずに戻る', rubygem_path(@gem)).untaint %></div>
+              <div class="content-footer right-side"><%= link_to('評価せずに戻る', rubygem_path(:id => @gem.to_param, :version => @version.to_param)).untaint %></div>
             </div>
           </div>
         </div>

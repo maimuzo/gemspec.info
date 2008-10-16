@@ -19,7 +19,7 @@
                               </div>
                             <% end -%>
                           </div>
-                          <div class="float-clear" />
+                          <div class="float-clear"></div>
                         </div>
                         <div class="comment-date"><%=h unchiku.method %> by <%=h unchiku.user.nickname %> at <%=h unchiku.last_update_string %></div>
                         <div class="link-wrapper"><%= link_to('詳細へ', unchiku_path({:id => unchiku.id, :rubygem_id => unchiku.commentable.to_param})) %></div>

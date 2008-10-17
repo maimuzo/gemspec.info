@@ -71,7 +71,7 @@
             <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">貴様証明</h2>
             <% if logged_in? -%>
               <p>User:<%=h current_user.nickname %> </p>
-              <div class="mypage-link"><%= link_to('自己管理', mypage_path) %> <a href="/logout">ログアウト</a></div>
+              <div class="mypage-link"><a href="/">トップ</a> <%= link_to('自己管理', mypage_path) %> <a href="/logout">ログアウト</a></div>
             <% else -%>
               <% form_tag(session_url, :class => "niceforms") do |f| -%>
               <label for="openid_url" >

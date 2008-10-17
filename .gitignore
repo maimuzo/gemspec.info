@@ -3,3 +3,6 @@ log/*.log
 tmp/**/*
 db/*.sqlite3
 nbproject
+public/javascripts/cache/*
+public/stylesheets/cache/*
+

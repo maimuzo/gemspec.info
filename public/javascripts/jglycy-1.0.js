@@ -3,31 +3,31 @@
  * (c) 2008 Semooh (http://semooh.jp/)
  * 
  */
-(function($, prefix, jg){
-  $[jg] = $({});
-  $[jg].extend({
+(function($j, prefix, jg){
+  jQuery[jg] = $({});
+  jQuery[jg].extend({
     invoke: function(nodes) {
       nodes.each(function(){
         var node = this;
-        var funcs = $(node).attr(prefix).split(',');
-        $(funcs).each(function(){
-          var arg = $(node).attr(prefix + ":" + this);
+        var funcs = jQuery(node).attr(prefix).split(',');
+        jQuery(funcs).each(function(){
+          var arg = jQuery(node).attr(prefix + ":" + this);
           if(arg) {
             eval('var options = {' + arg + '}');
           } else {
             var options = {};
           }
-          if($.fn[this]) {
-            $(node)[this](options);
+          if(jQuery.fn[this]) {
+            jQuery(node)[this](options);
           }
         });
       });
     },
     invokeElement: function(node) {
-      $[jg].invoke($("*[" + prefix + "]", node));
+      jQuery[jg].invoke(jQuery("*[" + prefix + "]", node));
     }
   });
-  $(document).ready(function(){
-    $[jg].invokeElement(document);
+  jQuery(document).ready(function(){
+    jQuery[jg].invokeElement(document);
   });
 })(jQuery, "jg", "jg");

@@ -14,10 +14,11 @@
 - Contact me: http://gordonmac.com/contact/
 - Free stuff: http://gordonmac.com/downloads/
 -->
-<%#= javascript_include_tag(:defaults, :cache => 'cache/defaults') %>
-<%#= javascript_include_tag('interface', 'jglycy-1.0', 'jforms.1.0', 'jquery.coolinput', 'jquery.dimensions', 'jquery.gradient', 'jquery.jgrowl', 'jquery.simplemodal', 'jquery.slider', 'jquery.curvycorners.min', 'lpomessage', :cache => 'cache/jqueries') %>
-<%= javascript_include_tag(:defaults) %>
-<%= javascript_include_tag('interface', 'jglycy-1.0', 'jforms.1.0', 'jquery.coolinput', 'jquery.dimensions', 'jquery.gradient', 'jquery.jgrowl', 'jquery.simplemodal', 'jquery.slider', 'jquery.curvycorners.min', 'lpomessage') %>
+<%= javascript_include_tag(:defaults, :cache => 'cache/defaults') %>
+<%= javascript_include_tag('interface') %>
+<%= javascript_include_tag('jglycy-1.0', 'jforms.1.0', 'jquery.coolinput', 'jquery.dimensions', 'jquery.gradient', 'jquery.jgrowl', 'jquery.simplemodal', 'jquery.slider', 'jquery.curvycorners.min', 'lpomessage', :cache => 'cache/jqueries') %>
+<%#= javascript_include_tag(:defaults) %>
+<%#= javascript_include_tag('interface', 'jglycy-1.0', 'jforms.1.0', 'jquery.coolinput', 'jquery.dimensions', 'jquery.gradient', 'jquery.jgrowl', 'jquery.simplemodal', 'jquery.slider', 'jquery.curvycorners.min', 'lpomessage') %>
 <%#= javascript_include_tag(:all) %>
 <%# = javascript_include_tag(:all, :cache => 'cache/all.js') %>
 <%= yield :other_js %>
@@ -37,8 +38,8 @@
 #wrapper-body, #wrapper-1, #wrapper-2, #wrapper-3 { height: 1%; }
 </style>
 <![endif]-->
-<%#= stylesheet_link_tag 'niceforms-default', 'ui.stars', 'jgrowl/jquery.jgrowl', 'simplemodal/basic', 'lpomessage', 'jqueryslider', 'customize', 'acts_as_taggable_stylesheet', :cache => 'cache/all' %>
-<%= stylesheet_link_tag 'niceforms-default', 'ui.stars', 'jgrowl/jquery.jgrowl', 'simplemodal/basic', 'lpomessage', 'jqueryslider', 'customize', 'acts_as_taggable_stylesheet' %>
+<%= stylesheet_link_tag 'niceforms-default', 'ui.stars', 'jgrowl/jquery.jgrowl', 'simplemodal/basic', 'lpomessage', 'jqueryslider', 'customize', 'acts_as_taggable_stylesheet', :cache => 'cache/all' %>
+<%#= stylesheet_link_tag 'niceforms-default', 'ui.stars', 'jgrowl/jquery.jgrowl', 'simplemodal/basic', 'lpomessage', 'jqueryslider', 'customize', 'acts_as_taggable_stylesheet' %>
 
 </head>
 <body>

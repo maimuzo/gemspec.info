@@ -8,7 +8,7 @@ OpenID::fetcher_use_env_http_proxy
 # 
 # kick:
 # script/runner 'Endpoint.new(true).find("fromnorth.blogspot.com")'
-# script/runner 'Endpoint.new(true).find("fromnorth.blogspot.com").each {|e| TrastedOpenidProvider.create(:endpoint_url => e)}'
+# script/runner -e production 'Endpoint.new(true).find("fromnorth.blogspot.com").each {|e| TrastedOpenidProvider.create(:endpoint_url => e)}'
 #
 class Endpoint
   include OpenIdAuthentication

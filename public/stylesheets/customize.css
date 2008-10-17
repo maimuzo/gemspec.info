@@ -139,6 +139,12 @@ Gem detail(for version and dependence) form styles
     padding:0;
 }
 
+.general-rank-part h3.gem-name {
+    font-size:1.0em;
+    font-weight:bold;
+    margin:0 0 5px 10px;
+}
+
 div.gem-detail .group-header {
 	font-weight:bold;
 	font-size:1.0em;

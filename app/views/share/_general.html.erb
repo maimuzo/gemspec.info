@@ -4,8 +4,13 @@
               <ul>
                 <% num = 0  -%>
                 <% general_ranks.each do |ranking| -%>
-                <% num += 1 -%>
-                <li><span><%= num %></span><span>(<%=h ranking.point %>pt)</span><%= link_to(sanitize(ranking.rubygem.name), rubygem_path(ranking.rubygem)).untaint %></li>
+                  <% num += 1 -%>
+                  <li>
+                    <div class="general-rank-part">
+                      <div>第<%= num %>位 (<%=h ranking.point %> point)</div>
+                      <h3 class="gem-name"><%= link_to(sanitize(ranking.rubygem.name), rubygem_path(ranking.rubygem), {:title => ranking.rubygem.name}).untaint %></h3>
+                    </div>
+                  </li>
                 <% end -%>
               </ul>
             </div>

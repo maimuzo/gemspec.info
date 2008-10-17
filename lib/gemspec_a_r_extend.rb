@@ -29,9 +29,9 @@ module GemspecARExtend
     rescue ZeroDivisionError
       ratio = "50"
     end
-    logger.debug "rated_count : " + rated_count.inspect
-    logger.debug "rated_total : " + rated_total.inspect
-    logger.debug "ratio : " + ratio.inspect
+#    logger.debug "rated_count : " + rated_count.inspect
+#    logger.debug "rated_total : " + rated_total.inspect
+#    logger.debug "ratio : " + ratio.inspect
     {
       :plus => plus_point.to_s,
       :minus => minus_point.to_s,

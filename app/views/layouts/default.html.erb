@@ -75,28 +75,20 @@
               </label><br />
               <%= text_field_tag :openid_url, nil, {:class => "coolinput", :title => "Input your OpenID!"} -%>
               <%= submit_tag "Go" -%>
+              <p class="how-to-input">OpenID持ってないなら<a href="http://openid.ne.jp" target="_blank">日本語ばっちこい</a>な所か、<a href="http://myopenid.com" target="_blank">最新技術ばっちこい</a>な所で取得するのがオススメです</p>
               <% end -%>
             <% end -%>
           </div>
           <div class="content-wrap search-indicator">
-            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">検索</h2>
+            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">検索(まーだー?)</h2>
             <form accept-charset="UTF-8" action="index.html" method="get">
               <div class="niceforms">
               	<input type="text" name="searchthis" id="searchthis" size="15" class="coolinput" title="fulltext search" />
               	<input type="button" id="search-detail-toggle" value="▽" />
-	          </div>
+	      </div>
               <div id="search-detail-panel" style="display:none;">
-                <div id="niceforms-select">
-              	  <select name="license" id="license" class="coolinput">
-                    <option value="*">問わない</option>
-                    <option value="gpl">GPL</option>
-                    <option value="mit">MIT</option>
-                    <option value="ruby">ruby</option>
-                    <option value="apache">apache</option>
-                  </select>
-                </div>
                 <div class="niceforms">
-                	<input name="tag" type="text" class="coolinput" title="search by tags" /><br />
+                  <input name="tag" type="text" class="coolinput" title="search by tags" /><br />
                 </div>
                 <fieldset id="last-update-slider">
                     <div>最新版更新日</div>
@@ -128,13 +120,11 @@
             <div class="how-to-input">「○○する」とき使うgem</div>
             <p><%= tag_cloud %></p>
           </div>
-          <div id="LPOToggle" class="content-wrap" style="display:none;">
-            <form class="niceform">
-            <input type="button" value="オススメをもう一度見る" onclick="LPOShowAgain();" />
-			</form>
-          </div>
-          <div class="content-wrap">
-          	<input type="button" value="LPO表示テスト" onclick="emuJsonP();" />
+          <div class="content-wrap tag-indicator">
+            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">GemSpec.infoについて</h2>
+            <p class="how-to-input">まいむぞうが個人的に作ったRubyGemsの情報集約サイトです。</p>
+            <p class="how-to-input">現在αリリースです。当然ばぎーです。</p>
+            <p class="how-to-input">バグレポート・叱咤激励などなどは<%= mail_to('maimuzo@gmail.com', 'こちら', {:subject => 'report from GemSpec.info', :body => "Your name:\n\nOS and browser(with version):\n\nplease bug-reports or comments:\n\n"}) %></p>
           </div>
         </div>
         <div id="content-bottom">&nbsp;</div>
@@ -151,7 +141,7 @@
     <p>This system is using contents under the Creative Commons License, and libraries under the MIT and the GPL license.</p>
     <h3>System</h3>
     <p>(c)2008 Yusuke Ohmichi ( Maimuzo ) - <a href="http://fromnorth.blogspot.com/">Web site</a> - <a href="mailto:maimuzo@gmail.com">Mail</a></p>
-    <p>I remixed HTML and CSS and some of images based on Gordon's template. It licensed under the <a href="http://creativecommons.org/licenses/by-sa/3.0/deed.ja">Creative Commons Attribution-ShareAlike 3.0 License</a>.</p>
+    <p>I remixed HTML and CSS and some of images based on Gordon's template. This HTML is licensed under the <a href="http://creativecommons.org/licenses/by-sa/3.0/deed.ja">Creative Commons Attribution-ShareAlike 3.0 License</a>.(but, I'm still building now. please wait a moment.)</p>
     <h3>HTML and CSS</h3>
     <p>(c)2007 Gordon Mackay. these contents are licensed under a <a href="http://creativecommons.org/licenses/by-sa/2.0/" target="_blank">Creative Commons Attribution-ShareAlike 2.0 License</a>.</p>
     <p>More details, see <a href="http://www.gordonmac.com/downloads/" target="_blank">his site</a>.</p>
@@ -160,18 +150,18 @@
     	<li>Some of Imgages.</li>
     </ul>
     <h3>Libraries and included contents</h3>
-  <ul>
+    <ul>
    	<li>jQuery</li>
     	<li>jQuery.ui</li>
     	<li>jforms(niceformes)</li>
     	<li>jquery.coolinput</li>
     	<li>jquery.dimensions</li>
     	<li>jquery.gradient</li>
-    	<li>ui.stars</li>
     	<li>jgrowl</li>
     	<li>simplemodal</li>
-  </ul>
-    <p>※名称は<strong>勢いを大事</strong>にしていますので、タグクラウドの事を「思考領域」とかは、あまり大きい声で言わない方が良いでしょう。</p>
+    </ul>
+    <p>※名称は<strong>勢いを大事</strong>にしています。特にコダワリは無いですが、いやんな人はメールで苦情をどうぞ。</p>
+    <p>※バグとか誤字脱字や表示崩れなどはどしどしレポートください。右サイドのメールテンプレから受け付けます。</p>
 </div>
 <div id="LPOPanel" class="top-left"></div>
 </body>

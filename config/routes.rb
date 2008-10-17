@@ -59,6 +59,9 @@ ActionController::Routing::Routes.draw do |map|
   map.unchiku_trackback 'rubygems/:rubygem_id/unchiku/trackback/:user_key', :controller => 'unchikus', :action => 'create_trackback', :requirements => { :method => :post }
   map.obstacle_trackback 'rubygems/:version_id/obstacle/trackback/:user_key', :controller => 'obstacles', :action => 'create_trackback', :requirements => { :method => :post }
   
+  # by hand for search
+  map.search '/search', :controller => "roots", :action => "search", :requirements => { :method => :get }
+  
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'

@@ -29,6 +29,11 @@ module ApplicationHelper
     GeneralPoint.find(:all, :order => "point DESC", :limit => 20)
   end
   
+  def tags_for_search
+    tags = Tag.find(:all)
+    tags.unshift(Tag.new({:name => "選択してください"}))
+  end
+    
   def tag_string_or_none(rubygem)
     if rubygem.tags.size == 0
       "(まだタグは付いていません。付けてみてください)"

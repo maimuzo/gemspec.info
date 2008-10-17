@@ -1,0 +1,37 @@
+        <div id="content-1">
+          <%= render :partial => "share/general" %>
+        </div>
+        <div id="content-2">
+          <div class="content-wrap">
+            <div class="content-area header-wrapper">
+              <div class="content-header">
+                <h3>検索条件</h3>
+                <hr>
+                <div class="sub-header">search conditions</div>
+              </div>
+              <div class="search-condition">
+                <ul>
+                  <% unless params[:keyword].nil? -%>
+                  <li>Keyword : <%=h params[:keyword] %></li>
+                  <% end -%>
+                  <% unless @tag.nil? -%>
+                  <li>Tag : <%=h @tag.name %>とき使うgem</li>
+                  <% end -%>
+                  <li>Gemリリース日 : <%=h @time_from[:message] %>から<%=h @time_to[:message] %>まで</li>
+                </ul>
+              </div>
+              <div class="list-wrapper">
+                <% if 0 == @gems.size -%>
+                  <div>検索条件に該当するGemはありませんでした</div>
+                <% else -%>
+                  <div class="right-side"><%= paginating_links(@gems, :params => params) %></div>
+                  <ol>
+                    <%= render :partial => "share/gem", :collection => @gems %>
+                  </ol>
+                  <div class="right-side"><%= paginating_links(@gems, :params => params) %></div>
+                <% end -%>
+              </div><!-- end of list-wrapper -->
+            </div><!-- end of content-area -->
+            <div class="content-footer right-side"><%= link_to('戻る', root_path) %></div>
+          </div><!-- end of content-wrap -->
+        </div>

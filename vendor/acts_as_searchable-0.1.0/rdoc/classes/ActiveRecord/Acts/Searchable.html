@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module: ActiveRecord::Acts::Searchable</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Module</strong></td>
+          <td class="class-name-in-header">ActiveRecord::Acts::Searchable</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../../files/lib/acts_as_searchable_rb.html">
+                lib/acts_as_searchable.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+Specify this act if you want to provide fulltext search capabilities to
+your model via Hyper Estraier. This assumes a setup and running Hyper
+Estraier node accessible through the HTTP API provided by the EstraierPure
+Ruby module (which is bundled with this plugin).
+</p>
+<p>
+The act supplies appropriate hooks to insert, update and remove documents
+from the index when you update your model data, create new objects or
+remove them from your database. For the initial indexing a convenience
+class method <tt>reindex!</tt> is provided.
+</p>
+<p>
+Example:
+</p>
+<pre>
+  class Article &lt; ActiveRecord::Base
+    acts_as_searchable
+  end
+
+  Article.reindex!
+</pre>
+<p>
+As soon as your model data has been indexed you can make use of the
+<tt>fulltext_search</tt> class method to search the index and get back
+instantiated matches.
+</p>
+<pre>
+  results = Article.fulltext_search('rails')
+  results.size        # =&gt; 3
+
+  results.first.class # =&gt; Article
+  results.first.body  # =&gt; &quot;Ruby on Rails is an open-source web framework&quot;
+</pre>
+<p>
+Connectivity configuration can be either inherited from conventions or
+setup globally in the Rails database configuration file
+<tt>config/database.yml</tt>.
+</p>
+<p>
+Example:
+</p>
+<pre>
+  development:
+    adapter: mysql
+    database: rails_development
+    host: localhost
+    user: root
+    password:
+    estraier:
+      host: localhost
+      user: admin
+      password: admin
+      port: 1978
+      node: development
+</pre>
+<p>
+That way you can configure separate connections for each environment. The
+values shown above represent the defaults. If you don&#8217;t need to
+change any of these it is safe to not specify the <tt>estraier</tt> hash at
+all.
+</p>
+<p>
+See <a
+href="Searchable/ClassMethods.html#M000068">ActiveRecord::Acts::Searchable::ClassMethods#acts_as_searchable</a>
+for per-model configuration options
+</p>
+
+    </div>
+
+
+   </div>
+
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+    <div id="class-list">
+      <h3 class="section-bar">Classes and Modules</h3>
+
+      Module <a href="Searchable/ActMethods.html" class="link">ActiveRecord::Acts::Searchable::ActMethods</a><br />
+Module <a href="Searchable/ClassMethods.html" class="link">ActiveRecord::Acts::Searchable::ClassMethods</a><br />
+
+    </div>
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

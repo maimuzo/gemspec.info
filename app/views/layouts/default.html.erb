@@ -85,29 +85,29 @@
             <% end -%>
           </div>
           <div class="content-wrap search-indicator">
-            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">検索(まーだー?)</h2>
-            <form accept-charset="UTF-8" action="index.html" method="get">
+            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">検索</h2>
+            <form accept-charset="UTF-8" action="/search" method="get">
               <div class="niceforms">
-              	<input type="text" name="searchthis" id="searchthis" size="15" class="coolinput" title="fulltext search" />
+              	<input type="text" name="keyword" class="coolinput" title="gem name" />
               	<input type="button" id="search-detail-toggle" value="▽" />
 	      </div>
               <div id="search-detail-panel" style="display:none;">
-                <div class="niceforms">
-                  <input name="tag" type="text" class="coolinput" title="search by tags" /><br />
+                <div>
+                  <%= select_tag('tag', options_from_collection_for_select(tags_for_search, :id, :name)) %><br />するとき使うgem
                 </div>
                 <fieldset id="last-update-slider">
-                    <div>最新版更新日</div>
+                    <div>最新versionリリース日</div>
                     <label for="from" class="sentence">From:</label>
                     <select name="from" id="from">
-                        <option value="more" selected="selected">問わない</option>
+                        <option value="longago" selected="selected">問わない</option>
                         <option value="1year">1年前</option>
                         <option value="6mon">6ヶ月前</option>
                         <option value="1mon">1ヶ月前</option>
                         <option value="now">現在</option>
-                    </select>            
+                    </select>
                     <label for="to" class="sentence">To:</label>
                     <select name="to" id="to">
-                        <option value="more">問わない</option>
+                        <option value="longago">問わない</option>
                         <option value="1year">1年前</option>
                         <option value="6mon">6ヶ月前</option>
                         <option value="1mon">1ヶ月前</option>

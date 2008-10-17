@@ -14,8 +14,8 @@
 - Contact me: http://gordonmac.com/contact/
 - Free stuff: http://gordonmac.com/downloads/
 -->
-<%= javascript_include_tag(:defaults, :cache => 'cache/defaults.js') %>
-<%= javascript_include_tag('interface', 'jglycy-1.0', 'jforms.1.0', 'jquery.coolinput', 'jquery.dimensions', 'jquery.gradient', 'jquery.jgrowl', 'jquery.simplemodal', 'jquery.slider', 'jquery.curvycorners.min', 'lpomessage', :cache => 'cache/jqueries.js') %>
+<%= javascript_include_tag(:defaults, :cache => 'cache/defaults') %>
+<%= javascript_include_tag('interface', 'jglycy-1.0', 'jforms.1.0', 'jquery.coolinput', 'jquery.dimensions', 'jquery.gradient', 'jquery.jgrowl', 'jquery.simplemodal', 'jquery.slider', 'jquery.curvycorners.min', 'lpomessage', :cache => 'cache/jqueries') %>
 <%#= javascript_include_tag(:all) %>
 <%# = javascript_include_tag(:all, :cache => 'cache/all.js') %>
 <%= yield :other_js %>
@@ -35,7 +35,7 @@
 #wrapper-body, #wrapper-1, #wrapper-2, #wrapper-3 { height: 1%; }
 </style>
 <![endif]-->
-<%= stylesheet_link_tag 'niceforms-default', 'ui.stars', 'jgrowl/jquery.jgrowl', 'simplemodal/basic', 'lpomessage', 'jqueryslider', 'customize', 'acts_as_taggable_stylesheet', :cache => 'cache/all.css' %>
+<%= stylesheet_link_tag 'niceforms-default', 'ui.stars', 'jgrowl/jquery.jgrowl', 'simplemodal/basic', 'lpomessage', 'jqueryslider', 'customize', 'acts_as_taggable_stylesheet', :cache => 'cache/all' %>
 
 </head>
 <body>
@@ -76,6 +76,7 @@
               <%= text_field_tag :openid_url, nil, {:class => "coolinput", :title => "Input your OpenID!"} -%>
               <%= submit_tag "Go" -%>
               <p class="how-to-input">OpenID持ってないなら<a href="http://openid.ne.jp" target="_blank">日本語ばっちこい</a>な所か、<a href="http://myopenid.com" target="_blank">最新技術ばっちこい</a>な所で取得するのがオススメです</p>
+              <p class="how-to-input">OpenIDプロバイダはホワイトリストで制限をかけてますが、よほど怪しいトコじゃない限り縛るつもりはないので、使いたいURL教えてくれればホワイトリストに追加します(どんなOPがあるか実情を掴んでないのです)</p>
               <% end -%>
             <% end -%>
           </div>

@@ -5,7 +5,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :email
       t.string :claimed_url
       t.string :fullname
-      t.date :birth_date
+      t.date :birth_day
       t.integer :gender
       t.string :postcode
       t.string :country

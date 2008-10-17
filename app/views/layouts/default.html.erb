@@ -22,7 +22,6 @@
 <%#= javascript_include_tag(:all) %>
 <%# = javascript_include_tag(:all, :cache => 'cache/all.js') %>
 <%= yield :other_js %>
-<%= javascript_include_tag('gemspec') %>
 
 <%= stylesheet_link_tag 'stylesMain' %>
 <!--[if lt IE 7]>
@@ -40,6 +39,7 @@
 <![endif]-->
 <%= stylesheet_link_tag 'niceforms-default', 'ui.stars', 'jgrowl/jquery.jgrowl', 'simplemodal/basic', 'lpomessage', 'jqueryslider', 'customize', 'acts_as_taggable_stylesheet', :cache => 'cache/all' %>
 <%#= stylesheet_link_tag 'niceforms-default', 'ui.stars', 'jgrowl/jquery.jgrowl', 'simplemodal/basic', 'lpomessage', 'jqueryslider', 'customize', 'acts_as_taggable_stylesheet' %>
+<%= javascript_include_tag('gemspec') %>
 
 </head>
 <body>

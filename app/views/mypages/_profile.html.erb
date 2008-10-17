@@ -5,7 +5,7 @@
               <p>表示名 : <%=h @user.nickname %></p>
               <p>メアド : <%=h @user.email %></p>
               <p>本名 : <%=h @user.fullname %></p>
-              <p>誕生日 : <%=h @user.birth_day.strftime("%Y/%m/%d") %></p>
+              <p>誕生日 : <%=h @user.birth_day.strftime("%Y/%m/%d") unless @user.birth_day.nil? %></p>
               <p>性別 : <%=h gender_value(@user.gender) %></p>
               <p>郵便番号 : <%=h @user.postcode %></p>
               <p>住んでいる国 : <%=h @user.country %></p>

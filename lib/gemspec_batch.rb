@@ -1,5 +1,5 @@
 # kick
-# script/runner -e production 'GemspecBatch.new.setup("./20081013_131255.zip")'
+# script/runner -e production 'GemspecBatch.new.setup("~/rails_app/gemspec.info/first_gem_pack.zip")'
 # script/runner -e production 'GemspecBatch.new.update_contents' / 10 min
 # script/runner -e production 'GemspecBatch.new.update_gems' / 1 day
 class GemspecBatch

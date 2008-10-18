@@ -11,6 +11,9 @@ require "yaml"
 # script/runner 'SpecParser.new(true, true).load_from_ar.update_spec_from_command'
 # script/runner 'SpecParser.new(true, true).load_from_ar.update_spec_from_zip("pack.zip")'
 # script/runner -e production 'SpecParser.new(true, true).load_from_ar.parse_agein_from_saved_yaml'
+# script/runner -e production 'SpecParser.new.scan.add_unknown_gem_versions.update_spec_from_command'
+# script/runner 'SpecParser.new(true, true).clear_empty_specs'
+# script/runner 'SpecParser.new(true, true).scan.install_all_gem_to("./tmp/gems_for_spec", true, false)'
 #
 class SpecParser < SpecScanner
   
@@ -51,21 +54,12 @@ class SpecParser < SpecScanner
         spec_yaml = remove_dust(spec_yaml)
         version.create_spec(:yaml => spec_yaml)
         added_spec_counter(version.gemversion)
-        puts "get the spec from a command line, and save it : #{line[:gem]}[#{version.version}]" if @verbose
+        puts "get the spec from a command line, and save it : #{rubygem.name}[#{version.version}]" if @verbose
         parse(version, spec_yaml)
       end
     end
   end
-  
-  # parse yaml specs from file, and add details
-  # ファイルから未知のyaml形式のspecを取得し、詳細を追加する
-  def update_spec_from_zip(filename = nil)
-    update_spec do |rubygem, version|
-      #load
-      get_unknown_spec(rubygem, version)
-    end
-  end
-  
+    
   # 保存済みyamlから再度解析する(カラム追加時など)
   def parse_agein_from_saved_yaml
     update_spec do |rubygem, version|
@@ -73,9 +67,58 @@ class SpecParser < SpecScanner
     end
   end
   
+  # 空のspecs.yamlを見つけて消す(再取得の準備)
+  def clear_empty_specs
+    Version.find(:all).each do |version|
+      unless version.spec.nil?
+        spec = version.spec
+        if spec.yaml.blank?
+          puts "destroy #{version.to_param}" if @verbose
+          spec.destroy
+        end
+      end
+    end
+  end
 
+  def install_all_gem_to(install_path = './tmp/gems_for_spec', with_sudo = true, only_new = true)
+    @scaned_gem_and_versions.each do |line|
+      if only_new
+        rubygem = Rubygem.find_by_name(line[:gem])
+        rubygem = Rubygem.new(:name => line[:gem]) if rubygem.nil?
+      end
+      line[:versions].each do |version_name|
+        puts "target : #{line[:gem]}[#{version_name}]" if @verbose
+        if only_new
+          version = rubygem.versions.find_by_version(version_name)
+          install_gem(install_path, with_sudo, line[:gem], version_name) if version.nil?
+        else
+          install_gem(install_path, with_sudo, line[:gem], version_name)
+        end       
+      end
+    end
+  end
+
+  
 private
 
+  # sudo gem install GEMNAME -v 0.0.1 -y -i PATH
+  def install_gem(install_path, with_sudo, gem_name, version_name)
+    if with_sudo
+      command = "sudo gem install #{gem_name} -v #{version_name} --include-dependencies -i #{install_path}"
+    else
+      command = "gem install #{gem_name} -v #{version_name} --include-dependencies -i #{install_path}"
+    end
+    puts "command : [#{command}]" if @verbose
+    result = `#{command}`
+    puts "result : " + result if @verbose
+    unless 0 == $?
+      return false
+    else
+      return true
+    end
+  end
+    
+    
   # add a unknown a gem, a version, a spec yaml, and a detail
   # get yaml formated spec from yield
   # 未知のgem、version、yaml形式のspec、詳細を追加する
@@ -163,6 +206,7 @@ private
   def get_unknown_spec(rubygem, version)
     begin
       command = "gem specification #{rubygem.name} --version #{version.version} -r -q 2>/dev/null"
+      puts "command : [#{command}]" if @verbose
       spec_yaml = `#{command}`
       spec_yaml = '' unless 0 == $?
       spec_yaml

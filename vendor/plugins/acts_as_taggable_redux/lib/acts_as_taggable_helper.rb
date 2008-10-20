@@ -27,7 +27,7 @@ module ActsAsTaggableHelper
     tags.each do |tag|
       html << %(    <li>)
       # Maimuzo modified
-      html << link_to(h(tag.name), tag_url(tag), :class => classes[(tag.taggings_count - min) / divisor]) 
+      html << link_to(h(tag.name), tag_url(tag), :class => classes[(tag.taggings_count - min) / divisor]).untaint
       html << %(</li> \n)
     end
     html <<   %(  </ul>\n)

@@ -13,7 +13,7 @@ require "yaml"
 # script/runner -e production 'SpecParser.new(true, true).load_from_ar.parse_agein_from_saved_yaml'
 # script/runner -e production 'SpecParser.new.scan.add_unknown_gem_versions.update_spec_from_command'
 # script/runner 'SpecParser.new(true, true).clear_empty_specs'
-# script/runner 'SpecParser.new(true, true).scan(false).install_all_gem_to("./tmp/gems_for_spec", false, true)'
+# script/runner 'SpecParser.new(true, true).scan(false).install_all_gem_to("/Volumes/Backup/gemspec_gemhome", false, true, true)'
 # script/runner 'SpecParser.new(true, true).scan(false).biff_installed_gems("./tmp/gems_for_spec", false)'
 #
 class SpecParser < SpecScanner
@@ -81,8 +81,9 @@ class SpecParser < SpecScanner
     end
   end
 
-  def install_all_gem_to(install_path = './tmp/gems_for_spec', with_sudo = false, only_new = true)
+  def install_all_gem_to(install_path = './tmp/gems_for_spec', with_sudo = false, only_new = true, randum_order = true)
     biff_installed_gems(install_path, false) if only_new
+    shuffle_gems if randum_order
     @scaned_gem_and_versions.each do |line|
       line[:versions].each do |version_name|
         puts "install target : #{line[:gem]}[#{version_name}]" if @verbose
@@ -137,7 +138,12 @@ class SpecParser < SpecScanner
     self
   end
 
+  
 private
+
+  def shuffle_gems
+    @scaned_gem_and_versions = @scaned_gem_and_versions.sort_by{|i| rand }
+  end
 
   # sudo gem install GEMNAME -v 0.0.1 -y -i PATH
   def install_gem(install_path, with_sudo, gem_name, version_name)

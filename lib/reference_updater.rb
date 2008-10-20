@@ -1,6 +1,6 @@
 require 'open-uri'
 require 'rubygems'
-require 'extractcontent'
+require 'vendor/extractcontent-0.0.1/lib/extractcontent'
 
 # kick
 # script/runner 'ReferenceUpdater.new(true).update'

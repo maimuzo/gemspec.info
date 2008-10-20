@@ -15,7 +15,7 @@
                   <div class="comments-wrapper">
                     <p><%= simple_format(h(@comment.comment)) %></p>
                   </div>
-                  <% if 'referenced' == @comment.method -%>
+                  <% unless 'posted' == @comment.method -%>
                     <div class="reference-wrapper">
                       <div class="capture-wrapper">
                         <%= image_tag(@comment.reference_site_capture_url, {:alt => @comment.title, :size => '128x128'}) %>

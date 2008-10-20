@@ -1,5 +1,7 @@
 class UnchikusController < ApplicationController
 
+  protect_from_forgery :except => :create_trackback
+
   # GET    /rubygems/:rubygem_id/unchikus/:id
   def show
     setup_for_spec(params[:rubygem_id])

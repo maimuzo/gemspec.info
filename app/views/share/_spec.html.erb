@@ -48,7 +48,7 @@
             <div class="list-wrapper">
               <div>このバージョンへの障害情報はありません</div>
             </div>
-            <% end -%>
+            <% else -%>
             <div class="list-wrapper">
               <ol>
                 <% @obstacles.each do |obstacle| -%>
@@ -69,6 +69,7 @@
                 <% end -%>
               </ol>
             </div>
+            <% end -%>
             <% if logged_in? -%>
               <div class="obstacle-new right-side"><%= niceforms_button_to('障害情報追加', new_obstacle_path({:rubygem_id => @gem.to_param, :version_id => @version.to_param}), :method => :get) %></div>
               <div class="trackback">障害情報トラックバックURL :<br /><input type="text" value="<%= make_obstacle_trackback_url(@version) %> " size="23" /></div>

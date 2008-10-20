@@ -18,7 +18,7 @@
                   <% unless 'posted' == @comment.method -%>
                     <div class="reference-wrapper">
                       <div class="capture-wrapper">
-                        <%= image_tag(@comment.reference_site_capture_url, {:alt => @comment.title, :size => '128x128'}) %>
+                        <%= link_to(image_tag(@comment.reference_site_capture_url, {:alt => @comment.title, :size => '128x128'}), strip_tags(@comment.url), {:target => "_blank", :rel => @comment.title}) %>
                       </div>
                       <div class="summary-wrapper">
                         <div class="reference-bubble">

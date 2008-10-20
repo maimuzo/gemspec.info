@@ -23,6 +23,7 @@
                   </li>
                   <% end -%>
                 </ul>
+                <% if logged_in? -%>
                 <div class="abstract-add">
                   <% form_for(What.new, {:url => whats_path(:rubygem_id => @gem.to_param), :html => {:class => "niceforms", :method => :post}}) do |f| %>
                     <%= f.error_messages %>
@@ -30,6 +31,7 @@
                     <%= f.submit("追加") %>
                   <% end %>
                 </div>
+                <% end -%>
               </div>
               <div class="line-group">
                 <h4 class="line-header">どこが嬉しいの?</h4>
@@ -45,6 +47,7 @@
                   </li>
                   <% end -%>
                 </ul>
+                <% if logged_in? -%>
                 <div class="abstract-add">
                   <% form_for(Strength.new, {:url => strengths_path(:rubygem_id => @gem.to_param), :html => {:class => "niceforms", :method => :post}}) do |f| %>
                     <%= f.error_messages %>
@@ -52,6 +55,7 @@
                     <%= f.submit("追加") %>
                   <% end %>
                 </div>
+                <% end -%>
               </div>
               <div class="line-group">
                 <h4 class="line-header">どこが苦手なの?</h4>
@@ -67,6 +71,7 @@
                   </li>
                   <% end -%>
                 </ul>
+                <% if logged_in? -%>
                 <div class="abstract-add">
                   <% form_for(@gem.weakness.build, {:url => weaknesses_path({:rubygem_id => @gem.to_param}), :html => {:class => "niceforms"}}) do |f| %>
                     <%= f.error_messages %>
@@ -74,6 +79,7 @@
                     <%= f.submit("追加") %>
                   <% end %>
                 </div>
+                <% end -%>
               </div>
             </div>
             <div class="content-area header-wrapper">
@@ -89,7 +95,9 @@
                   <% end -%>
                   <%= render :partial => "share/gemcast", :collection => @gem.gemcasts %>
                 </ol>
+                <% if logged_in? -%>
                 <div class="comment-add right-side"><%= niceforms_button_to('Gemcast追加', new_gemcast_path(@gem), :method => :get) %></div>
+                <% end -%>
               </div><!-- end of list-wrapper -->
             </div>
             <div class="content-area header-wrapper">
@@ -105,7 +113,9 @@
                   <% end -%>
                   <%= render :partial => "share/unchiku", :collection => @gem.unchikus %>
                 </ol>
+                <% if logged_in? -%>
                 <div class="comment-add right-side"><%= niceforms_button_to('うんちく追加', new_unchiku_path(@gem), :method => :get) %></div>
+                <% end -%>
               </div><!-- end of list-wrapper -->
               <div class="content-footer right-side"><%= link_to('戻る', root_path) %></div>
             </div>

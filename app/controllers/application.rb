@@ -50,12 +50,12 @@ protected
 
   def setup_for_spec(rubygem_id)
     @gem = Rubygem.find(rubygem_id)
-    if params[:version]
-      @version = @gem.versions.find(params[:version])
+    if params[:version_id]
+      @version = @gem.versions.find(params[:version_id])
     else
       @version = @gem.lastest_version
     end
-    @versions_for_select = @gem.versions
+    @versions_for_select = @gem.versions.reverse
     @detail = @version.find_detail_and_check_empty
     @dependencies = @version.dependencies
     @obstacles = @version.obstacles

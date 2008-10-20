@@ -58,8 +58,6 @@ module GemspecARExtend
     "http://chart.apis.google.com/chart?chs=80x50&cht=gom&chf=bg,s,#{bgcolor}&chco=8080ff,ff8080&chd=t:#{ratio}"
   end
 
-  DISPLAY_LENGTH = 50
-
   def message_summary
     make_summary(self.message, 50)
   end

@@ -16,7 +16,12 @@
             <% if logged_in? -%>
               <div class="tag-new right-side"><%= niceforms_button_to('タグ編集', new_tag_rubygem_path(@gem), :method => :get) %></div>
             <% end -%>
-            <div class="version-select">Version <form class="inline-form"><%= select_tag('version', options_from_collection_for_select(@versions_for_select, :to_param, :version, @version.to_param)) %><input type="submit" value="変更" /></form></div>
+            <div class="version-select">Version 
+              <% form_tag(rubygem_path({:id => @gem.to_param}), {:class => "inline-form", :method => :get}) do -%>
+                <%= select_tag('version_id', options_from_collection_for_select(@versions_for_select, :to_param, :version, @version.to_param)) %>
+                <input type="submit" value="変更" />
+              <% end -%>
+            </div>
             <div class="gem-detail">
               <h3 class="group-header">バージョン依存情報</h3>
               <p class="detail-content"><%=h @detail.summary %></p>

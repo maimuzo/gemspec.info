@@ -73,7 +73,7 @@
               <p>User:<%=h current_user.nickname %> </p>
               <div class="mypage-link"><a href="/">トップ</a> <%= link_to('自己管理', mypage_path) %> <a href="/logout">ログアウト</a></div>
             <% else -%>
-              <% form_tag(session_url, :class => "niceforms") do |f| -%>
+              <% form_tag(session_url, :class => "niceforms") do -%>
               <label for="openid_url" >
                 OpenId URL:
               </label><br />

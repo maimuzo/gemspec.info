@@ -106,12 +106,18 @@ module OpenIdAuthentication
       open_id_request = open_id_consumer.begin(identity_url)
       endpoint_url = open_id_request.endpoint.server_url
       if options.has_key?(:whitelist) and options.has_key?(:target_column)
-        unless options[:whitelist].send("find_by_#{options[:target_column]}", endpoint_url)
-          raise DenyProvider, "#{identity_url}'s OP server(#{endpoint_url}) is denyed"
-        end
+	whitelist = options[:whitelist].send("find", :all)
+	unless whitelist.nil?
+	  whitelist.each do |w|
+	    raise DenyProvider, "#{identity_url}'s OP server(#{endpoint_url}) is denyed" unless w.send("#{options[:target_column]}") =~ endpoint_url
+	  end
+	end
       elsif options.has_key?(:blacklist) and options.has_key?(:target_column)
-        if options[:blacklist].send("find_by_#{options[:target_column]}", endpoint_url)
-          raise DenyProvider, "#{identity_url}'s OP server(#{endpoint_url}) is denyed"
+        blacklist = options[:blacklist].send("find", :all)
+        unless blacklist.nil?
+          blacklist.each do |b| 
+            raise DenyProvider, "#{identity_url}'s OP server(#{endpoint_url}) is denyed" if b.send("#{options[:target_column]}") =~ endpoint_url
+          end
         end
       end
       add_simple_registration_fields(open_id_request, options)

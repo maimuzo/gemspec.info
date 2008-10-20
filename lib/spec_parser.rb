@@ -13,7 +13,8 @@ require "yaml"
 # script/runner -e production 'SpecParser.new(true, true).load_from_ar.parse_agein_from_saved_yaml'
 # script/runner -e production 'SpecParser.new.scan.add_unknown_gem_versions.update_spec_from_command'
 # script/runner 'SpecParser.new(true, true).clear_empty_specs'
-# script/runner 'SpecParser.new(true, true).scan.install_all_gem_to("./tmp/gems_for_spec", true, false)'
+# script/runner 'SpecParser.new(true, true).scan(false).install_all_gem_to("./tmp/gems_for_spec", false, true)'
+# script/runner 'SpecParser.new(true, true).scan(false).biff_installed_gems("./tmp/gems_for_spec", false)'
 #
 class SpecParser < SpecScanner
   
@@ -80,33 +81,75 @@ class SpecParser < SpecScanner
     end
   end
 
-  def install_all_gem_to(install_path = './tmp/gems_for_spec', with_sudo = true, only_new = true)
+  def install_all_gem_to(install_path = './tmp/gems_for_spec', with_sudo = false, only_new = true)
+    biff_installed_gems(install_path, false) if only_new
     @scaned_gem_and_versions.each do |line|
-      if only_new
-        rubygem = Rubygem.find_by_name(line[:gem])
-        rubygem = Rubygem.new(:name => line[:gem]) if rubygem.nil?
-      end
       line[:versions].each do |version_name|
-        puts "target : #{line[:gem]}[#{version_name}]" if @verbose
-        if only_new
-          version = rubygem.versions.find_by_version(version_name)
-          install_gem(install_path, with_sudo, line[:gem], version_name) if version.nil?
-        else
-          install_gem(install_path, with_sudo, line[:gem], version_name)
-        end       
+        puts "install target : #{line[:gem]}[#{version_name}]" if @verbose
+        install_gem(install_path, with_sudo, line[:gem], version_name)
       end
     end
   end
 
-  
+  def biff_installed_gems(install_path = "", to_downcase = true)
+    if @scaned_gem_and_versions.nil?
+      puts "@scaned_gem_and_versions is nil"
+      return
+    end
+    if "" == install_path
+      command = "gem list -a"
+    else
+      if "./" == install_path[0, 2]
+        target_dir = Dir.pwd + "/" + install_path 
+      else  
+        target_dir = install_path
+      end
+      command = "sh -c 'export GEM_HOME=#{target_dir}; gem list -a'"
+    end
+    begin
+      puts "local gem list command : [#{command}]" if @verbose
+      lines = `#{command}`.split("\n")
+    rescue
+      puts "Catch exception from command line"
+      show_result_of_gem_version
+      exit(1)
+    end
+    lines.each do |line|
+      puts "scaned line(biff) : #{line}" if @verbose
+      next if "*** LOCAL GEMS ***" == line or "" == line or /Bulk updating/ =~ line
+      gem_name_and_versions = line.scan(/^(.+)\s\((.+)\)$/).first
+      gem_name = gem_name_and_versions[0].strip
+      gem_name = gem_name.downcase if to_downcase
+      versions = gem_name_and_versions[1].split(",").map do |version| version.strip end
+      
+      # delete installed gems and versions
+      #インストール済みのGemとバージョンを削除
+      @scaned_gem_and_versions.each do |remote_line|
+        if remote_line[:gem] == gem_name
+          puts "#{remote_line[:gem]} before versions(remote) : #{remote_line[:versions].join(', ')}" if @verbose
+          versions.each do |version|
+            remote_line[:versions].delete(version)
+          end
+          puts "#{remote_line[:gem]} after versions(remote) : #{remote_line[:versions].join(', ')}" if @verbose
+        end
+      end
+    end
+    self
+  end
+
 private
 
   # sudo gem install GEMNAME -v 0.0.1 -y -i PATH
   def install_gem(install_path, with_sudo, gem_name, version_name)
-    if with_sudo
-      command = "sudo gem install #{gem_name} -v #{version_name} --include-dependencies -i #{install_path}"
+    if "./" == install_path[0, 2]
+      target_dir = Dir.pwd + "/" + install_path
     else
-      command = "gem install #{gem_name} -v #{version_name} --include-dependencies -i #{install_path}"
+      target_dir = install_path
+    end
+    if with_sudo
+      command = "sh -c 'export GEM_HOME=#{target_dir}; sudo gem install #{gem_name} -v #{version_name} --install-dir #{install_path} --no-rdoc --no-ri'"
+    else
+      command = "sh -c 'export GEM_HOME=#{target_dir}; gem install #{gem_name} -v #{version_name} --install-dir #{install_path} --no-rdoc --no-ri'"
     end
     puts "command : [#{command}]" if @verbose
     result = `#{command}`
@@ -116,8 +159,7 @@ private
     else
       return true
     end
-  end
-    
+  end  
     
   # add a unknown a gem, a version, a spec yaml, and a detail
   # get yaml formated spec from yield
@@ -146,7 +188,6 @@ private
     end
     show_result_of_spec
   end
-  
   
   # parse spec, and save it or force update it
   # specの解析と、保存または上書き

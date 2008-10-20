@@ -8,7 +8,7 @@
             </div>
             <div class="content-area">
               <p>your OpenID : <%=h @user.claimed_url %></p>
-              <% form_for(@user, :url => mypage_path, :html => {:class => "niceforms"}) do |f| -%>
+              <% form_for(@user, :url => mypage_path) do |f| -%>
                 <%= f.error_messages %>
                 <p>
                   <label for="mypage_nickname">表示名(必須・ユニーク)</label><br />

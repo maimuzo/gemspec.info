@@ -148,8 +148,9 @@ class UnchikusController < ApplicationController
     setup_for_spec(params[:rubygem_id])   
     
     @user = User.find_by_user_key(params[:user_key])
-    raise "User not found" unless 1 == @user.size
+    raise "User not found" if @user.nil?
     @comment = @gem.unchikus.build
+    @comment.user_id = @user.id
     @comment.url = params[:url]
     @comment.tried_times = 100 # TODO:
     @comment.title = params[:title]
@@ -158,9 +159,15 @@ class UnchikusController < ApplicationController
     @comment.method = 'sent trackback'
     respond_to do |format|
       if @comment.save
+        logger.info "create trackback for #{params[:title]}"
         format.html { render_result_of_trackback(0, "added your trackback") }
       else
-        format.html { render_result_of_trackback(1, trip_tags(error_message_for(:unchiku))) }
+        format.html { 
+          error_message = ""
+          @comment.errors.each do |key, value| error_message << "#{key} : #{value}" end
+          logger.info "error messages on unchiku trackback : [#{error_message}]"
+          render_result_of_trackback(1, error_message)       
+        }
       end
     end
   end

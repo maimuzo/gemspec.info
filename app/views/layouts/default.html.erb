@@ -64,7 +64,7 @@
         <div id="content-3">
           <div class="content-wrap login-indicator">
             <% if flash[:error] -%>  
-            <%= flash[:error] %>
+            <%=h flash[:error] %>
             <% end -%>
           </div>
           <div class="content-wrap login-indicator">

@@ -35,7 +35,7 @@ class SpecScanner
   
   # list up all gem name and all version, and return a version list
   # すべてのgem名とバージョンを取得し、そのリストを返す
-  def scan
+  def scan(to_downcase = true)
     begin
       lines = `gem list -ra`.split("\n")
     rescue
@@ -48,7 +48,8 @@ class SpecScanner
       puts "scaned line : #{line}" if @verbose
       next if "*** REMOTE GEMS ***" == line or "" == line or /Bulk updating/ =~ line
       gem_name_and_versions = line.scan(/^(.+)\s\((.+)\)$/).first
-      gem_name = gem_name_and_versions[0].strip.downcase
+      gem_name = gem_name_and_versions[0].strip
+      gem_name = gem_name.downcase if to_downcase
       versions = gem_name_and_versions[1].split(",").map do |version| version.strip end
       #古い物から登録する
       versions.reverse!

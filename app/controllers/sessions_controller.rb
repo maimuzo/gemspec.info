@@ -75,6 +75,7 @@ protected
         if @current_user = User.find_by_claimed_url(identity_url)
           successful_login_and :jump_from
         else
+          logger.info "New user : #{identity_url}"
           @current_user = User.new
           assign_registration_attributes!(registration)
           @current_user.claimed_url = identity_url

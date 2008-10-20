@@ -108,16 +108,28 @@ module OpenIdAuthentication
       if options.has_key?(:whitelist) and options.has_key?(:target_column)
 	whitelist = options[:whitelist].send("find", :all)
 	unless whitelist.nil?
+          judge = false
 	  whitelist.each do |w|
-	    raise DenyProvider, "#{identity_url}'s OP server(#{endpoint_url}) is denyed" unless w.send("#{options[:target_column]}") =~ endpoint_url
-	  end
+            pattern = w.send("#{options[:target_column]}")
+            judge = true if /#{pattern}/ =~ endpoint_url
+ 	  end
+          unless judge
+            logger.info "[#{identity_url}]'s endpoint [#{endpoint_url}] was blocked by whitelist"
+            raise DenyProvider, "#{identity_url}'s OP server(#{endpoint_url}) is denyed"
+          end
 	end
       elsif options.has_key?(:blacklist) and options.has_key?(:target_column)
         blacklist = options[:blacklist].send("find", :all)
         unless blacklist.nil?
+          judge = true
           blacklist.each do |b| 
-            raise DenyProvider, "#{identity_url}'s OP server(#{endpoint_url}) is denyed" if b.send("#{options[:target_column]}") =~ endpoint_url
+            pattern = b.send("#{options[:target_column]}")
+            if /#{pattern}/ =~ endpoint_url
+              logger.info "#{identity_url}]'s endpoint [#{endpoint_url}] is blocked by a blacklist : [#{pattern}]"            
+              judge = false
+            end
           end
+          raise DenyProvider, "#{identity_url}'s OP server(#{endpoint_url}) is denyed" unless judge
         end
       end
       add_simple_registration_fields(open_id_request, options)

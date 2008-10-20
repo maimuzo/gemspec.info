@@ -201,7 +201,7 @@ jQuery(this).before('<div class="selectArea" style="width:'+(jQuery(this).width(
 	//text areas
 	jQuery('textarea',self).each(function()
 	{
-		jQuery(this).replaceWith('<div style="width: '+(jQuery(this).width()+20)+'px; height: '+(jQuery(this).height()+20)+'px;" class="txtarea" id = "'+this.id+'_fake"><div class="tr"><img src="/niceforms/default/txtarea_tl.gif" class="txt_corner"></div><div class="cntr"><div style="height: '+(jQuery(this).height()+10)+'px;" class="cntr_l"></div></div><div class="br"><img src="'+imagePath+'txtarea_bl.gif" class="txt_corner"></div></div>');
+		jQuery(this).replaceWith('<div style="width: '+(jQuery(this).width()+20)+'px; height: '+(jQuery(this).height()+20)+'px;" class="txtarea" id = "'+this.id+'_fake"><div class="tr"><img src="'+imagePath+'txtarea_tl.gif" class="txt_corner"></div><div class="cntr"><div style="height: '+(jQuery(this).height()+10)+'px;" class="cntr_l"></div></div><div class="br"><img src="'+imagePath+'txtarea_bl.gif" class="txt_corner"></div></div>');
 		jQuery('#'+this.id+'_fake .cntr').append(jQuery(this));
 		
 	}).focus(function()

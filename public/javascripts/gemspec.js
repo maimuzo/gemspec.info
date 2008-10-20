@@ -5,8 +5,8 @@ var $j = jQuery.noConflict();
 $j(document).ready( function() 
 {
   // for search
-  $j('form.niceforms').jForms({listSize:20, imagePath:'/images/niceforms/default/'});
-  $j('div.niceforms').jForms({listSize:20, imagePath:'/images/niceforms/default/'});
+  $j('.niceforms').jForms({listSize:20, imagePath:'/images/niceforms/default/'});
+  //$j('div.niceforms').jForms({listSize:20, imagePath:'/images/niceforms/default/'});
   $j('input.coolinput').coolinput({blurClass: 'pre-input'});
 
   // for title

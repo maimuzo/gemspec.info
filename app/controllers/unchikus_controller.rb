@@ -62,8 +62,6 @@ class UnchikusController < ApplicationController
         @comment.url = params[:unchiku][:url]
         @comment.tried_times = 0
         @comment.foreign_content = "コンテンツ取得中...\n(お急ぎの方は直接リンクをクリックしてください)"        
-      else
-        raise "Can not change obstacle type"
       end
       respond_to do |format|
         if @comment.update_attributes(params[:unchiku])
@@ -75,7 +73,7 @@ class UnchikusController < ApplicationController
         end
       end
     rescue => e
-      errors.add_to_base(e)
+      flash[:error] += e.to_s
       @title = "Edit unchiku agein for " + @gem.name
       format.html { render :action => "edit" }
     end

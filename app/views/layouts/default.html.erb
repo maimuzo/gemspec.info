@@ -169,5 +169,6 @@
     <p>※バグとか誤字脱字や表示崩れなどはどしどしレポートください。右サイドのメールテンプレから受け付けます。</p>
 </div>
 <div id="LPOPanel" class="top-left"></div>
+<%= render(:partial => "share/google_analytics") if RAILS_ENV == 'production' -%>
 </body>
 </html>

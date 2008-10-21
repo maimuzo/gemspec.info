@@ -45,16 +45,7 @@ module ApplicationHelper
   def plus_minus_total(base)
     (base.result_of_rating[:plus] + "/" + base.result_of_rating[:minus] + " " + base.result_of_rating[:total])
   end
-  
-  def show_path_for_gemcast(gemcast)
-    "/rubygems/#{gemcast.rubygem.to_param}/gemcast/#{gemcast.id.to_s}".untaint
-  end
-
-
-  def show_path_for_unchiku(unchiku)
-    "/rubygems/#{unchiku.rubygem.to_param}/unchiku/#{unchiku.id.to_s}".untaint
-  end
-  
+    
   def gender_value(sex)
     if sex == 0
       "男性"

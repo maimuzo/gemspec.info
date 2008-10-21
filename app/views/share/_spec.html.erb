@@ -56,11 +56,13 @@
             <% else -%>
             <div class="list-wrapper">
               <ol>
+                <% logger.debug "obstacles in rhtml : " + @obstacles.inspect %>
                 <% @obstacles.each do |obstacle| -%>
                 <li>
                   <div class="commentboxgrey">
                     <h2 class="comment-title"><%=h obstacle.title %></h2>
                     <div class="comments-wrapper">
+                      <% logger.debug "obstacle in loop : " + obstacle.inspect %>
                       <p><%=h obstacle.comment_summary %></p>
                     </div>
                     <div class="left-rate-wrapper">

@@ -13,7 +13,7 @@ class ObstaclesController < ApplicationController
   def new
     setup_for_spec(params[:rubygem_id])
     @title = "add obstacle for " + @gem.name + "[" + @version.version + "]"
-    @comment = @version.obstacles.build
+    @comment = Obstacle.new
   end
 
   # POST   /rubygems/:rubygem_id/:version_id/obstacles

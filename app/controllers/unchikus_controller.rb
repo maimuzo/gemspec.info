@@ -13,7 +13,7 @@ class UnchikusController < ApplicationController
   def new
     setup_for_spec(params[:rubygem_id])
     @title = "add unchiku for " + @gem.name
-    @comment = @gem.unchikus.build
+    @comment = Unchiku.new
   end
 
   # POST   /rubygems/:rubygem_id/unchikus

@@ -11,7 +11,7 @@ class GemcastsController < ApplicationController
   def new
     setup_for_spec(params[:rubygem_id])
     @title = "add gemcast for " + @gem.name
-    @comment = @gem.gemcasts.build
+    @comment = Gemcast.new
   end
 
   # POST   /rubygems/:rubygem_id/gemcasts

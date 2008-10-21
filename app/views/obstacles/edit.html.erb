@@ -9,7 +9,7 @@
                 <hr>
                 <div class="sub-header">Obstacles</div>
               </div>
-              <% form_for(@comment, {:url => obstacle_path({:rubygem_id => @gem.to_param, :version => @version.to_param, :id => @comment.id}), :html => {:class => "niceforms", :method => :put}}) do |f|  %>
+              <% form_for(@comment, {:url => obstacle_path({:rubygem_id => @gem.to_param, :version_id => @version.to_param, :id => @comment.id}), :html => {:class => "niceforms", :method => :put}}) do |f|  %>
               <div class="list-wrapper">
                 <div class="commentboxgrey">
                   <div class="how-to-input">以下の項目のみ変更可能です。<br />ただし、参照先URLを変更した場合、参照先URLの本文を取得するまでしばらく時間がかかります。<br />当初入力してなかったURLを編集時に入力したり、その逆はできません。</div>
@@ -27,7 +27,7 @@
                 </div>
               </div><!-- end of list-wrapper -->
               <% end -%>
-              <div class="content-footer right-side"><%= link_to('戻る', rubygem_path(:id => @gem.to_param, :version => @version.to_param)).untaint %></div>
+              <div class="content-footer right-side"><%= link_to('戻る', rubygem_path(:id => @gem.to_param, :version_id => @version.to_param)).untaint %></div>
             </div>
           </div>
         </div>

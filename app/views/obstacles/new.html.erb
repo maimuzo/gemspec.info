@@ -9,7 +9,7 @@
                 <hr>
                 <div class="sub-header">Obstacles</div>
               </div>
-              <% form_for(@comment, {:url => obstacles_path({:rubygem_id => @gem.to_param, :version => @version.to_param}), :html => {:class => "niceforms"}}) do |f|  %>
+              <% form_for(@comment, {:url => obstacles_path({:rubygem_id => @gem.to_param, :version_id => @version.to_param}), :html => {:class => "niceforms"}}) do |f|  %>
               <div class="list-wrapper">
                 <div class="commentboxgrey">
                   <div class="comment-title">タイトル:<br /><%= f.text_field(:title, {:class => "coolinput comment-input-title", :title => "title for this comment"}) %></div>
@@ -22,7 +22,7 @@
                 </div>
               </div><!-- end of list-wrapper -->
               <% end -%>
-              <div class="content-footer right-side"><%= link_to('戻る', rubygem_path(:id => @gem.to_param, :version => @version.to_param)).untaint %></div>
+              <div class="content-footer right-side"><%= link_to('戻る', rubygem_path(:id => @gem.to_param, :version_id => @version.to_param)).untaint %></div>
             </div>
           </div>
         </div>

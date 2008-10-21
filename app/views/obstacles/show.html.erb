@@ -43,10 +43,10 @@
                 </div>
                 <% if logged_in? and current_user.id == @comment.user_id -%>
                   <div class="comment-modify right-side"><%= niceforms_button_to('うんちく編集', edit_obstacle_path({:rubygem_id => @gem.to_param, :version_id => @version.to_param, :id => @comment.id}), :method => :get) %>
-                  <%= niceforms_button_to('うんちく削除', obstacle_path({:rubygem_id => @gem.to_param, :version => @version.to_param, :id => @comment.id}), {:method => :delete, :confirm => 'まじで?' }) %></div>
+                  <%= niceforms_button_to('うんちく削除', obstacle_path({:rubygem_id => @gem.to_param, :version_id => @version.to_param, :id => @comment.id}), {:method => :delete, :confirm => 'まじで?' }) %></div>
                 <% end -%>
               </div><!-- end of list-wrapper -->
-              <div class="content-footer right-side"><%= link_to('評価せずに戻る', rubygem_path(:id => @gem.to_param, :version => @version.to_param)).untaint %></div>
+              <div class="content-footer right-side"><%= link_to('評価せずに戻る', rubygem_path(:id => @gem.to_param, :version_id => @version.to_param)).untaint %></div>
             </div>
           </div>
         </div>

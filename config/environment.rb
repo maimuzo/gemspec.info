@@ -68,3 +68,14 @@ Rails::Initializer.run do |config|
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector
 end
+
+# by hand
+ExceptionNotifier.exception_recipients = %w(maimuzo@gmail.com)
+
+# defaults to exception.notifier@default.com
+ExceptionNotifier.sender_address =
+  %("Application Error" <gemspec.error@gemspec.info>)
+
+# defaults to "[ERROR] "
+ExceptionNotifier.email_prefix = "[APP] "
+

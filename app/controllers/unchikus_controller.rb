@@ -161,7 +161,7 @@ class UnchikusController < ApplicationController
     @comment.method = 'sent trackback'
     respond_to do |format|
       if @comment.save
-        logger.info "create trackback for #{params[:title]}"
+        logger.info "create trackback for #{params[:url]}"
         format.html { render_result_of_trackback(0, "added your trackback") }
       else
         format.html { 

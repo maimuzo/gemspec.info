@@ -154,8 +154,9 @@ class ObstaclesController < ApplicationController
     @version = Version.find(params[:version_id])
     
     @user = User.find_by_user_key(params[:user_key])
-    raise "User not found" unless 1 == @user.size
+    raise "User not found" unless @user.nil?
     @comment = @version.obstacles.build
+    @comment.user_id = @user.id
     @comment.url = params[:url]
     @comment.tried_times = 100 # TODO:
     @comment.title = params[:title]
@@ -164,9 +165,15 @@ class ObstaclesController < ApplicationController
     @comment.method = 'sent trackback'
     respond_to do |format|
       if @comment.save
+        logger.info "create trackback for #{params[:url]}"
         format.html { render_result_of_trackback(0, "added your trackback") }
       else
-        format.html { render_result_of_trackback(1, trip_tags(error_message_for(:obstacle))) }
+        format.html { 
+          error_message = ""
+          @comment.errors.each do |key, value| error_message << "#{key} : #{value}" end
+          logger.info "error messages on unchiku trackback : [#{error_message}]"
+          render_result_of_trackback(1, error_message)       
+        }
       end
     end
   end

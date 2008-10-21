@@ -153,8 +153,8 @@ class ObstaclesController < ApplicationController
   def create_trackback
     @version = Version.find(params[:version_id])
     
-    @user = User.find_by_user_key(params[:user_key])
-    raise "User not found" unless @user.nil?
+    @user = User.find_by_user_key(params[:user_key].strip)
+    raise "User not found" if @user.nil?
     @comment = @version.obstacles.build
     @comment.user_id = @user.id
     @comment.url = params[:url]

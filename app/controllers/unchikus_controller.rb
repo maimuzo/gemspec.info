@@ -149,7 +149,7 @@ class UnchikusController < ApplicationController
   def create_trackback
     setup_for_spec(params[:rubygem_id])   
     
-    @user = User.find_by_user_key(params[:user_key])
+    @user = User.find_by_user_key(params[:user_key].strip)
     raise "User not found" if @user.nil?
     @comment = @gem.unchikus.build
     @comment.user_id = @user.id

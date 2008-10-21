@@ -22,16 +22,9 @@ class Rubygem < ActiveRecord::Base
   has_many :unchikus, :as => :commentable, :dependent => :destroy, :order => 'created_at ASC'
   
   include GemspecARExtend
-  
-  # ar holder
-  @@ar_lastest_version = nil
-  
+    
   def lastest_version
-    if @@ar_lastest_version.nil?
-      find_lastest_version
-    else
-      @@ar_lastest_version
-    end
+    @lastest_version ||= find_lastest_version
   end
   
   def lastest_version_reload
@@ -77,6 +70,6 @@ class Rubygem < ActiveRecord::Base
 private
 
   def find_lastest_version
-    @@ar_lastest_version = self.versions.find(:first, :order =>  "position DESC")
+    self.versions.find(:first, :order =>  "position DESC")
   end
 end

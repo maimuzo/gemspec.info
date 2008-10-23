@@ -47,7 +47,7 @@ module ApplicationHelper
   end
     
   def plus_minus_total_for_tag(base)
-    ('的確:' + base.result_of_rating[:plus] + "/ そうかな?:" + base.result_of_rating[:minus] + " " + base.result_of_rating[:total])
+    ('的確:' + base.result_of_rating[:plus] + "/そうかな?:" + base.result_of_rating[:minus] + " " + base.result_of_rating[:total])
   end
 
   def gender_value(sex)

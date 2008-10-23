@@ -66,6 +66,18 @@ class Rubygem < ActiveRecord::Base
     @tag_array.join(", ")
   end
 
+  def setup_tagging_for(tag_id)
+    if @tag_id == tag_id
+      return @tagging_with_tag_id ||= taggings.find_by_tag_id(tag_id)
+    else
+      @tag_id = tag_id
+      return @tagging_with_tag_id = taggings.find_by_tag_id(tag_id)
+    end
+  end
+  
+  def tagging
+    @tagging_with_tag_id
+  end
 
 private
 

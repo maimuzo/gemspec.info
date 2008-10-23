@@ -1,4 +1,5 @@
 class GemcastsController < ApplicationController
+  before_filter :block_until_authorized, :except => [:show]
 
   # GET    /rubygems/:rubygem_id/gemcasts/:id
   def show

@@ -29,7 +29,7 @@ class RootsController < ApplicationController
     end
     unless params[:keyword].blank?
       sql_base << "rubygems.name like :keyword"
-      bind_base[:keyword] = "%" + params[:keyword] + "%"
+      bind_base[:keyword] = "%" + params[:keyword].strip + "%"
     end
     unless params[:tag].blank?
       sql_base << "taggings.tag_id = :tag_id"

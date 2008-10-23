@@ -29,13 +29,13 @@ class GemspecBatch
       "maimuzo.myopenid.com",
       "http://www.hatena.ne.jp/maimuzo/",
       "https://mixi.jp/",
-      "http://yahoo.co.jp",
-      "http://yahoo.com",
+      "https://me.yahoo.co.jp/a/vTJHT7J6VKo2WSb1DUPq4fncKWT97jg-",
+      "https://me.yahoo.com/a/WnsGs_d9l97N.B7eSplbAS4GJoc-",
       "http://profile.jugemkey.jp/USER_ID",
       "http://USER_ID.livejournal.com/",
       "http://technorati.com/people/technorati/USER_ID",
       "http://USER_ID.vox.com/",
-      "http://profile.livedoor.com/USER_ID"
+      "http://profile.livedoor.com/maimuzo"
     ]
     allow_openid_providers.each do |op| add_op(op) end
     

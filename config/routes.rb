@@ -44,6 +44,12 @@ ActionController::Routing::Routes.draw do |map|
   # acts_as_taggable_redux
   map.resources :tags
   map.resources :versions
+
+  # by hand for tag rating
+  map.plus_useful_tag 'tags/:id/plus_useful/:rubygem_id', :controller => 'tags', :action => 'plus_useful', :requirements => { :method => :post }
+  map.minus_useful_tag 'tags/:id/minus_useful/:rubygem_id', :controller => 'tags', :action => 'minus_useful', :requirements => { :method => :post }
+  map.reset_useful_tag 'tags/:id/reset_useful/:rubygem_id', :controller => 'tags', :action => 'reset_useful', :requirements => { :method => :post }
+
   
   # by hand
   map.resource :mypage

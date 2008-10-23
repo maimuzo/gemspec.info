@@ -46,6 +46,10 @@ module ApplicationHelper
     (base.result_of_rating[:plus] + "/" + base.result_of_rating[:minus] + " " + base.result_of_rating[:total])
   end
     
+  def plus_minus_total_for_tag(base)
+    ('的確:' + base.result_of_rating[:plus] + "/ そうかな?:" + base.result_of_rating[:minus] + " " + base.result_of_rating[:total])
+  end
+
   def gender_value(sex)
     if sex == 0
       "男性"
@@ -62,6 +66,9 @@ module ApplicationHelper
     base_chose_rate_links(target, user, '＋評価して戻る', plus_url, '−評価して戻る', minus_url, '評価取消して戻る', reset_url)
   end
   
+  def chose_rate_links_for_tag(target, user, plus_url, minus_url, reset_url = '')
+    base_chose_rate_links(target, user, '的確', plus_url, 'そうかな?', minus_url, '評価取消', reset_url)
+  end
   
   def base_chose_rate_links(target, user, plus_message, plus_url, minus_message, minus_url, reset_message, reset_url = '')
     link_string = ""

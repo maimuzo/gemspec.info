@@ -15,6 +15,12 @@
                           <div class="float-clear" />
                         </div>
                         <div class="tag-name">Tag : <%=h tag_string_or_none(gem) %></div>
+                        <% if @with_tag_rate == true -%>
+                          <div>この使い分けについて <%=h plus_minus_total_for_tag(gem.tagging) %>人による評価</div>
+                          <% if logged_in? -%>
+                            <div>あなたはどう思いますか? <%= chose_rate_links_for_tag(gem.tagging, current_user, plus_useful_tag_path({:id => @tag.id, :rubygem_id => gem.to_param}), minus_useful_tag_path({:id => @tag.id, :rubygem_id => gem.to_param}), reset_useful_tag_path({:id => @tag.id, :rubygem_id => gem.to_param})) %></div>
+                          <% end -%>
+                        <% end -%>
                         <div class="comment-date">Last update on <%=h gem.last_update_string %></div>
                         <div class="link-wrapper"><%= link_to('詳細へ', rubygem_path(gem)).untaint %></div>
                       </div>

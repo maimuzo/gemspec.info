@@ -1,6 +1,7 @@
 class AbstractsController < ApplicationController
 #  def show
 #  end
+  before_filter :block_until_authorized
 
   # POST   /rubygems/:rubygem_id/(what/strength/weakness)/plus_useful
   def plus_useful

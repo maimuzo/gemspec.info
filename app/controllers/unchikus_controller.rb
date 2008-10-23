@@ -1,5 +1,5 @@
 class UnchikusController < ApplicationController
-
+  before_filter :block_until_authorized, :except => [:show, :create_trackback]
   protect_from_forgery :except => :create_trackback
 
   # GET    /rubygems/:rubygem_id/unchikus/:id

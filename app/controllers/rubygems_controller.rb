@@ -21,6 +21,8 @@ formatted_destroy_tag_rubygem POST   /rubygems/:id/destroy_tag.:format {:control
 
 =end
 
+  before_filter :block_until_authorized, :except => [:show]
+
   # GET    /rubygems/:id
   def show
     setup_for_spec(params[:id])

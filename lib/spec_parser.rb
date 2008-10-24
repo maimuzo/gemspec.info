@@ -138,12 +138,11 @@ class SpecParser < SpecScanner
     self
   end
 
-  
-private
-
   def shuffle_gems
     @scaned_gem_and_versions = @scaned_gem_and_versions.sort_by{|i| rand }
   end
+  
+private
 
   # sudo gem install GEMNAME -v 0.0.1 -y -i PATH
   def install_gem(install_path, with_sudo, gem_name, version_name)

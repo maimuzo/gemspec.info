@@ -7,7 +7,7 @@ require "yaml"
 # script/runner 'SpecScanner.new(true, true).scan.add_unknown_gem_versions'
 #
 class SpecScanner
-  def initialize(report = false, verbose = false)
+  def initialize(report = false, verbose = false, gem_path = '/usr/local/bin/gem')
     # searched number of gem name
     @scaned_name = 0
     @scaned_name_array = []
@@ -31,13 +31,14 @@ class SpecScanner
     @report = report
     
     @scaned_gem_and_versions = []
+    @gem_path = gem_path
   end
   
   # list up all gem name and all version, and return a version list
   # すべてのgem名とバージョンを取得し、そのリストを返す
   def scan(to_downcase = true)
     begin
-      lines = `gem list -ra`.split("\n")
+      lines = `#{@gem_path} list -ra`.split("\n")
     rescue
       puts "Catch exception from command line"
       show_result_of_gem_version

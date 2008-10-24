@@ -81,7 +81,7 @@ module ActiveRecord #:nodoc:
       end
       
       module ClassMethods
-        VALID_FULLTEXT_OPTIONS = [:limit, :offset, :order, :attributes, :raw_matches, :find]
+        VALID_FULLTEXT_OPTIONS = [:limit, :offset, :order, :attributes, :raw_matches, :find, :count]
 
         # == Configuration options
         #
@@ -154,6 +154,7 @@ module ActiveRecord #:nodoc:
         # * <tt>attributes</tt>  - String to append to Hyper Estraier search query
         # * <tt>raw_matches</tt> - Returns raw Hyper Estraier documents instead of instantiated AR objects
         # * <tt>find</tt>        - Options to pass on to the <tt>ActiveRecord::Base#find</tt> call
+        # * <tt>count</tt>       - Set this to <tt>true</tt> if you're using <tt>fulltext_search</tt> in conjunction with <tt>ActionController::Pagination</tt> to return the number of matches only
         #
         # Examples:
         # 
@@ -176,9 +177,8 @@ module ActiveRecord #:nodoc:
           find_options = options[:find] || {}
           [ :limit, :offset ].each { |k| find_options.delete(k) } unless find_options.blank?
 
-          cond = EstraierPure::Condition.new
+          cond = new_estraier_condition
           cond.set_phrase query
-          cond.add_attr("type STREQ #{self.to_s}")
           [options[:attributes]].flatten.reject { |a| a.blank? }.each do |attr|
             cond.add_attr attr
           end
@@ -189,8 +189,8 @@ module ActiveRecord #:nodoc:
           matches = nil
           seconds = Benchmark.realtime do
             result = estraier_connection.search(cond, 1);
+            return (result.doc_num rescue 0) if options[:count]
             return [] unless result
-            
             matches = get_docs_from(result)
             return matches if options[:raw_matches]
           end
@@ -201,8 +201,35 @@ module ActiveRecord #:nodoc:
               "Condition: #{cond.to_s}"
             )
           )
+
+          # suppress exception
+          return [] if matches.blank?
+          conditions = " AND (#{sanitize_sql(find_options[:conditions])})" if
+            find_options[:conditions]
+          ids = matches.collect { |m| m.attr('db_id') }
+          ids_list = ids.map do |id|
+            quote_value(id, columns_hash[primary_key])
+          end.join(',')
+          find_options.update :conditions => "#{quoted_table_name}." +
+            "#{connection.quote_column_name(primary_key)} IN " +
+            "(#{ids_list})#{conditions}"
+          find_every(find_options)
             
-          matches.blank? ? [] : find(matches.collect { |m| m.attr('db_id') }, find_options)
+          #matches.blank? ? [] : find(matches.collect { |m| m.attr('db_id') }, find_options)
+        end
+
+        # Similarity search
+        def similarity_search(model, options = {})
+          return [] unless doc = model.estraier_doc
+          doc_id = doc.attr('@id')
+          keywords = estraier_connection.etch_doc(doc_id)
+          config = options.delete(:config) || '16 1024 4096'
+          phrase = keywords.inject("[SIMILAR] #{config}") do |r,(k,v)|
+            r << " WITH #{v} #{k}"
+          end
+          options[:attributes] = [options[:attributes]].flatten.compact
+          options[:attributes] << "db_id NUMNE #{model.id}"
+          fulltext_search phrase, options
         end
         
         # Clear all entries from index
@@ -229,6 +256,14 @@ module ActiveRecord #:nodoc:
             docs << result.get_doc(i)
           end
           docs
+        end
+
+        def new_estraier_condition #:nodoc
+          cond = EstraierPure::Condition::new
+          cond.set_options(EstraierPure::Condition::SIMPLE | EstraierPure::Condition::USUAL)
+          cond.add_attr("type STREQ #{ self.to_s }") if subclasses.blank?
+          cond.add_attr("type_base STREQ #{ base_class.to_s }") unless base_class == self and subclasses.blank?
+          cond
         end
 
         protected
@@ -258,9 +293,8 @@ module ActiveRecord #:nodoc:
         
         # Retrieve index record for current model object
         def estraier_doc
-          cond = EstraierPure::Condition::new
+          cond = self.class.new_estraier_condition
           cond.add_attr("db_id STREQ #{self.id}")
-          cond.add_attr("type STREQ #{self.class.to_s}")
           result = self.estraier_connection.search(cond, 1)
           return unless result and result.doc_num > 0
           get_doc_from(result)
@@ -304,6 +338,10 @@ module ActiveRecord #:nodoc:
           doc = EstraierPure::Document::new
           doc.add_attr('db_id', "#{id}")
           doc.add_attr('type', "#{self.class.to_s}")
+          # Use type instead of self.class.subclasses as the latter is a protected method
+          unless self.class.base_class == self.class and not attribute_names.include?("type")
+            doc.add_attr("type_base", "#{ self.class.base_class.to_s }")
+          end
           doc.add_attr('@uri', "/#{self.class.to_s}/#{id}")
           
           unless attributes_to_store.blank?

@@ -18,8 +18,8 @@ require "yaml"
 #
 class SpecParser < SpecScanner
   
-  def initialize(report = false, verbose = false)
-    super(report, verbose)
+  def initialize(report = false, verbose = false, gem_path = '/usr/local/bin/gem')
+    super(report, verbose, gem_path)
     # result counter
     @scaned_spec = 0
     @added_spec = 0
@@ -98,14 +98,14 @@ class SpecParser < SpecScanner
       return
     end
     if "" == install_path
-      command = "gem list -a"
+      command = "#{@gem_path} list -a"
     else
       if "./" == install_path[0, 2]
         target_dir = Dir.pwd + "/" + install_path 
       else  
         target_dir = install_path
       end
-      command = "sh -c 'export GEM_HOME=#{target_dir}; gem list -a'"
+      command = "sh -c 'export GEM_HOME=#{target_dir}; #{@gem_path} list -a'"
     end
     begin
       puts "local gem list command : [#{command}]" if @verbose
@@ -153,9 +153,9 @@ private
       target_dir = install_path
     end
     if with_sudo
-      command = "sh -c 'export GEM_HOME=#{target_dir}; sudo gem install #{gem_name} -v #{version_name} --install-dir #{install_path} --no-rdoc --no-ri'"
+      command = "sh -c 'export GEM_HOME=#{target_dir}; sudo #{@gem_path} install #{gem_name} -v #{version_name} --install-dir #{install_path} --no-rdoc --no-ri'"
     else
-      command = "sh -c 'export GEM_HOME=#{target_dir}; gem install #{gem_name} -v #{version_name} --install-dir #{install_path} --no-rdoc --no-ri'"
+      command = "sh -c 'export GEM_HOME=#{target_dir}; #{@gem_path} install #{gem_name} -v #{version_name} --install-dir #{install_path} --no-rdoc --no-ri'"
     end
     puts "command : [#{command}]" if @verbose
     result = `#{command}`
@@ -252,7 +252,7 @@ private
   # gem specificationコマンドから詳細を得る
   def get_unknown_spec(rubygem, version)
     begin
-      command = "gem specification #{rubygem.name} --version #{version.version} -r -q 2>/dev/null"
+      command = "#{@gem_path} specification #{rubygem.name} --version #{version.version} -r -q 2>/dev/null"
       puts "command : [#{command}]" if @verbose
       spec_yaml = `#{command}`
       spec_yaml = '' unless 0 == $?

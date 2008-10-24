@@ -237,6 +237,12 @@ module EstraierPure
       @phrase = phrase
       nil
     end
+    # Set the similar id and node URI.
+    def set_similar(id, uri)
+      @similar = id
+      @simnode = uri
+      nil
+    end
     # Add an expression for an attribute.
     # `expr' specifies an expression for an attribute.
     # The return value is always `nil'.
@@ -293,6 +299,14 @@ module EstraierPure
     def phrase()
       @phrase
     end
+    # Get similar id
+    def similar()
+      @similar
+    end
+    # Get simnode URI
+    def simnode()
+      @simnode
+    end
     # Get expressions for attributes.
     # The return value is expressions for attributes.
     def attrs()
@@ -325,6 +339,8 @@ module EstraierPure
     # Create a search condition object.
     def initialize()
       @phrase = nil
+      @similar = nil
+      @simnode = nil
       @attrs = []
       @order = nil
       @max = -1
@@ -438,6 +454,10 @@ module EstraierPure
       Utility::check_types({ url=>String }) if $DEBUG
       @url = url
       nil
+    end
+    # Get the URL of a node server.
+    def get_url
+      @url
     end
     # Set the proxy information.
     # `host' specifies the host name of a proxy server.
@@ -983,6 +1003,11 @@ module EstraierPure
         buf.write("&") if buf.length > 0
         buf.write("phrase=")
         buf.write(URI::encode(cond.phrase))
+      end
+      if cond.similar
+        buf.write("&") if buf.length > 0
+        buf.write("simid=" + cond.similar.to_s)
+        buf.write("&simnode=" + CGI::escape(cond.simnode.to_s))
       end
       for i in 0...cond.attrs.length
         buf.write("&") if buf.length > 0

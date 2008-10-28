@@ -101,6 +101,9 @@ class SpecParser < SpecScanner
     # この時点でgem名はdowncaseしていない前提
     @scaned_gem_and_versions.each do |line|
       puts "got record : #{line[:gem]}" if @verbose
+#      opt = {
+#        :include => {:versions => :spec}
+#      }
       rubygem = Rubygem.find_by_name(line[:gem].downcase)
       if rubygem.nil?
         rubygem = Rubygem.create(:name => line[:gem].downcase)
@@ -108,7 +111,8 @@ class SpecParser < SpecScanner
       end
       line[:versions].each do |version_name|
         puts "got record : #{line[:gem]}[#{version_name}]" if @verbose and not only_fail
-        version = rubygem.versions.find_by_version(version_name)
+        version = rubygem.versions.find_by_version(version_name, :include => [:spec])
+        # version = rubygem.versions.find_by_version(version_name)
         if version.nil?
           version = rubygem.versions.create(:version => version_name)
           puts "add version : #{line[:gem]}[#{version_name}]" if @verbose and not only_fail
@@ -214,6 +218,7 @@ class SpecParser < SpecScanner
 
   # gem名をシャッフルする
   def shuffle_gems
+    puts "shuffle now..." if @verbose
     @scaned_gem_and_versions = @scaned_gem_and_versions.sort_by{|i| rand }
   end
   
@@ -341,7 +346,7 @@ private
     end    
   end
 
-    # RubygemとVersionからGemファイル名を推測し、そのファイルがあればyamlを返す
+  # RubygemとVersionからGemファイル名を推測し、そのファイルがあればyamlを返す
   # real_gem_nameはdowncaseされていない前提
   # command:
   # gem specification /Volumes/Backup/gemspec_gemhome/gems/ANTFARM-0.2.0.gem
@@ -351,8 +356,9 @@ private
     gem_file_path = gem_path_prefix + '.gem'
     begin
       unless File.exist?(gem_file_path)
+        # 代わりになりそうなやつをとりあえず入れる
         look_like_gems = Dir::glob(gem_path_prefix + '*')
-        if 1 == look_like_gems.length
+        if 0 < look_like_gems.length
           gem_file_path = look_like_gems.first
         else
           raise "look like gems are not only one. it is #{look_like_gems.length.to_s}"
@@ -367,7 +373,8 @@ private
         return result
       end
     rescue => e
-      puts "ERROR : #{e.to_s}"
+      puts temp = "ERROR : #{e.to_s}"
+      @fail_gems << temp
       puts temp = "#{gem_file_path} could not find."
       @fail_gems << temp
       Dir::glob(gem_path_prefix + '*').each {|filename|

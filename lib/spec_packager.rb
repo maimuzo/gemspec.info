@@ -30,7 +30,7 @@ class SpecPackager
       `#{command}`
       raise "Can't find zip file at #{zippath_with_file_name}" unless 0 == $?
       puts "finished to unzip. scanning all specs..." if @verbose
-      Rubygem.find(:all).each do |gem|
+      Rubygem.find(:all, :include => [:versions]).each do |gem|
         gem.versions.each do |version|
           input_from_yaml_file(version) if version.spec.nil?
         end
@@ -50,14 +50,14 @@ class SpecPackager
     puts "working directory is [#{workdir}]"
     puts "zip file : #{zipfile}"
     work_on_workdir(workdir) do |current_dir|
-      Rubygem.find(:all).each do |gem|
+      Rubygem.find(:all, :include => [:versions]).each do |gem|
         gem.versions.each do |version|
           unless version.spec.nil?
             output_to_yaml_file(version) unless version.spec.yaml.blank?
           end
         end
       end
-      command = "zip -j #{zipfile} #{workdir}/*"
+      command = "zip -jr #{zipfile} #{workdir}"
       puts "zip command : #{command}" if @verbose
       `#{command}`
       raise "Can't zip by the following command: [#{command}]" unless 0 == $?

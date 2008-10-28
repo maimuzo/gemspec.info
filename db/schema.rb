@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081011041026) do
+ActiveRecord::Schema.define(:version => 20081028085108) do
 
   create_table "abstracts", :force => true do |t|
     t.integer  "user_id",      :limit => 11
@@ -22,6 +22,10 @@ ActiveRecord::Schema.define(:version => 20081011041026) do
     t.integer  "rating_total", :limit => 10, :precision => 10, :scale => 0
     t.decimal  "rating_avg",                 :precision => 10, :scale => 2
   end
+
+  add_index "abstracts", ["user_id"], :name => "index_abstracts_on_user_id"
+  add_index "abstracts", ["rubygem_id"], :name => "index_abstracts_on_rubygem_id"
+  add_index "abstracts", ["type"], :name => "index_abstracts_on_type"
 
   create_table "clone_sites", :force => true do |t|
     t.string   "name"
@@ -46,7 +50,15 @@ ActiveRecord::Schema.define(:version => 20081011041026) do
     t.integer  "rating_count",     :limit => 11
     t.integer  "rating_total",     :limit => 10, :precision => 10, :scale => 0
     t.decimal  "rating_avg",                     :precision => 10, :scale => 2
+    t.string   "foreign_content"
+    t.integer  "tried_times",      :limit => 11
   end
+
+  add_index "comments", ["user_id"], :name => "index_comments_on_user_id"
+  add_index "comments", ["commentable_id", "commentable_type"], :name => "index_comments_on_commentable_id_and_commentable_type"
+  add_index "comments", ["type"], :name => "index_comments_on_type"
+  add_index "comments", ["tried_times"], :name => "index_comments_on_tried_times"
+  add_index "comments", ["updated_at"], :name => "index_comments_on_updated_at"
 
   create_table "dependencies", :force => true do |t|
     t.integer  "version_id", :limit => 11
@@ -72,6 +84,7 @@ ActiveRecord::Schema.define(:version => 20081011041026) do
     t.text     "installmessage"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "project_name"
   end
 
   add_index "details", ["id"], :name => "index_details_on_id"
@@ -84,6 +97,9 @@ ActiveRecord::Schema.define(:version => 20081011041026) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "favorites", ["user_id"], :name => "index_favorites_on_user_id"
+  add_index "favorites", ["favorable_id", "favorable_type"], :name => "index_favorites_on_favorable_id_and_favorable_type"
 
   create_table "general_points", :force => true do |t|
     t.integer "rubygem_id", :limit => 11
@@ -147,6 +163,8 @@ ActiveRecord::Schema.define(:version => 20081011041026) do
     t.datetime "updated_at"
   end
 
+  add_index "specs", ["version_id"], :name => "index_specs_on_version_id"
+
   create_table "taggings", :force => true do |t|
     t.integer "tag_id",        :limit => 11
     t.integer "taggable_id",   :limit => 11
@@ -193,6 +211,9 @@ ActiveRecord::Schema.define(:version => 20081011041026) do
     t.string   "user_key",                  :null => false
   end
 
+  add_index "users", ["claimed_url"], :name => "index_users_on_claimed_url"
+  add_index "users", ["user_key"], :name => "index_users_on_user_key"
+
   create_table "versions", :force => true do |t|
     t.integer  "rubygem_id", :limit => 11
     t.string   "version"
@@ -204,5 +225,6 @@ ActiveRecord::Schema.define(:version => 20081011041026) do
 
   add_index "versions", ["id"], :name => "index_versions_on_id"
   add_index "versions", ["rubygem_id"], :name => "index_versions_on_rubygem_id"
+  add_index "versions", ["position"], :name => "index_versions_on_position"
 
 end

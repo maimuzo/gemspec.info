@@ -1,7 +1,12 @@
 # kick
-# script/runner -e production 'GemspecBatch.new.setup("~/rails_app/gemspec.info/first_gem_pack.zip")'
-# script/runner -e production 'GemspecBatch.new.update_contents' / 10 min
-# script/runner -e production 'GemspecBatch.new.update_gems' / 1 day
+# script/runner -e production 'GemspecBatch.new.setup("~/rails_app/gemspec.info/first_gem_pack.zip")' / maybe you can not run
+# script/runner -e production 'GemspecBatch.new.update_contents' / every 10 minites
+# script/runner -e production 'GemspecBatch.new.update_gems' / every 6 hours
+#
+# crontab
+# */10 * * * * /usr/local/bin/ruby /(replace to your RAILS_HOME)/gemspec.info/current/script/runner -e production 'GemspecBatch.new(true).update_contents'
+# 4 */6 * * * /usr/local/bin/ruby /(replace to your RAILS_HOME)/script/runner -e production 'GemspecBatch.new.update_gems'
+#
 class GemspecBatch
   def initialize(verbose = false)
     @verbose = verbose
@@ -49,7 +54,7 @@ class GemspecBatch
   
   def update_gems
     sync_from_core
-    SpecParser.new(@verbose, @verbose).scan.update_spec_from_command
+    # SpecParser.new(@verbose, @verbose).scan.update_spec_from_command
     GeneralRankUpdater.new(@verbose).update
   end
   

@@ -16,6 +16,10 @@ require "yaml"
 # script/runner 'SpecParser.new(true, true).scan(false).install_all_gem_to("/Volumes/Backup/gemspec_gemhome", false, true, true)'
 # script/runner 'SpecParser.new(true, true).scan(false).biff_installed_gems("./tmp/gems_for_spec", false)'
 #
+# Get all gems
+# rsync -av --delete rsync://rubyforge.rubyuser.de/gems/ /Volumes/Backup/gemspec_gemhome/gems
+#  && wget http://gems.rubyforge.org/yaml -O /Volumes/Backup/gemspec_gemhome/index.yaml
+#
 class SpecParser < SpecScanner
   
   def initialize(report = false, verbose = false, gem_path = '/usr/local/bin/gem')
@@ -25,6 +29,7 @@ class SpecParser < SpecScanner
     @added_spec = 0
     @scaned_spec_array = []
     @added_spec_array = []
+    @fail_gems = []
   end
   
   # generate @scaned_gem_and_versions from Rubygem and Version(ActiveRecord)
@@ -51,7 +56,7 @@ class SpecParser < SpecScanner
       # get a spec and add it if this system dosn't have a spec
       # もしspecをキャッシュしてなければ、取得して保存する
       if version.spec.nil?
-        spec_yaml = get_unknown_spec(rubygem, version)
+        spec_yaml = get_unknown_spec_from_remote(rubygem, version)
         spec_yaml = remove_dust(spec_yaml)
         version.create_spec(:yaml => spec_yaml)
         added_spec_counter(version.gemversion)
@@ -60,6 +65,72 @@ class SpecParser < SpecScanner
       end
     end
   end
+  
+  # まだrdocを持ってないgemに対してテンプレートを適用したrdocを生成する
+  # 参考
+  # http://subtech.g.hatena.ne.jp/cho45/20071006/1191619884
+  # http://pub.cozmixng.org/~the-rwiki/rw-cgi.rb?cmd=view;name=RDoc%B3%D0%A4%A8%BD%F1%A4%AD
+  # http://blog.evanweaver.com/files/doc/fauna/allison/files/README.html
+  # http://www.kmc.gr.jp/~ohai/rdoc.ja.html
+  # http://subtech.g.hatena.ne.jp/cho45/20071008/1191815854
+  # 
+  # 正解っぽい記事
+  # http://jarp.does.notwork.org/diary/200809c.html
+  # 
+  def generate_rdocs_for_empty
+    
+  end
+  
+  # rdocをHEに登録する
+  # 
+  # 参考
+  # http://d.hatena.ne.jp/jitte/20080112/1200153854
+  def add_rdoc_to_he
+    
+  end
+  
+  
+  # ダウンロード済みgemパッケージからspecを取得する
+  # あくまでgem list -raを元にgemfileを推定し、
+  # wxruby-1.9.2-i386-mswin32.gemのようなネイティブgemもあるので、
+  # どのgemはspecを取得できなかったか把握する
+  #
+  # kick
+  # script/runner 'SpecParser.new(true, true, "/opt/local/bin/gem").scan(false).clear_empty_specs.update_spec_from_downloaded_gems("/Volumes/Backup/gemspec_gemhome")'
+  def update_spec_from_downloaded_gems(gem_home = '/Volumes/Backup/gemspec_gemhome', only_fail = true)
+    # この時点でgem名はdowncaseしていない前提
+    @scaned_gem_and_versions.each do |line|
+      puts "got record : #{line[:gem]}" if @verbose
+      rubygem = Rubygem.find_by_name(line[:gem].downcase)
+      if rubygem.nil?
+        rubygem = Rubygem.create(:name => line[:gem].downcase)
+        puts "add gem : " + line[:gem] if @verbose and not only_fail
+      end
+      line[:versions].each do |version_name|
+        puts "got record : #{line[:gem]}[#{version_name}]" if @verbose and not only_fail
+        version = rubygem.versions.find_by_version(version_name)
+        if version.nil?
+          version = rubygem.versions.create(:version => version_name)
+          puts "add version : #{line[:gem]}[#{version_name}]" if @verbose and not only_fail
+        end
+        
+        if version.spec.nil?
+          begin
+            spec_yaml = get_unknown_spec_from_cache(line[:gem], version, gem_home)
+          rescue => e
+            puts e.to_s
+          end
+          spec_yaml = remove_dust(spec_yaml)
+          version.create_spec(:yaml => spec_yaml)
+          added_spec_counter(version.gemversion)
+          puts "get the spec from a command line, and save it : #{rubygem.name}[#{version.version}]" if @verbose
+          parse(version, spec_yaml)
+        end
+      end
+    end
+    @fail_gems.each do |line| puts line end
+  end
+  
     
   # 保存済みyamlから再度解析する(カラム追加時など)
   def parse_agein_from_saved_yaml
@@ -70,7 +141,7 @@ class SpecParser < SpecScanner
   
   # 空のspecs.yamlを見つけて消す(再取得の準備)
   def clear_empty_specs
-    Version.find(:all).each do |version|
+    Version.find(:all, :include => [:spec]).each do |version|
       unless version.spec.nil?
         spec = version.spec
         if spec.yaml.blank?
@@ -79,8 +150,10 @@ class SpecParser < SpecScanner
         end
       end
     end
+    self
   end
 
+  # もう使わない
   def install_all_gem_to(install_path = './tmp/gems_for_spec', with_sudo = false, only_new = true, randum_order = true)
     biff_installed_gems(install_path, false) if only_new
     shuffle_gems if randum_order
@@ -92,6 +165,7 @@ class SpecParser < SpecScanner
     end
   end
 
+  # インストール済みのgemを除外する
   def biff_installed_gems(install_path = "", to_downcase = true)
     if @scaned_gem_and_versions.nil?
       puts "@scaned_gem_and_versions is nil"
@@ -138,6 +212,7 @@ class SpecParser < SpecScanner
     self
   end
 
+  # gem名をシャッフルする
   def shuffle_gems
     @scaned_gem_and_versions = @scaned_gem_and_versions.sort_by{|i| rand }
   end
@@ -188,7 +263,7 @@ private
           version = rubygem.versions.create(:version => version_name)
           puts "add version : #{line[:gem]}[#{version_name}]" if @verbose
         end       
-        yield(rubygem, version)
+        yield(rubygem, version, line[:gem])
       end
     end
     show_result_of_spec
@@ -237,19 +312,21 @@ private
   # gem間の依存関係を解析
   def gem_dependencies(depend_yaml)
     result = []
-    depend_yaml.each { |depend|
-      req = depend.version_requirements.requirements
-      result << {
-        :depgem => depend.name, 
-        :depversion => req[0][0].to_s + " " + req[0][1].version
-      }
-    }
+    depend_yaml.each do |depend|
+      unless depend.nil? or depend.version_requirements.nil? or depend.version_requirements.requirements.nil?
+        req = depend.version_requirements.requirements
+        result << {
+          :depgem => depend.name, 
+          :depversion => req[0][0].to_s + " " + req[0][1].version
+        }
+      end
+    end
     result
   end
   
   # get spec using gem specification command.
   # gem specificationコマンドから詳細を得る
-  def get_unknown_spec(rubygem, version)
+  def get_unknown_spec_from_remote(rubygem, version)
     begin
       command = "#{@gem_path} specification #{rubygem.name} --version #{version.version} -r -q 2>/dev/null"
       puts "command : [#{command}]" if @verbose
@@ -262,6 +339,43 @@ private
       show_result_of_spec
       exit(1)
     end    
+  end
+
+    # RubygemとVersionからGemファイル名を推測し、そのファイルがあればyamlを返す
+  # real_gem_nameはdowncaseされていない前提
+  # command:
+  # gem specification /Volumes/Backup/gemspec_gemhome/gems/ANTFARM-0.2.0.gem
+  # gem directory are gem_home + "/cache"
+  def get_unknown_spec_from_cache(real_gem_name, version, gem_home)
+    gem_path_prefix = gem_home + '/cache/' + real_gem_name + '-' + version.version
+    gem_file_path = gem_path_prefix + '.gem'
+    begin
+      unless File.exist?(gem_file_path)
+        look_like_gems = Dir::glob(gem_path_prefix + '*')
+        if 1 == look_like_gems.length
+          gem_file_path = look_like_gems.first
+        else
+          raise "look like gems are not only one. it is #{look_like_gems.length.to_s}"
+        end
+      end
+      command = "#{@gem_path} specification #{gem_file_path}"
+      puts "command : #{command}"
+      result = `#{command}`
+      unless 0 == $?
+        return ''
+      else
+        return result
+      end
+    rescue => e
+      puts "ERROR : #{e.to_s}"
+      puts temp = "#{gem_file_path} could not find."
+      @fail_gems << temp
+      Dir::glob(gem_path_prefix + '*').each {|filename|
+        puts temp = "- but it found: #{filename}"
+        @fail_gems << temp
+      }
+      return ''
+    end
   end
 
   # show result of this scanning

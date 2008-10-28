@@ -1,3 +1,5 @@
+require 'timeout'
+
 # kick
 # script/runner -e production 'GemspecBatch.new.setup("~/rails_app/gemspec.info/first_gem_pack.zip")' / maybe you can not run
 # script/runner -e production 'GemspecBatch.new.update_contents' / every 10 minites
@@ -8,10 +10,12 @@
 # 4 */6 * * * /usr/local/bin/ruby /(replace to your RAILS_HOME)/script/runner -e production 'GemspecBatch.new.update_gems'
 #
 class GemspecBatch
-  def initialize(verbose = false)
+  def initialize(verbose = false, maximum_load_average1 = 5.0)
     @verbose = verbose
+    @maximum_load_average1 = maximum_load_average1
+    check_load_average
   end
-
+  
   def setup(zip_path)
     sync_from_core
     # TODO:need to get clone_sites from core.gemspec.info
@@ -49,22 +53,43 @@ class GemspecBatch
   end
   
   def update_contents
-    ReferenceUpdater.new(@verbose).update
+    timeout(60) do
+      ReferenceUpdater.new(@verbose).update
+    end
   end
   
   def update_gems
-    sync_from_core
-    # SpecParser.new(@verbose, @verbose).scan.update_spec_from_command
-    GeneralRankUpdater.new(@verbose).update
+    timeout(60) do
+      sync_from_core
+    end
+    check_load_average
+    timeout(60 * 3) do
+      SpecParser.new(@verbose, @verbose).scan.add_unknown_gem_versions
+    end
+    check_load_average
+    timeout(60) do
+      GeneralRankUpdater.new(@verbose).update
+    end
   end
   
 protected
 
   def add_op(op_url)
-    Endpoint.new(@verbose).find(op_url).each {|e| TrastedOpenidProvider.create(:endpoint_url => e)}
+    timeout(15) do
+      Endpoint.new(@verbose).find(op_url).each {|e| TrastedOpenidProvider.create(:endpoint_url => e)}
+    end
+  end
+
+  def check_load_average
+    la1 = LoadAverage.new.average1
+    if la1 > @maximum_load_average1
+      puts "Stop batch! because load average is #{la1} now."
+      exit(1) 
+    end
   end
   
   def sync_from_core
     # TODO:
   end
+  
 end

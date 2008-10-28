@@ -3,7 +3,8 @@
 # kick:
 # script/runner 'SpecPackager.new(true).pack()'
 # script/runner 'SpecPackager.new(true).unpack("~/Sources/gemspec/gemspec.info/20081013_131255.zip")'
-# script/runner -e production 'SpecPackager.new(true).unpack("./20081013_131255.zip")'
+# script/runner -e production 'SpecPackager.new(true).unpack("./../first_gem_pack.zip")'
+
 #
 class SpecPackager
   def initialize(verbose = false, tmp = Dir.tmpdir)
@@ -37,6 +38,7 @@ class SpecPackager
       end
     end
     puts "loaded #{@input} spec files from #{zippath_with_file_name}"
+    puts "please delete working directory [#{@input_workdir}] after check it." if @verbose
   end
   
   # make zip file from saved specs on working directory
@@ -63,6 +65,7 @@ class SpecPackager
       raise "Can't zip by the following command: [#{command}]" unless 0 == $?
     end
     puts "wrote #{@output} spec files to #{zipfile}"
+    puts "please delete working directory [#{@input_workdir}] after check it." if @verbose
   end
 
 protected

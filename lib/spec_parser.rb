@@ -318,12 +318,19 @@ private
   def gem_dependencies(depend_yaml)
     result = []
     depend_yaml.each do |depend|
-      unless depend.nil? or depend.version_requirements.nil? or depend.version_requirements.requirements.nil?
-        req = depend.version_requirements.requirements
-        result << {
-          :depgem => depend.name, 
-          :depversion => req[0][0].to_s + " " + req[0][1].version
-        }
+      unless depend.nil?
+        if depend.respond_to?(:version_requirements) and depend.version_requirements.respond_to?(:requirements)
+          req = depend.version_requirements.requirements
+          result << {
+            :depgem => depend.name, 
+            :depversion => req[0][0].to_s + " " + req[0][1].version
+          }
+        elsif depend.respond_to?(:length) and 2 == depend.length
+          result << {
+            :depgem => depend[0], 
+            :depversion => depend[1]
+          }
+        end
       end
     end
     result

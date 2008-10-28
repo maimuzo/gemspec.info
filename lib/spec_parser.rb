@@ -35,7 +35,7 @@ class SpecParser < SpecScanner
   # generate @scaned_gem_and_versions from Rubygem and Version(ActiveRecord)
   def load_from_ar
     @scaned_gem_and_versions = []
-    rubygems = Rubygem.find(:all)
+    rubygems = Rubygem.find(:all, :include => [:versions])
     rubygems.each do |rubygem|
       versions = rubygem.versions
       array_version = []
@@ -137,9 +137,13 @@ class SpecParser < SpecScanner
   
     
   # 保存済みyamlから再度解析する(カラム追加時など)
-  def parse_agein_from_saved_yaml
+  def parse_agein_from_saved_yaml(for_all = false)
     update_spec do |rubygem, version|
-      parse(version, version.spec.yaml) unless version.spec.nil?
+      if for_all
+        parse(version, version.spec.yaml) unless version.spec.nil?
+      else
+        parse(version, version.spec.yaml) if not version.spec.nil? and version.detail.nil?
+      end
     end
   end
   
@@ -263,7 +267,7 @@ private
         puts "got record : #{line[:gem]}[#{version_name}]" if @verbose
         # add a unknown version
         # 未知のバージョンなら登録する
-        version = rubygem.versions.find_by_version(version_name)
+        version = rubygem.versions.find_by_version(version_name, :include => [:spec, :detail])
         if version.nil?
           version = rubygem.versions.create(:version => version_name)
           puts "add version : #{line[:gem]}[#{version_name}]" if @verbose
@@ -277,39 +281,43 @@ private
   # parse spec, and save it or force update it
   # specの解析と、保存または上書き
   def parse(version, spec_yaml_source)
-    geminfo = YAML.load(spec_yaml_source)
-    puts "spec : " + geminfo.inspect if @verbose
-    unless geminfo == false
-      detail = {}
-      detail[:platform] = geminfo.platform unless geminfo.platform.nil?
-      detail[:executables] = geminfo.executables.to_s unless geminfo.executables.nil?
-      detail[:date] = geminfo.date unless geminfo.date.nil?
-      detail[:summary] = geminfo.summary unless geminfo.summary.nil?
-      detail[:description] = geminfo.description.to_s unless geminfo.description.nil?
-      detail[:homepage] = geminfo.homepage unless geminfo.homepage.nil?
-      detail[:authors] = geminfo.authors.join(", ") unless geminfo.authors.nil?
-      detail[:email] = geminfo.email unless geminfo.email.nil?
-      detail[:installmessage] = geminfo.post_install_message unless geminfo.post_install_message.nil?          
-      detail[:project_name] = geminfo.rubyforge_project unless geminfo.rubyforge_project.nil?
-      # add or update
-      if version.detail.nil?
-        version.create_detail(detail)
-        puts "add a detail" if @verbose
-      else
-        version.detail.update_attributes(detail)
-        puts "update the detail" if @verbose
-      end
-      added_spec_counter(version.gemversion)     
-      
-      gem_dependencies(geminfo.dependencies).each do |rec|
-        puts "found dependency : " + rec.inspect if @verbose
-        # add a dependence if unknown one
-        # 未知の依存関係なら追加
-        if version.dependencies.find_by_depgem_and_depversion(rec[:gem], rec[:version]).nil?
-          version.dependencies.create(rec)
-          puts "add dependency : #{rec[:depgem]}[#{rec[:depversion]}]" if @verbose
+    begin
+      geminfo = YAML.load(spec_yaml_source)
+      puts "spec : " + geminfo.inspect if @verbose
+      unless geminfo == false
+        detail = {}
+        detail[:platform] = geminfo.platform unless geminfo.platform.nil?
+        detail[:executables] = geminfo.executables.to_s unless geminfo.executables.nil?
+        detail[:date] = geminfo.date unless geminfo.date.nil?
+        detail[:summary] = geminfo.summary unless geminfo.summary.nil?
+        detail[:description] = geminfo.description.to_s unless geminfo.description.nil?
+        detail[:homepage] = geminfo.homepage unless geminfo.homepage.nil?
+        detail[:authors] = geminfo.authors.join(", ") unless geminfo.authors.nil?
+        detail[:email] = geminfo.email unless geminfo.email.nil?
+        detail[:installmessage] = geminfo.post_install_message unless geminfo.post_install_message.nil?          
+        detail[:project_name] = geminfo.rubyforge_project unless geminfo.rubyforge_project.nil?
+        # add or update
+        if version.detail.nil?
+          version.create_detail(detail)
+          puts "add a detail" if @verbose
+        else
+          version.detail.update_attributes(detail)
+          puts "update the detail" if @verbose
+        end
+        added_spec_counter(version.gemversion)     
+
+        gem_dependencies(geminfo.dependencies).each do |rec|
+          puts "found dependency : " + rec.inspect if @verbose
+          # add a dependence if unknown one
+          # 未知の依存関係なら追加
+          if version.dependencies.find_by_depgem_and_depversion(rec[:gem], rec[:version]).nil?
+            version.dependencies.create(rec)
+            puts "add dependency : #{rec[:depgem]}[#{rec[:depversion]}]" if @verbose
+          end
         end
       end
+    rescue => e
+      puts "Error : #{e.to_s}"
     end
   end
 

@@ -77,7 +77,19 @@ class SpecParser < SpecScanner
   # 正解っぽい記事
   # http://jarp.does.notwork.org/diary/200809c.html
   # 
-  def generate_rdocs_for_empty
+  def generate_rdocs_for_empty_one
+    
+  end
+  
+  # gemを解凍する
+  # cd /Volumes/Backup/gemspec_gemhome/unpack
+  # gem unpack /Volumes/Backup/gemspec_gemhome/cache/git-trip-0.0.5.gem
+  def unpack_gem
+    
+  end
+  
+  # allison --title 'RDoc for Gem[0.0.1] from RubyForge'  --charset utf-8  --op ../doc/git-trip-0.0.5 --fmt html --diagram --line-numbers --main README --promiscuous ../unpack/git-trip-0.0.5/
+  def generate_rdoc
     
   end
   
@@ -94,6 +106,8 @@ class SpecParser < SpecScanner
   # あくまでgem list -raを元にgemfileを推定し、
   # wxruby-1.9.2-i386-mswin32.gemのようなネイティブgemもあるので、
   # どのgemはspecを取得できなかったか把握する
+  #
+  # gem mirrorしてから使うこと。
   #
   # kick
   # script/runner 'SpecParser.new(true, true, "/opt/local/bin/gem").scan(false).clear_empty_specs.update_spec_from_downloaded_gems("/Volumes/Backup/gemspec_gemhome")'
@@ -173,7 +187,7 @@ class SpecParser < SpecScanner
     end
   end
 
-  # インストール済みのgemを除外する
+  # @scaned_gem_and_versionsからローカルシステムにインストール済みのgemを除外する
   def biff_installed_gems(install_path = "", to_downcase = true)
     if @scaned_gem_and_versions.nil?
       puts "@scaned_gem_and_versions is nil"
@@ -228,6 +242,7 @@ class SpecParser < SpecScanner
   
 private
 
+  # もう使わない
   # sudo gem install GEMNAME -v 0.0.1 -y -i PATH
   def install_gem(install_path, with_sudo, gem_name, version_name)
     if "./" == install_path[0, 2]

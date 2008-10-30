@@ -69,13 +69,8 @@ class SpecParser < SpecScanner
   # まだrdocを持ってないgemに対してテンプレートを適用したrdocを生成する
   # 参考
   # http://subtech.g.hatena.ne.jp/cho45/20071006/1191619884
-  # http://pub.cozmixng.org/~the-rwiki/rw-cgi.rb?cmd=view;name=RDoc%B3%D0%A4%A8%BD%F1%A4%AD
   # http://blog.evanweaver.com/files/doc/fauna/allison/files/README.html
   # http://www.kmc.gr.jp/~ohai/rdoc.ja.html
-  # http://subtech.g.hatena.ne.jp/cho45/20071008/1191815854
-  # 
-  # 正解っぽい記事
-  # http://jarp.does.notwork.org/diary/200809c.html
   # 
   def generate_rdocs_for_empty_one
     

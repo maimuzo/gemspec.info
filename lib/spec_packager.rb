@@ -25,7 +25,7 @@ class SpecPackager
     @input_workdir = temp.path
     puts "working directory is [#{@input_workdir}]"
     puts "zip file : #{zippath_with_file_name}"
-    work_on_workdir(@input_workdir) do |current_dir|
+    WorkingDirectory.new(@verbose).work_on(@input_workdir) do |current_dir|
       command = "unzip -j #{zippath_with_file_name}"
       puts "unzip command : #{command}" if @verbose
       `#{command}`
@@ -51,7 +51,7 @@ class SpecPackager
     zipfile = zippath_without_filename + "/" + basename + ".zip"
     puts "working directory is [#{workdir}]"
     puts "zip file : #{zipfile}"
-    work_on_workdir(workdir) do |current_dir|
+    WorkingDirectory.new(@verbose).work_on(workdir) do |current_dir|
       Rubygem.find(:all, :include => [:versions]).each do |gem|
         gem.versions.each do |version|
           unless version.spec.nil?
@@ -69,42 +69,6 @@ class SpecPackager
   end
 
 protected
-
-  # setup working directory, and call yield on the workdir
-  def work_on_workdir(workdir)
-    begin
-      if 0 == Dir.chdir(workdir)
-        puts "Work directory is exist. [#{workdir}]"
-        exit(1)
-      end
-    rescue      
-    end
-    
-    begin
-      if 0 == Dir.mkdir(workdir)
-        Dir.chdir(workdir)
-        yield(workdir)
-        Dir.chdir("..")
-        unless @verbose
-          # サブディレクトリを階層が深い順にソートした配列を作成
-          dirlist = Dir::glob(workdir + "**/").sort {
-            |a,b| b.split('/').size <=> a.split('/').size
-          }
-
-          # サブディレクトリ配下の全ファイルを削除後、サブディレクトリを削除
-          dirlist.each {|d|
-            Dir::foreach(d) {|f|
-              File::delete(d+f) if ! (/\.+$/ =~ f)
-            }
-            Dir::rmdir(d)
-          }
-        end
-      end
-    rescue => e
-      puts "error message : [#{e.to_s}]"
-      exit(2)
-    end
-  end
   
   # save to a file from the database
   def output_to_yaml_file(version)

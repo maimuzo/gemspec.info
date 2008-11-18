@@ -1,0 +1,328 @@
+# 
+# To change this template, choose Tools | Templates
+# and open the template in the editor.
+ 
+require 'timeout'
+require 'pathname'
+# require 'rdoc'
+# require 'rdoc/rdoc'
+require "yaml"
+require 'erb'
+
+
+# kick
+# script/runner 'RdocGen.new(false, "/opt/local/bin/gem", "/Users/maimuzo/Sources/gemspec/gemspec.info/tmp/test_gem_home").init_rdoc.generate_all.update_rdoc_and_diagram_status'
+# script/runner 'RdocGen.new(false, "/opt/local/bin/gem", "/Users/maimuzo/Sources/gemspec/gemspec.info/tmp/test_gem_home").update_rdoc_and_diagram_status'
+#
+# なぜかrequire "rdoc"と"rdoc/rdoc"してrdocを作ろうとすると、rdocとallisonが喧嘩しちゃうので、MacOS標準のrdocを使うようにしてみた
+# 何故これで正常に動くのかは不明
+class RdocGen
+  
+  def initialize(verbose = false, gem_path = '/usr/local/bin/gem', gem_home = '/Volumes/Backup/gemspec_gemhome', runtime = '', rdoc_lib_path = '/usr/bin/rdoc', tmp = Dir.tmpdir)
+    @verbose = verbose
+    @gem_home = Pathname.new(gem_home)
+    temp = Tempfile.open("rdoc", tmp)
+    temp.close(true)
+    @tmp_dir = Pathname.new(temp.path.to_s)
+    @gem_path = Pathname.new(gem_path)
+    @runtime = Pathname.new(runtime)
+    @rdoc_lib_path = Pathname.new(rdoc_lib_path)
+    @diagram_wrapper_html = "diagrams.html"
+  end
+
+  # 生成済みrdocファイルとrdocのパスを削除する
+  def init_rdoc(with_files = false)
+    opt = {
+      :conditions => ["NOT(versions.rdoc_path IS NULL OR versions.rdoc_path = '')"],
+    }
+    Version.find(:all, opt).each do |version|
+      if with_files
+        rdoc_dir = @gem_home + 'rdoc' + version.to_param
+        command = "rm -rf #{rdoc_dir.to_s}"
+        `#{command}`
+      end
+      version.rdoc_path = ''
+      version.diagram_path = ''
+      version.save
+    end
+    self
+  end
+  
+  # まだrdocを持ってないgemに対してテンプレートを適用したrdocを生成する
+  # 参考
+  # http://subtech.g.hatena.ne.jp/cho45/20071006/1191619884
+  # http://blog.evanweaver.com/files/doc/fauna/allison/files/README.html
+  # http://www.kmc.gr.jp/~ohai/rdoc.ja.html
+  def generate_all
+    generated_rdoc_counter = 0
+    total_version_counter = 0
+    error_gems = []
+    WorkingDirectory.new(@verbose).work_on(@tmp_dir.to_s) do |current_temp_dir|
+      mkdir_if_not_exist(@tmp_dir + 'extract_temporary')
+      mkdir_if_not_exist(@gem_home + 'rdoc')
+      
+#      opt = {
+#        # :conditions => ["NOT(versions.gemfile IS NULL OR versions.gemfile = '') AND NOT(specs.yaml IS NULL OR specs.yaml = '')"],
+#        :conditions => ["(versions.rdoc_path IS NULL OR versions.rdoc_path = '') AND NOT(versions.gemfile IS NULL OR versions.gemfile = '') AND NOT(specs.yaml IS NULL OR specs.yaml = '') AND rubygems.name LIKE :gem", {:gem => 'h%'}],
+#        :include => [:rubygem, :spec]
+#      }
+#      versions = Version.find(:all, opt)
+#      total_version_counter = versions.size
+#      versions.each do |version|
+      Rubygem.find(:all).each do |rubygem|
+        version = rubygem.lastest_version
+        next unless version.rdoc_path.blank? and not version.gemfile.blank? and not version.spec.yaml.blank?
+        total_version_counter += 1
+        puts "generate rdoc about: " + version.gemfile
+        gemfile_path = @gem_home + 'cache' + version.gemfile
+        extract_base_dir = @tmp_dir + 'extract_temporary'
+        extract_dir = extract_base_dir + File::basename(version.gemfile, '.*')
+        rdoc_dir = @gem_home + 'rdoc' + version.to_param
+        mkdir_if_not_exist(rdoc_dir)
+        extract_gem(gemfile_path, extract_base_dir)
+        spec = YAML.load(version.spec.yaml)
+        args = setup_args(spec, extract_dir)
+        if generate_rdoc(args, extract_dir)
+          # '--diagram'のための画像ラッパーHTMLを作る
+          generate_diagram_wrapper_html(extract_dir, args, version)
+          # check empty
+          if 0 < Dir.glob(rdoc_dir.to_s).size
+            move_rdoc_dir(extract_dir, rdoc_dir)
+            generated_rdoc_counter += 1 
+            puts " => Success to generate RDoc for " + version.gemfile
+            next
+          end
+        end
+        error_gems << version.gemfile
+        puts " => Fault to generate RDoc for " + version.gemfile
+      end
+    end
+    puts "gems : #{total_version_counter} / generated : #{generated_rdoc_counter}"
+    puts "fault generate rdoc : #{error_gems.join(' ')}"
+    self
+  end
+  
+  # 配置済みrdocディレクトリをスキャンして、配置済みコンテンツ情報を更新する
+  def update_rdoc_and_diagram_status(all_check = false)
+    document_root = Pathname.new(RAILS_ROOT) + 'public'
+    rdoc_path_at_server = document_root + 'system/rdoc'
+    if all_check
+      versions = Version.find(:all)
+    else
+      opt = {
+        :conditions => ["versions.rdoc_path IS NULL OR versions.rdoc_path = ''"],
+      }
+      versions = Version.find(:all, opt)      
+    end
+    puts "version count : " + versions.size.to_s if @verbose
+    versions.each do |version|
+      version_name = version.to_param
+      puts version_name if @verbose
+      if (rdoc_path_at_server + version_name).directory?
+        version.rdoc_path = '/system/rdoc/' + version_name + '/'
+      else
+        version.rdoc_path = ''
+      end   
+      if (rdoc_path_at_server + version_name + @diagram_wrapper_html).file?
+        version.diagram_path = '/system/rdoc/' + version_name + '/' + @diagram_wrapper_html
+      else
+        version.diagram_path = ''
+      end   
+      version.save
+    end
+    self
+  end
+
+  # rdocをHEに登録する
+  # 
+  # 参考
+  # http://d.hatena.ne.jp/jitte/20080112/1200153854
+  def add_rdoc_to_he
+    
+  end
+  
+protected
+
+  # gemfile_pathで示されたgemファイルをtemp_dirに解凍する
+  # gemを解凍する
+  # cd /Volumes/Backup/gemspec_gemhome/unpack
+  # gem unpack /Volumes/Backup/gemspec_gemhome/cache/git-trip-0.0.5.gem
+  def extract_gem(gemfile_path, extract_dir)
+    begin
+      command = "cd #{extract_dir.to_s}; #{@gem_path.to_s} unpack #{gemfile_path.to_s}"
+      puts " Step 1. extract command : #{command}" if @verbose
+      result = `#{command}`
+      unless 0 == $?
+        return ''
+      else
+        return result
+      end
+    rescue => e
+      puts "ERROR : #{e.to_s}" if @verbose
+      return ''
+    end    
+  end
+  
+  # specで指定されたファイルやディレクトリが実際に存在するかチェックし、存在するものだけ配列で返す
+  def add_exist_dirs_and_files(extract_dir, target_array)
+    exist_paths = []
+    target_array.each do |target|
+      exist_paths << target if (extract_dir + target).exist?
+    end
+    exist_paths
+  end
+  
+  # 展開したgemのトップレベルディレクトリに存在するファイル名の配列を返す
+  # (specに指定が無くても、これらのファイルはrdocに含める)
+  def pick_up_top_level_files(target_dir)
+    exist_files = []
+    Pathname.glob(target_dir.to_s + "/*").each do |path|
+      exist_files << File::basename(path) if path.file?
+    end
+    exist_files
+  end
+  
+  # 各rdocに渡すオプションを整理する
+  def setup_args(spec, extract_dir)
+    args = []
+    args << spec.rdoc_options
+    args << ['--quiet', '--inline-source', "--template", "/opt/local/lib/ruby/gems/1.8/gems/allison-2.0.3/lib/allison",  '--diagram']
+    args << ['--main', '"README"'] if not args.include?('--main') and (extract_dir + 'README').file?
+    args << ['--op', 'rdoc'] unless args.include?('--op') or args.include?('-o')
+    args << add_exist_dirs_and_files(extract_dir, spec.require_paths.clone)
+    args << add_exist_dirs_and_files(extract_dir, spec.extra_rdoc_files)
+    args << pick_up_top_level_files(extract_dir)
+    args = args.flatten.map do |arg| arg.to_s end
+    args
+  end
+  
+  # rdocを生成する
+  #
+  # コマンドラインサンプル
+  # allison --title 'RDoc for Gem[0.0.1] from RubyForge'  --charset utf-8  --op ../doc/git-trip-0.0.5 --fmt html --diagram --line-numbers --main README --promiscuous ../unpack/git-trip-0.0.5/
+  def generate_rdoc(args, extract_dir)
+    begin
+      timeout(60 * 3) do
+        puts " Step 2. move into : " + extract_dir.to_s if @verbose
+        Dir.chdir(extract_dir.to_s)
+
+        rdoc_command = ""
+        rdoc_command << @runtime.to_s + " " unless @runtime.to_s.blank?
+        rdoc_command << "#{@rdoc_lib_path.to_s} #{args.join(' ')}"
+        puts " Step 3. RDoc command : " + rdoc_command if @verbose
+        `#{rdoc_command}`
+        unless 0 == $?
+          puts "Error : can not generate rdoc files."
+          return false
+        end
+      end
+      return true
+    rescue => e
+      puts "ERROR : #{e.to_s}"
+      puts "current directory : " + Dir.pwd
+      puts e.backtrace
+      return false
+    end
+  end
+  
+  # --diagramオプションで生成したクラスダイアグラムの画像を表示するHTMLを生成する
+  def generate_diagram_wrapper_html(extract_dir, args, version)
+    begin
+      diagram_dir = extract_dir + 'rdoc' + 'dot'
+      exist_files = []
+      Pathname.glob(diagram_dir.to_s + "/*.png").each do |path|
+        exist_files << File::basename(path) if path.file?
+      end
+      diagram_file = extract_dir + 'rdoc' + @diagram_wrapper_html
+      puts " Step 4. generate diagram wrapper html : " + diagram_file.to_s if @verbose
+      puts "diagram images: " + exist_files.join(" ") if @verbose
+      
+      return false if exist_files.empty?
+      
+      erb_params = {}
+      erb_params[:images] = exist_files
+      erb_params[:title] = choose_default_or_next('--title', args, version.to_param)
+      erb_params[:gemname] = version.rubygem.name
+      erb_params[:version] = version.version
+
+      @erb ||= ERB.new(diagram_template_erb)
+
+      diagram_file.open("w") do |file|
+        file.puts @erb.result(binding)
+      end
+    rescue => e
+      puts "Error : can not generate a diagram wrapper html : " + version.to_param
+      puts "Message : #{e.to_s}"
+      puts e.backtrace
+      return false
+    end
+    return true
+  end
+  
+  # rdoc用オプションから必要な値を取り出すか、デフォルト値を返す
+  def choose_default_or_next(keyword, args, default)
+    if args.include?(keyword)
+      return args[(args.index(keyword) + 1)]
+    else
+      return default
+    end
+  end
+
+  # クラスダイアグラム用のerbテンプレートを返す
+  def diagram_template_erb
+    template = <<EOM
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+  <title><%= erb_params[:title] %> | class diagrams | gemspec.info</title>
+  <link type="text/css" href="rdoc-style.css" media="screen" rel="stylesheet"/>
+  <meta name="keywords" content="<%= erb_params[:gemname] %> version <%= erb_params[:version] %>, class diagrams">
+</head>
+<body>
+  <div id="container">
+    <div class="curve" id="preheader_curve_0"></div>
+    <div class="curve" id="preheader_curve_1"></div>
+    <div class="curve" id="preheader_curve_2"></div>
+    <div class="curve" id="preheader_curve_3"></div>
+    <div class="curve" id="preheader_curve_4"></div>
+    <div class="curve" id="preheader_curve_5"></div>
+    <div id="header">
+      <span id="title">
+        <p>&nbsp;</p>
+        <h1>Class diagrams of <%= erb_params[:gemname] %> version <%= erb_params[:version] %></h1>
+      </span>
+    </div>
+    <div class="clear"></div>
+    <div id="content">
+      <% erb_params[:images].each do |image| %>
+      <p><img src="./dot/<%= image %>" alt="Class diagrams of <%= erb_params[:gemname] %> version <%= erb_params[:version] %>" /></p>
+      <% end %>
+    </div>
+  </div>
+  <div class="clear" id="footer">Generated on Jan 21, 2008 / Allison 2 &copy; 2007 <a href="http://cloudbur.st">Cloudburst, LLC</a></div>
+</body>
+</html>    
+EOM
+    template
+  end
+  
+  # 生成できたrdocファイルを配置する
+  def move_rdoc_dir(from, to)
+    command = "mv #{(from + 'rdoc').to_s}/* #{to.to_s}"
+    puts " Step 5. move rdoc-dir command : " + command if @verbose
+    `#{command}`
+    unless 0 == $?
+      puts "Error : can not move rdoc files."
+      return false
+    end
+  end
+  
+  # ディレクトリが存在しなければ作成する
+  # pathはPathnameのインスタンス
+  def mkdir_if_not_exist(path)
+    unless path.directory?
+      path.mkdir
+    end
+  end
+
+end

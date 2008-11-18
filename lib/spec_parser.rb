@@ -64,37 +64,8 @@ class SpecParser < SpecScanner
         parse(version, spec_yaml)
       end
     end
-  end
+  end    
   
-  # まだrdocを持ってないgemに対してテンプレートを適用したrdocを生成する
-  # 参考
-  # http://subtech.g.hatena.ne.jp/cho45/20071006/1191619884
-  # http://blog.evanweaver.com/files/doc/fauna/allison/files/README.html
-  # http://www.kmc.gr.jp/~ohai/rdoc.ja.html
-  # 
-  def generate_rdocs_for_empty_one
-    
-  end
-  
-  # gemを解凍する
-  # cd /Volumes/Backup/gemspec_gemhome/unpack
-  # gem unpack /Volumes/Backup/gemspec_gemhome/cache/git-trip-0.0.5.gem
-  def unpack_gem
-    
-  end
-  
-  # allison --title 'RDoc for Gem[0.0.1] from RubyForge'  --charset utf-8  --op ../doc/git-trip-0.0.5 --fmt html --diagram --line-numbers --main README --promiscuous ../unpack/git-trip-0.0.5/
-  def generate_rdoc
-    
-  end
-  
-  # rdocをHEに登録する
-  # 
-  # 参考
-  # http://d.hatena.ne.jp/jitte/20080112/1200153854
-  def add_rdoc_to_he
-    
-  end
   
   
   # ダウンロード済みgemパッケージからspecを取得する
@@ -106,13 +77,68 @@ class SpecParser < SpecScanner
   #
   # kick
   # script/runner 'SpecParser.new(true, true, "/opt/local/bin/gem").scan(false).clear_empty_specs.update_spec_from_downloaded_gems("/Volumes/Backup/gemspec_gemhome")'
-  def update_spec_from_downloaded_gems(gem_home = '/Volumes/Backup/gemspec_gemhome', only_fail = true)
+#  def update_spec_from_downloaded_gems(gem_home = '/Volumes/Backup/gemspec_gemhome', only_fail = true)
+#    # この時点でgem名はdowncaseしていない前提
+#    @scaned_gem_and_versions.each do |line|
+#      puts "got record : #{line[:gem]}" if @verbose
+##      opt = {
+##        :include => {:versions => :spec}
+##      }
+#      rubygem = Rubygem.find_by_name(line[:gem].downcase)
+#      if rubygem.nil?
+#        rubygem = Rubygem.create(:name => line[:gem].downcase)
+#        puts "add gem : " + line[:gem] if @verbose and not only_fail
+#      end
+#      line[:versions].each do |version_name|
+#        puts "got record : #{line[:gem]}[#{version_name}]" if @verbose and not only_fail
+#        version = rubygem.versions.find_by_version(version_name, :include => [:spec])
+#        # version = rubygem.versions.find_by_version(version_name)
+#        if version.nil?
+#          version = rubygem.versions.create(:version => version_name)
+#          puts "add version : #{line[:gem]}[#{version_name}]" if @verbose and not only_fail
+#        end
+#        
+#        if version.spec.nil?
+#          begin
+#            spec_yaml = get_unknown_spec_from_cache(line[:gem], version, gem_home)
+#          rescue => e
+#            puts e.to_s
+#          end
+#          spec_yaml = remove_dust(spec_yaml)
+#          version.create_spec(:yaml => spec_yaml)
+#          added_spec_counter(version.gemversion)
+#          puts "get the spec from a command line, and save it : #{rubygem.name}[#{version.version}]" if @verbose
+#          parse(version, spec_yaml)
+#        end
+#      end
+#    end
+#    @fail_gems.each do |line| puts line end
+#  end
+  def update_spec_from_downloaded_gems(gem_home = '/Volumes/Backup/gemspec_gemhome')
+    versions = Versions.find(:all, :conditions => ["NOT(versions.gemfile IS NULL or versions.gemfile = '')"], :include => [:rubygem, :spec])
+    versions.each do |version|
+      if version.spec.nil? and not version.gemfile.blank?
+        begin
+          spec_yaml = get_unknown_spec_from_cache(version.gemfile, gem_home)
+        rescue => e
+          puts e.to_s
+        end
+        spec_yaml = remove_dust(spec_yaml)
+        version.create_spec(:yaml => spec_yaml)
+        added_spec_counter(version.gemversion)
+        puts "get the spec from a command line, and save it : #{version.rubygem.name}[#{version.version}]" if @verbose
+        parse(version, spec_yaml)
+      end
+    end
+  end
+  
+  # バージョン名に対応するgemfile名を取得する
+  # 先にself.scanして置くことが前提
+  # script/runner 'SpecParser.new(true, true, "/opt/local/bin/gem").scan(false).match_gemfiles'
+  def match_gemfiles(gem_home = '/Volumes/Backup/gemspec_gemhome', only_fail = true)
     # この時点でgem名はdowncaseしていない前提
     @scaned_gem_and_versions.each do |line|
       puts "got record : #{line[:gem]}" if @verbose
-#      opt = {
-#        :include => {:versions => :spec}
-#      }
       rubygem = Rubygem.find_by_name(line[:gem].downcase)
       if rubygem.nil?
         rubygem = Rubygem.create(:name => line[:gem].downcase)
@@ -127,24 +153,49 @@ class SpecParser < SpecScanner
           puts "add version : #{line[:gem]}[#{version_name}]" if @verbose and not only_fail
         end
         
-        if version.spec.nil?
-          begin
-            spec_yaml = get_unknown_spec_from_cache(line[:gem], version, gem_home)
-          rescue => e
-            puts e.to_s
+        if version.gemfile.blank?
+          gemfile = find_gemfile(gem_home, line[:gem], version.version)
+          unless gemfile.blank?
+            version.gemfile = File::basename(gemfile)
+            version.save
           end
-          spec_yaml = remove_dust(spec_yaml)
-          version.create_spec(:yaml => spec_yaml)
-          added_spec_counter(version.gemversion)
-          puts "get the spec from a command line, and save it : #{rubygem.name}[#{version.version}]" if @verbose
-          parse(version, spec_yaml)
         end
       end
     end
-    @fail_gems.each do |line| puts line end
+    @fail_gems.each do |line|
+      puts "can not find gemfile for #{line}"
+    end
   end
-  
-    
+ 
+  # gemfile名の取得
+  # かわりになりそうなやつも探す
+  def find_gemfile(gem_home, gem_name, version_name)
+    gem_path_prefix = gem_home + '/cache/' + gem_name + '-' + version_name
+    gem_file_path = gem_path_prefix + '.gem'
+    begin
+      unless File.exist?(gem_file_path)
+        # 代わりになりそうなやつをとりあえず入れる
+        look_like_gems = Dir::glob(gem_path_prefix + '*')
+        if 0 < look_like_gems.length
+          gem_file_path = look_like_gems.first
+        else
+          return ''
+        end
+      end
+      return gem_file_path
+    rescue
+      puts temp = "ERROR : #{e.to_s}"
+      @fail_gems << temp
+      puts temp = "#{gem_file_path} could not find."
+      @fail_gems << temp
+      Dir::glob(gem_path_prefix + '*').each {|filename|
+        puts temp = "- but it found: #{filename}"
+        @fail_gems << temp
+      }
+      return ''
+    end
+  end
+          
   # 保存済みyamlから再度解析する(カラム追加時など)
   def parse_agein_from_saved_yaml(for_all = false)
     update_spec do |rubygem, version|
@@ -376,19 +427,42 @@ private
   # command:
   # gem specification /Volumes/Backup/gemspec_gemhome/gems/ANTFARM-0.2.0.gem
   # gem directory are gem_home + "/cache"
-  def get_unknown_spec_from_cache(real_gem_name, version, gem_home)
-    gem_path_prefix = gem_home + '/cache/' + real_gem_name + '-' + version.version
-    gem_file_path = gem_path_prefix + '.gem'
+#  def get_unknown_spec_from_cache(real_gem_name, version, gem_home)
+#    gem_path_prefix = gem_home + '/cache/' + real_gem_name + '-' + version.version
+#    gem_file_path = gem_path_prefix + '.gem'
+#    begin
+#      unless File.exist?(gem_file_path)
+#        # 代わりになりそうなやつをとりあえず入れる
+#        look_like_gems = Dir::glob(gem_path_prefix + '*')
+#        if 0 < look_like_gems.length
+#          gem_file_path = look_like_gems.first
+#        else
+#          raise "look like gems are not only one. it is #{look_like_gems.length.to_s}"
+#        end
+#      end
+#      command = "#{@gem_path} specification #{gem_file_path}"
+#      puts "command : #{command}"
+#      result = `#{command}`
+#      unless 0 == $?
+#        return ''
+#      else
+#        return result
+#      end
+#    rescue => e
+#      puts temp = "ERROR : #{e.to_s}"
+#      @fail_gems << temp
+#      puts temp = "#{gem_file_path} could not find."
+#      @fail_gems << temp
+#      Dir::glob(gem_path_prefix + '*').each {|filename|
+#        puts temp = "- but it found: #{filename}"
+#        @fail_gems << temp
+#      }
+#      return ''
+#    end
+#  end
+  def get_unknown_spec_from_cache(gemfile, gem_home)
     begin
-      unless File.exist?(gem_file_path)
-        # 代わりになりそうなやつをとりあえず入れる
-        look_like_gems = Dir::glob(gem_path_prefix + '*')
-        if 0 < look_like_gems.length
-          gem_file_path = look_like_gems.first
-        else
-          raise "look like gems are not only one. it is #{look_like_gems.length.to_s}"
-        end
-      end
+      gem_file_path = gem_home + '/cache/' + gemfile
       command = "#{@gem_path} specification #{gem_file_path}"
       puts "command : #{command}"
       result = `#{command}`
@@ -398,14 +472,7 @@ private
         return result
       end
     rescue => e
-      puts temp = "ERROR : #{e.to_s}"
-      @fail_gems << temp
-      puts temp = "#{gem_file_path} could not find."
-      @fail_gems << temp
-      Dir::glob(gem_path_prefix + '*').each {|filename|
-        puts temp = "- but it found: #{filename}"
-        @fail_gems << temp
-      }
+      puts "ERROR : #{e.to_s}"
       return ''
     end
   end

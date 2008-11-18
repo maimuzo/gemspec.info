@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081028085108) do
+ActiveRecord::Schema.define(:version => 20081030212607) do
 
   create_table "abstracts", :force => true do |t|
     t.integer  "user_id",      :limit => 11
@@ -221,6 +221,8 @@ ActiveRecord::Schema.define(:version => 20081028085108) do
     t.datetime "updated_at"
     t.string   "gemversion"
     t.integer  "position",   :limit => 11
+    t.string   "gemfile"
+    t.string   "yaml_path"
   end
 
   add_index "versions", ["id"], :name => "index_versions_on_id"

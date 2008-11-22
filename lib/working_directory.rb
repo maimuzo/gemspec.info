@@ -30,10 +30,18 @@ class WorkingDirectory
             |a,b| b.split('/').size <=> a.split('/').size
           }
 
+          puts "dirlist:"
+          dirlist.each {|d|
+            puts d.to_s
+          }
+
           # サブディレクトリ配下の全ファイルを削除後、サブディレクトリを削除
           dirlist.each {|d|
             Dir::foreach(d) {|f|
-              File::delete(d+f) if ! (/\.+$/ =~ f)
+              if ! (/\.+$/ =~ f)
+                puts "try to delete: #{d+f}"
+                File::delete(d+f)
+              end
             }
             Dir::rmdir(d)
           }

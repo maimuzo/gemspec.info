@@ -4,6 +4,7 @@ class Version < ActiveRecord::Base
   has_one :detail
   has_one :spec
   belongs_to :rubygem
+  belongs_to :source
   
   has_friendly_id :gemversion, :use_slug => true
   

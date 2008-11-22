@@ -4,18 +4,22 @@
  
 require 'timeout'
 require 'pathname'
-# require 'rdoc'
-# require 'rdoc/rdoc'
 require "yaml"
 require 'erb'
+
+# 実験用
+#require 'rdoc'
+#require 'rdoc/rdoc'
 
 
 # kick
 # script/runner 'RdocGen.new(false, "/opt/local/bin/gem", "/Users/maimuzo/Sources/gemspec/gemspec.info/tmp/test_gem_home").init_rdoc.generate_all.update_rdoc_and_diagram_status'
+# script/runner 'RdocGen.new(false, "/opt/local/bin/gem", "/Volumes/Backup/gemspec_gemhome").init_rdoc.generate_all.update_rdoc_and_diagram_status'
 # script/runner 'RdocGen.new(false, "/opt/local/bin/gem", "/Users/maimuzo/Sources/gemspec/gemspec.info/tmp/test_gem_home").update_rdoc_and_diagram_status'
 #
 # なぜかrequire "rdoc"と"rdoc/rdoc"してrdocを作ろうとすると、rdocとallisonが喧嘩しちゃうので、MacOS標準のrdocを使うようにしてみた
 # 何故これで正常に動くのかは不明
+# でもRubyのプロセスではないので、timeoutが効かない
 class RdocGen
   
   def initialize(verbose = false, gem_path = '/usr/local/bin/gem', gem_home = '/Volumes/Backup/gemspec_gemhome', runtime = '', rdoc_lib_path = '/usr/bin/rdoc', tmp = Dir.tmpdir)
@@ -48,12 +52,23 @@ class RdocGen
     self
   end
   
+  # rdoc_dirにある空のディレクトリを削除する
+  def delete_empty_dirs
+    rdoc_dir_base = @gem_home + 'rdoc'
+    Pathname.glob(rdoc_dir_base.to_s + '/*') { |d|
+      if d.directory? and d.children.size == 0
+        puts "delete empty directory: " + d.to_s
+        d.rmdir
+      end
+    }
+  end
+  
   # まだrdocを持ってないgemに対してテンプレートを適用したrdocを生成する
   # 参考
   # http://subtech.g.hatena.ne.jp/cho45/20071006/1191619884
   # http://blog.evanweaver.com/files/doc/fauna/allison/files/README.html
   # http://www.kmc.gr.jp/~ohai/rdoc.ja.html
-  def generate_all
+  def generate_all(limit = 100)
     generated_rdoc_counter = 0
     total_version_counter = 0
     error_gems = []
@@ -68,33 +83,86 @@ class RdocGen
 #      }
 #      versions = Version.find(:all, opt)
 #      total_version_counter = versions.size
-#      versions.each do |version|
+
+      puts "find all versions..." if @verbose
+      all_versions = []
       Rubygem.find(:all).each do |rubygem|
         version = rubygem.lastest_version
-        next unless version.rdoc_path.blank? and not version.gemfile.blank? and not version.spec.yaml.blank?
+        all_versions << version if version.rdoc_path.blank? and not version.gemfile.blank? and not version.spec.nil? and not version.spec.yaml.blank?
+      end
+      puts "sorting..." if @verbose
+      all_versions.sort! do |a,b|
+        a.last_gen_rdoc = Time.at(0) if a.last_gen_rdoc.nil?
+        b.last_gen_rdoc = Time.at(0) if b.last_gen_rdoc.nil?
+        a.last_gen_rdoc <=> b.last_gen_rdoc
+      end
+      versions = []
+      total_version_counter = 0
+      limit.times do
+        versions << all_versions.shift
         total_version_counter += 1
-        puts "generate rdoc about: " + version.gemfile
-        gemfile_path = @gem_home + 'cache' + version.gemfile
-        extract_base_dir = @tmp_dir + 'extract_temporary'
-        extract_dir = extract_base_dir + File::basename(version.gemfile, '.*')
-        rdoc_dir = @gem_home + 'rdoc' + version.to_param
-        mkdir_if_not_exist(rdoc_dir)
-        extract_gem(gemfile_path, extract_base_dir)
-        spec = YAML.load(version.spec.yaml)
-        args = setup_args(spec, extract_dir)
-        if generate_rdoc(args, extract_dir)
-          # '--diagram'のための画像ラッパーHTMLを作る
-          generate_diagram_wrapper_html(extract_dir, args, version)
-          # check empty
-          if 0 < Dir.glob(rdoc_dir.to_s).size
-            move_rdoc_dir(extract_dir, rdoc_dir)
-            generated_rdoc_counter += 1 
-            puts " => Success to generate RDoc for " + version.gemfile
-            next
+        break if all_versions.size == 0
+      end
+      
+      versions.each do |version|
+        begin
+          version.last_gen_rdoc = Time.now
+          version.save
+          puts "generate rdoc about: " + version.gemfile
+          gemfile_path = @gem_home + 'cache' + version.gemfile
+          extract_base_dir = @tmp_dir + 'extract_temporary'
+          extract_dir = extract_base_dir + File::basename(version.gemfile, '.*')
+          rdoc_scan_dir = extract_dir.to_s + '/rdoc/*'
+          rdoc_dir = @gem_home + 'rdoc' + version.to_param
+          mkdir_if_not_exist(rdoc_dir)
+          extract_gem(gemfile_path, extract_base_dir)
+          spec = YAML.load(version.spec.yaml)
+          args = setup_args(spec, extract_dir)
+          need_regenerate = false
+          if generate_rdoc(args, extract_dir)
+            # '--diagram'のための画像ラッパーHTMLを作る
+            generate_diagram_wrapper_html(extract_dir, args, version)
+            # check empty
+            generated_files = Dir.glob(rdoc_scan_dir)
+            puts "scan files at: " + rdoc_scan_dir if @verbose
+            puts "generated_files: " + generated_files.join(', ') if @verbose
+            puts "generated_files count: " + generated_files.size.to_s
+            if 0 < generated_files.size
+              move_rdoc_dir(extract_dir, rdoc_dir)
+              generated_rdoc_counter += 1 
+              puts " => Success to generate RDoc for " + version.gemfile
+            else
+              need_regenerate = true
+            end
+          else
+            need_regenerate = true
           end
+          if need_regenerate
+            puts " => Fault to generate RDoc with a diagram, re-generate only RDoc for " + version.gemfile
+            `rm -rf #{(extract_dir + 'rdoc').to_s}`
+            args = setup_args(spec, extract_dir, false)
+            if generate_rdoc(args, extract_dir)
+              generated_files = Dir.glob(rdoc_scan_dir)
+              puts "scan files at: #{rdoc_scan_dir} agein" if @verbose
+              puts "re-generated_files: " + generated_files.join(', ') if @verbose
+              puts "re-generated_files count: " + generated_files.size.to_s
+              if 0 < generated_files.size
+                move_rdoc_dir(extract_dir, rdoc_dir)
+                generated_rdoc_counter += 1 
+                puts " => Success to generate RDoc for " + version.gemfile
+              else
+                puts " => Fault to re-generate RDoc only for " + version.gemfile
+                error_gems << version.gemfile
+              end
+            else
+              puts " => Fault to re-generate RDoc only for " + version.gemfile
+              error_gems << version.gemfile
+            end
+          end
+        rescue => e
+          puts "ERROR : #{e.to_s}"
+          puts e.backtrace
         end
-        error_gems << version.gemfile
-        puts " => Fault to generate RDoc for " + version.gemfile
       end
     end
     puts "gems : #{total_version_counter} / generated : #{generated_rdoc_counter}"
@@ -104,21 +172,29 @@ class RdocGen
   
   # 配置済みrdocディレクトリをスキャンして、配置済みコンテンツ情報を更新する
   def update_rdoc_and_diagram_status(all_check = false)
+    SystemState.update_rdocs_now
+
     document_root = Pathname.new(RAILS_ROOT) + 'public'
     rdoc_path_at_server = document_root + 'system/rdoc'
+    
     if all_check
       versions = Version.find(:all)
     else
-      opt = {
-        :conditions => ["versions.rdoc_path IS NULL OR versions.rdoc_path = ''"],
-      }
-      versions = Version.find(:all, opt)      
+#      opt = {
+#        :conditions => ["versions.rdoc_path IS NULL OR versions.rdoc_path = ''"],
+#      }
+#      versions = Version.find(:all, opt)  
+      versions = []
+      Rubygem.find(:all).each do |rubygem|
+        version = rubygem.lastest_version      
+        versions << version if version.rdoc_path.blank?
+      end
     end
     puts "version count : " + versions.size.to_s if @verbose
     versions.each do |version|
       version_name = version.to_param
       puts version_name if @verbose
-      if (rdoc_path_at_server + version_name).directory?
+      if (rdoc_path_at_server + version_name).directory? and 0 < Dir.glob((rdoc_path_at_server + version_name).to_s + '/*').size
         version.rdoc_path = '/system/rdoc/' + version_name + '/'
       else
         version.rdoc_path = ''
@@ -129,7 +205,13 @@ class RdocGen
         version.diagram_path = ''
       end   
       version.save
+      if not version.rdoc_path.blank? and not version.diagram_path.blank?
+        puts "found rdoc and diagram: " + version_name
+      elsif not version.rdoc_path.blank?
+        puts "found rdoc: " + version_name
+      end
     end
+    SystemState.update_counters
     self
   end
 
@@ -183,10 +265,11 @@ protected
   end
   
   # 各rdocに渡すオプションを整理する
-  def setup_args(spec, extract_dir)
+  def setup_args(spec, extract_dir, with_diagram = true)
     args = []
     args << spec.rdoc_options
-    args << ['--quiet', '--inline-source', "--template", "/opt/local/lib/ruby/gems/1.8/gems/allison-2.0.3/lib/allison",  '--diagram']
+    args << ['--quiet', '--inline-source', "--template", "/opt/local/lib/ruby/gems/1.8/gems/allison-2.0.3/lib/allison"]
+    args << ['--diagram'] if with_diagram
     args << ['--main', '"README"'] if not args.include?('--main') and (extract_dir + 'README').file?
     args << ['--op', 'rdoc'] unless args.include?('--op') or args.include?('-o')
     args << add_exist_dirs_and_files(extract_dir, spec.require_paths.clone)
@@ -202,7 +285,7 @@ protected
   # allison --title 'RDoc for Gem[0.0.1] from RubyForge'  --charset utf-8  --op ../doc/git-trip-0.0.5 --fmt html --diagram --line-numbers --main README --promiscuous ../unpack/git-trip-0.0.5/
   def generate_rdoc(args, extract_dir)
     begin
-      timeout(60 * 3) do
+      timeout(60 * 10) do
         puts " Step 2. move into : " + extract_dir.to_s if @verbose
         Dir.chdir(extract_dir.to_s)
 
@@ -210,11 +293,19 @@ protected
         rdoc_command << @runtime.to_s + " " unless @runtime.to_s.blank?
         rdoc_command << "#{@rdoc_lib_path.to_s} #{args.join(' ')}"
         puts " Step 3. RDoc command : " + rdoc_command if @verbose
+
+        
+#        rdoc = RDoc::RDoc.new
+#        rdoc.document args
+
+        
         `#{rdoc_command}`
         unless 0 == $?
           puts "Error : can not generate rdoc files."
           return false
         end
+
+
       end
       return true
     rescue => e

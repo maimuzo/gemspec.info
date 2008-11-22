@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081030212607) do
+ActiveRecord::Schema.define(:version => 20081119142648) do
 
   create_table "abstracts", :force => true do |t|
     t.integer  "user_id",      :limit => 11
@@ -156,6 +156,13 @@ ActiveRecord::Schema.define(:version => 20081030212607) do
   add_index "slugs", ["name", "sluggable_type"], :name => "index_slugs_on_name_and_sluggable_type", :unique => true
   add_index "slugs", ["sluggable_id"], :name => "index_slugs_on_sluggable_id"
 
+  create_table "sources", :force => true do |t|
+    t.string   "name"
+    t.string   "url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "specs", :force => true do |t|
     t.integer  "version_id", :limit => 11
     t.text     "yaml"
@@ -164,6 +171,18 @@ ActiveRecord::Schema.define(:version => 20081030212607) do
   end
 
   add_index "specs", ["version_id"], :name => "index_specs_on_version_id"
+
+  create_table "system_states", :force => true do |t|
+    t.integer  "total_gem",         :limit => 11
+    t.integer  "total_version",     :limit => 11
+    t.integer  "spec_counter",      :limit => 11
+    t.integer  "rdoc_counter",      :limit => 11
+    t.integer  "diagram_counter",   :limit => 11
+    t.string   "help_gems"
+    t.datetime "last_update_rdocs"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "taggings", :force => true do |t|
     t.integer "tag_id",        :limit => 11
@@ -215,14 +234,16 @@ ActiveRecord::Schema.define(:version => 20081030212607) do
   add_index "users", ["user_key"], :name => "index_users_on_user_key"
 
   create_table "versions", :force => true do |t|
-    t.integer  "rubygem_id", :limit => 11
+    t.integer  "rubygem_id",    :limit => 11
     t.string   "version"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "gemversion"
-    t.integer  "position",   :limit => 11
+    t.integer  "position",      :limit => 11
     t.string   "gemfile"
-    t.string   "yaml_path"
+    t.string   "rdoc_path"
+    t.string   "diagram_path"
+    t.datetime "last_gen_rdoc"
   end
 
   add_index "versions", ["id"], :name => "index_versions_on_id"

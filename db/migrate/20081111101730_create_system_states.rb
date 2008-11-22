@@ -7,6 +7,7 @@ class CreateSystemStates < ActiveRecord::Migration
       t.integer :rdoc_counter
       t.integer :diagram_counter
       t.string :help_gems
+      t.datetime :last_update_rdocs
 
       t.timestamps
     end

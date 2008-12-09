@@ -14,6 +14,9 @@ require 'erb'
 # script/runner 'RdocGen.new(false, "/opt/local/bin/gem", "/Volumes/Backup/gemspec_gemhome").init_rdoc.generate_all.update_rdoc_and_diagram_status'
 # script/runner 'RdocGen.new(false, "/opt/local/bin/gem", "/Users/maimuzo/Sources/gemspec/gemspec.info/tmp/test_gem_home").update_rdoc_and_diagram_status'
 #
+# for production
+# script/runner 'RdocGen.new(false, "/opt/local/bin/gem", "~/rails_app/gemspec.info/current/public/system/rdoc").update_rdoc_and_diagram_status'
+#
 # なぜかrequire "rdoc"と"rdoc/rdoc"してrdocを作ろうとすると、rdocとallisonが喧嘩しちゃうので、MacOS標準のrdocを使うようにしてみた
 # 何故これで正常に動くのかは不明
 # でもRubyのプロセスではないので、timeoutが効かない

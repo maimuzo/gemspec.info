@@ -1,11 +1,13 @@
 class SystemState < ActiveRecord::Base
   
   def self.current
-    @current = self.find(:first)
+    @@current = self.find(:first)
+    @@current = self.create if @@current.nil?
+    @@current
   end
   
   def self.update_counters
-    stat = @current ||= current
+    stat = @@current ||= current
     stat.total_gem = Rubygem.find(:all).size
     stat.total_version = Version.find(:all).size
     stat.spec_counter = Spec.find(:all, :conditions => ["specs.yaml IS NOT NULL AND specs.yaml != ''"]).size
@@ -15,13 +17,13 @@ class SystemState < ActiveRecord::Base
   end
   
   def self.update_rdocs_now
-    stat = @current ||= current
+    stat = @@current ||= current
     stat.last_update_rdocs = Time.now
     stat.save
   end
   
   def self.choose_help_gems
-    stat = @current ||= current
+    stat = @@current ||= current
     help_gems = []
     worst1000 = Rubygem.find(:all, {:include => [:general_point], :limit => 1000, :order => "general_points.point DESC"})
     10.times do

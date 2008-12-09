@@ -27,6 +27,12 @@
               <p class="detail-content"><%=h @detail.summary %></p>
               <p>Official : <%= site_link(@detail) %></p>
               <p>RubyForge : <%= project_link(@detail) %></p>
+              <% unless @version.rdoc_path.blank? -%>
+              <p>RDoc : <%= link_to('オンライン版', @version.rdoc_path, :title => "#{@gem.name} #{@version.version} | rdoc online edition").untaint %></p>
+              <% end -%>
+              <% unless @version.diagram_path.blank? -%>
+              <p>Class diagram : <%= link_to('オンライン適当版', @version.diagram_path, :title => "#{@gem.name} #{@version.version} | class diagram online edition").untaint %></p>
+              <% end -%>
               <ul>
                 <% @detail.authors.split(",").each do |author| -%>
               	<li>provided by <%=h author.strip %></li>

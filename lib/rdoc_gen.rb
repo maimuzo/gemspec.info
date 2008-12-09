@@ -1,7 +1,4 @@
-# 
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
- 
+
 require 'timeout'
 require 'pathname'
 require "yaml"

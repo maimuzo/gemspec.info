@@ -63,8 +63,12 @@ class GemspecBatch
       sync_from_core
     end
     check_load_average
+    timeout(60 * 3) do
+      SpecParser.new(@verbose, @verbose).scan.add_unknown_gem_versions
+    end
+    check_load_average
     timeout(60 * 15) do
-      SpecParser.new(@verbose, @verbose).scan.add_unknown_gem_versions.update_spec_from_command
+      SpecParser.new(@verbose, @verbose).scan.update_spec_from_command
     end
     check_load_average
     timeout(60) do

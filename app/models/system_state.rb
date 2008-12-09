@@ -1,9 +1,7 @@
 class SystemState < ActiveRecord::Base
   
-  def self.current
-    @@current = self.find(:first)
-    @@current = self.create if @@current.nil?
-    @@current
+  def self.now
+    @@current ||= current
   end
   
   def self.update_counters
@@ -37,4 +35,13 @@ class SystemState < ActiveRecord::Base
     stat.help_gems = help_gems.join(',')
     stat.save
   end
+  
+private
+
+  def self.current
+    @@current = self.find(:first)
+    @@current = self.create if @@current.nil?
+    @@current
+  end
+
 end

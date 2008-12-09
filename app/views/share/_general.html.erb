@@ -1,4 +1,13 @@
           <div class="content-wrap">
+            <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">データ量統計</h2>
+            <p>総Gem数 : <%=h SystemState.now.total_gem %></p>
+            <p>総Version数 : <%=h SystemState.now.total_version %></p>
+            <p>総Spec数 : <%=h SystemState.now.spec_counter %></p>
+            <p>保持総RDoc数 : <%=h SystemState.now.rdoc_counter %></p>
+            <p>保持総Diagram数 : <%=h SystemState.now.diagram_counter %></p>
+            <p>最終RDoc更新時刻 : <%=h SystemState.now.last_update_rdocs.strftime("%Y/%m/%d %H:%M:%S") %></p>
+          </div>
+          <div class="content-wrap">
             <h2 class="part-of-title" jg="gradient" jg:gradient="from:'c4bfac', to:'ffffff', direction:'vertical', length:100, position: 'right'">総合評価</h2>
             <div style="overflow:hidden;">
               <ul>

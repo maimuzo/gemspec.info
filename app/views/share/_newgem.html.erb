@@ -1,0 +1,10 @@
+                    <li>
+                      <div class="commentboxgrey">
+                        <h2 class="gem-name"><%=h newgem.name %></h2>
+                        <% if not newgem.lastest_version.detail.nil? and not newgem.lastest_version.detail.summary.blank? -%>
+                        <div class="summary"><%=h newgem.lastest_version.detail.summary %></div>
+                        <% end -%>
+                        <div class="comment-date">Last update on <%=h newgem.last_update_string %></div>
+                        <div class="link-wrapper"><%= link_to('詳細へ', rubygem_path(newgem)).untaint %></div>
+                      </div>
+                    </li>
